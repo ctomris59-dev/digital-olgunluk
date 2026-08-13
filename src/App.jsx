@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
-import { ArrowRight, ArrowLeft, RotateCcw, ExternalLink, CircleCheck } from "lucide-react";
+import { ArrowRight, ArrowLeft, RotateCcw, ExternalLink, CircleCheck, X } from "lucide-react";
+import { saveAssessment } from "./lib/supabaseClient";
 
 /* ---------------------------------------------------------------
    VERİ MODELİ
@@ -262,6 +263,9 @@ export default function App() {
   const [firmName, setFirmName] = useState("");
   const [axisIndex, setAxisIndex] = useState(0);
   const [answers, setAnswers] = useState({});
+  const [consent, setConsent] = useState(false);
+  const [showConsentText, setShowConsentText] = useState(false);
+  const [saveState, setSaveState] = useState("idle"); // idle | saving | saved | error
 
   const currentAxis = AXES[axisIndex];
   const answeredCount = currentAxis.questions.filter((_, qi) => answers[`${currentAxis.id}-${qi}`]).length;
@@ -292,6 +296,17 @@ export default function App() {
       setAxisIndex(axisIndex + 1);
     } else {
       setScreen("results");
+      setSaveState("saving");
+      saveAssessment({
+        firmName: firmName || null,
+        answers,
+        scores,
+        overall,
+        levelName: level.name,
+        consent: true,
+      })
+        .then((ok) => setSaveState(ok ? "saved" : "error"))
+        .catch(() => setSaveState("error"));
     }
   };
   const goPrevAxis = () => {
@@ -302,6 +317,8 @@ export default function App() {
     setAnswers({});
     setAxisIndex(0);
     setFirmName("");
+    setConsent(false);
+    setSaveState("idle");
     setScreen("intro");
   };
 
@@ -387,9 +404,34 @@ export default function App() {
                 style={{ maxWidth: 420, background: "#FBFAF5", border: "1px solid var(--grid)" }}
               />
 
+              <label className="flex items-start gap-2.5 mb-6 cursor-pointer" style={{ maxWidth: 480 }}>
+                <input
+                  type="checkbox"
+                  checked={consent}
+                  onChange={(e) => setConsent(e.target.checked)}
+                  className="mt-0.5"
+                  style={{ width: 16, height: 16, accentColor: "var(--brass)", flexShrink: 0 }}
+                />
+                <span className="text-sm leading-relaxed">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowConsentText(true);
+                    }}
+                    className="underline font-medium"
+                    style={{ color: "var(--steel)" }}
+                  >
+                    KVKK Aydınlatma Metni
+                  </button>
+                  'ni okudum, verilerimin bu amaçla işlenmesini kabul ediyorum.
+                </span>
+              </label>
+
               <div>
                 <button
-                  onClick={() => setScreen("quiz")}
+                  onClick={() => consent && setScreen("quiz")}
+                  disabled={!consent}
                   className="dmat-btn-primary px-6 py-3 text-sm font-medium inline-flex items-center gap-2"
                 >
                   Değerlendirmeye Başla <ArrowRight size={16} />
@@ -400,6 +442,61 @@ export default function App() {
                 VERİ KULLANIMI: Cevaplarınız yalnızca bu raporu oluşturmak ve Çorlu TSO
                 Proje Birimi'nin size uygun destek programı önerebilmesi için kullanılır.
               </p>
+            </div>
+          )}
+
+          {/* KVKK MODAL */}
+          {showConsentText && (
+            <div
+              className="fixed inset-0 flex items-center justify-center p-6 z-50"
+              style={{ background: "rgba(27,36,48,0.55)" }}
+              onClick={() => setShowConsentText(false)}
+            >
+              <div
+                className="dmat-card p-6 max-w-lg w-full"
+                style={{ maxHeight: "80vh", overflowY: "auto" }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className="dmat-display text-lg font-semibold">KVKK Aydınlatma Metni</div>
+                  <button onClick={() => setShowConsentText(false)}><X size={18} /></button>
+                </div>
+                <div className="text-sm space-y-3 leading-relaxed" style={{ color: "#3A4250" }}>
+                  <p>
+                    <strong>Veri Sorumlusu:</strong> Çorlu Ticaret ve Sanayi Odası (Çorlu TSO), Tekirdağ.
+                  </p>
+                  <p>
+                    <strong>İşlenen Veriler:</strong> Firma adı (opsiyonel) ve bu değerlendirme
+                    formunda verdiğiniz cevaplar.
+                  </p>
+                  <p>
+                    <strong>İşleme Amacı:</strong> Firmanızın dijital olgunluk seviyesini ölçmek,
+                    size özel bir sonuç raporu oluşturmak ve Çorlu TSO Proje Birimi'nin size uygun
+                    destek programına (KOSGEB, EDIH, TÜBİTAK TÜSSİDE vb.) yönlendirme yapabilmesini
+                    sağlamaktır.
+                  </p>
+                  <p>
+                    <strong>Saklama Süresi:</strong> Veriler, yönlendirme ve takip süreci
+                    tamamlanana kadar, en fazla 24 ay saklanır.
+                  </p>
+                  <p>
+                    <strong>Paylaşım:</strong> Verileriniz yalnızca Çorlu TSO Proje Birimi personeli
+                    tarafından görülebilir; üçüncü kişi/kurumlarla yalnızca sizin açık isteğiniz
+                    üzerine (ör. bir destek programına yönlendirme talebiniz olduğunda) paylaşılır.
+                  </p>
+                  <p>
+                    <strong>Haklarınız:</strong> KVKK'nın 11. maddesi kapsamında verilerinize erişme,
+                    düzeltme, silinmesini talep etme haklarına sahipsiniz. Talepleriniz için Çorlu
+                    TSO Proje Birimi ile iletişime geçebilirsiniz.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowConsentText(false)}
+                  className="dmat-btn-primary px-5 py-2.5 text-sm font-medium mt-5"
+                >
+                  Anladım, Kapat
+                </button>
+              </div>
             </div>
           )}
 
@@ -476,7 +573,17 @@ export default function App() {
             <div>
               {firmName && <div className="dmat-mono text-xs mb-1" style={{ color: "var(--steel)" }}>{firmName.toUpperCase()}</div>}
               <h2 className="dmat-display text-2xl font-semibold mb-1">Dijital Olgunluk Sonucu</h2>
-              <p className="text-sm mb-8" style={{ color: "#3A4250" }}>{level.desc}</p>
+              <p className="text-sm mb-2" style={{ color: "#3A4250" }}>{level.desc}</p>
+              {saveState === "saving" && (
+                <p className="dmat-mono text-[10px] mb-6" style={{ color: "var(--steel)" }}>SONUÇ KAYDEDİLİYOR…</p>
+              )}
+              {saveState === "saved" && (
+                <p className="dmat-mono text-[10px] mb-6" style={{ color: "var(--green)" }}>✓ SONUÇ ÇORLU TSO PROJE BİRİMİ'NE İLETİLDİ</p>
+              )}
+              {saveState === "error" && (
+                <p className="dmat-mono text-[10px] mb-6" style={{ color: "var(--steel)" }}>SONUÇ YALNIZCA BU EKRANDA GÖRÜNTÜLENİYOR (kayıt şu an aktif değil)</p>
+              )}
+              {saveState === "idle" && <div className="mb-6" />}
 
               <div className="dmat-card p-6 mb-8 grid md:grid-cols-2 gap-6 items-center">
                 <div className="text-center">
