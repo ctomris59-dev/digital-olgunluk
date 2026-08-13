@@ -372,7 +372,7 @@ export default function App() {
               <img
                 src="/ctso-logo.jpg"
                 alt="Çorlu Ticaret ve Sanayi Odası"
-                style={{ width: 40, height: 40, borderRadius: "50%", flexShrink: 0, objectFit: "cover" }}
+                style={{ width: 46, height: 46, flexShrink: 0, objectFit: "contain" }}
               />
               <div>
                 <div className="dmat-mono text-[11px]" style={{ color: "var(--steel)" }}>ÇORLU TİCARET VE SANAYİ ODASI</div>
