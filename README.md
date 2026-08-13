@@ -1,9 +1,19 @@
 # Çorlu TSO — Dijital Olgunluk Ölçüm Aracı
 
-6 eksen / 24 sorudan oluşan, üye firmaların dijital dönüşüm olgunluğunu
+6 eksen / 30 sorudan oluşan, üye firmaların dijital dönüşüm olgunluğunu
 ölçen interaktif değerlendirme aracı. Sonuç ekranında radar grafik, eksen
-bazlı skorlar ve zayıf eksenlere özel destek programı önerileri (KOSGEB,
-EDIH, TÜBİTAK TÜSSİDE) sunulur.
+bazlı skorlar, acatech Industrie 4.0 Maturity Index'e uyarlanmış 6 aşamalı
+olgunluk seviyesi, zayıf eksenlere özel destek programı önerileri (KOSGEB,
+EDIH, TÜBİTAK TÜSSİDE) ve tam kaynakçalı bir **Metodoloji** bölümü sunulur.
+
+## Metodoloji
+
+Araç; acatech Industrie 4.0 Maturity Index, MIT & Capgemini Digital Maturity
+Model (Westerman, Bonnet & McAfee) ve Avrupa Komisyonu EDIH Open DMAT
+çerçevelerinden esinlenerek özgün olarak geliştirilmiştir. Tam kaynakça ve
+yöntem açıklaması, uygulama içindeki "Metodoloji" bağlantısında (giriş
+ekranı ve sonuç raporu) ve `src/App.jsx` içindeki `MethodologyModal`
+bileşeninde yer alır.
 
 ## Yerel geliştirme
 
