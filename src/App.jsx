@@ -1,151 +1,9 @@
 import React, { useState, useMemo } from "react";
-import { ArrowRight, ArrowLeft, RotateCcw, ExternalLink, CircleCheck, X } from "lucide-react";
+import { ArrowRight, ArrowLeft, RotateCcw, ExternalLink, CircleCheck, X, Download } from "lucide-react";
 import { saveAssessment } from "./lib/supabaseClient";
+import { AXES, SCALE_LABELS, LEVELS, levelFor, statusFor, axisLevelGuide } from "./lib/data";
+import { generatePdfReport } from "./lib/pdfReport";
 
-/* ---------------------------------------------------------------
-   VERİ MODELİ
---------------------------------------------------------------- */
-
-const AXES = [
-  {
-    id: "process",
-    no: "01",
-    short: "Süreç",
-    title: "Süreç Dijitalleşmesi",
-    intro: "İş süreçlerinizin kağıt/manuel mi, yoksa yazılım destekli mi yürüdüğünü ölçer.",
-    framework: "acatech — Bilgi Sistemleri",
-    questions: [
-      "Muhasebe, stok, satış gibi temel iş süreçlerimiz kağıt/Excel yerine bir yazılım üzerinden yürütülür.",
-      "Departmanlar arası bilgi akışı, manuel tekrar girişi gerektirmeden dijital bir sistem üzerinden aktarılır.",
-      "İş süreçlerindeki darboğazları düzenli olarak dijital araçlarla (raporlama, dashboard) takip ederiz.",
-      "Yeni bir dijital araç devreye alma kararı, tanımlı bir sorumlu/süreç üzerinden yürütülür.",
-      "İş süreçlerimize ait performans göstergeleri (KPI) düzenli olarak tanımlanır, ölçülür ve raporlanır.",
-    ],
-    resource: {
-      name: "KOSGEB İşletme Geliştirme Destek Programı",
-      url: "https://www.kosgeb.gov.tr",
-    },
-  },
-  {
-    id: "data",
-    no: "02",
-    short: "Veri",
-    title: "Veri Yönetimi ve Analitik",
-    intro: "Verinin toplanma, saklanma ve karar almada kullanılma biçimini ölçer.",
-    framework: "acatech — Bilgi Sistemleri / EDIH — Veri Yönetimi",
-    questions: [
-      "Satış, üretim veya müşteri verilerimiz dağınık Excel dosyaları yerine merkezi bir sistemde toplanır.",
-      "Yönetim kararları alınırken güncel veriye dayalı raporlar kullanılır.",
-      "Verilerimizin yedeklenmesi düzenli ve otomatik olarak yapılır.",
-      "Veri kalitesinden (doğruluk, güncellik, tutarlılık) sorumlu bir kişi veya süreç vardır.",
-      "Farklı sistemlerden (satış, üretim, finans) gelen veriler birbiriyle ilişkilendirilerek analiz edilebilir.",
-    ],
-    resource: {
-      name: "EDIH West Marmara — Veri Yönetimi Danışmanlığı",
-      url: "https://european-digital-innovation-hubs.ec.europa.eu",
-    },
-  },
-  {
-    id: "market",
-    no: "03",
-    short: "Pazar",
-    title: "Müşteri / Pazar Dijital Varlığı",
-    intro: "E-ticaret, dijital pazarlama ve online müşteri ilişkilerindeki olgunluğu ölçer.",
-    framework: "MIT & Capgemini — Dijital Yoğunluk / EDIH — Dijital İş Stratejisi",
-    questions: [
-      "Güncel tutulan bir web sitemiz ve/veya aktif sosyal medya hesabımız vardır.",
-      "Ürün/hizmetlerimizi online kanallardan (e-ticaret, pazaryeri, B2B platform) satabiliyoruz.",
-      "Müşteri talep ve şikayetleri dijital bir sistem (CRM, ticket sistemi) üzerinden takip edilir.",
-      "Dijital pazarlama faaliyetlerimizin sonuçlarını ölçüp değerlendiririz.",
-      "Rakip analizi veya pazar trendlerini takip etmek için dijital araç/veri kaynakları kullanırız.",
-    ],
-    resource: {
-      name: "KOSGEB E-Ticaret Destek Programı",
-      url: "https://www.kosgeb.gov.tr",
-    },
-  },
-  {
-    id: "automation",
-    no: "04",
-    short: "Otomasyon",
-    title: "Otomasyon ve Yapay Zeka",
-    intro: "Üretim ve operasyonda otomasyon ile YZ araçlarının benimsenme düzeyini ölçer.",
-    framework: "acatech — Kaynaklar / EDIH — Otomasyon ve YZ",
-    questions: [
-      "Üretim/operasyon süreçlerimizde otomasyon sistemleri (PLC, robotik, otomatik hat) kullanılır.",
-      "Tekrarlayan idari işler için otomasyon araçları veya yazılım robotları kullanılır.",
-      "Firmamızda yapay zeka destekli araçlar deneniyor veya kullanılıyor.",
-      "Makine/ekipman verilerimiz (IoT sensör, performans verisi) dijital olarak izlenip analiz ediliyor.",
-      "Operasyonel kararlarımız (bakım zamanlaması, stok, üretim planı vb.) geçmiş verilere dayalı öngörü/tahmin modelleriyle destekleniyor.",
-    ],
-    resource: {
-      name: "EDIH — Test-Before-Invest Hizmetleri",
-      url: "https://european-digital-innovation-hubs.ec.europa.eu",
-    },
-  },
-  {
-    id: "people",
-    no: "05",
-    short: "Yetkinlik",
-    title: "Dijital Yetkinlik ve İnsan Kaynağı",
-    intro: "Çalışan yetkinliği, organizasyonel yapı ve yönetimin dijital dönüşüme verdiği önceliği ölçer.",
-    framework: "acatech — Organizasyonel Yapı ve Kültür / MIT & Capgemini — Dönüşüm Yönetimi",
-    questions: [
-      "Çalışanlarımız günlük işlerinde kullandıkları dijital araçlar konusunda yeterli eğitim almıştır.",
-      "Firmamızda dijital dönüşüm/yeni teknoloji konularında düzenli eğitim faaliyetleri yürütülür.",
-      "Yönetim, dijital dönüşümü stratejik öncelik olarak görür ve kaynak ayırır.",
-      "Çalışanlarımız yeni dijital araç ve sistemlere geçişte genel olarak açık ve uyumludur.",
-      "Firmamızda dijital dönüşüm sürecini yürüten veya bu konuda sorumluluk üstlenen tanımlı bir kişi/ekip vardır.",
-    ],
-    resource: {
-      name: "Çorlu TSO Eğitim Programları",
-      url: null,
-    },
-  },
-  {
-    id: "security",
-    no: "06",
-    short: "Güvenlik",
-    title: "Siber Güvenlik ve Altyapı",
-    intro: "IT altyapısı, veri güvenliği ve KVKK uyum farkındalığını ölçer.",
-    framework: "acatech — Kaynaklar",
-    questions: [
-      "İnternet, sunucu, bulut altyapımız güncel ve ihtiyaçlarımızı karşılayacak durumdadır.",
-      "Sistemlerimize erişim yetkilendirme ile kontrol edilir; şifre/erişim politikalarımız vardır.",
-      "Siber saldırı, veri sızıntısı gibi risklere karşı önlemlerimiz (antivirüs, güvenlik duvarı vb.) mevcuttur.",
-      "KVKK ve veri güvenliği yükümlülüklerimiz konusunda farkındalığımız ve uyum sürecimiz vardır.",
-      "Sistem arızası veya veri kaybı durumuna karşı bir iş sürekliliği/kurtarma planımız vardır.",
-    ],
-    resource: {
-      name: "KOSGEB Bilgi Yönetimi Destek Programı",
-      url: "https://www.kosgeb.gov.tr",
-    },
-  },
-];
-
-const SCALE_LABELS = ["Hiç yok", "Başlangıç", "Kısmen var", "Sistematik", "Tam entegre"];
-
-// Genel olgunluk skalası, acatech Industrie 4.0 Maturity Index'in 6 aşamalı
-// yapısına (Bilgisayarlaşma → Bağlanabilirlik → Görünürlük → Şeffaflık →
-// Öngörü Yeteneği → Uyarlanabilirlik) uyarlanmıştır. Bkz. Metodoloji bölümü.
-const LEVELS = [
-  { max: 1.49, name: "Bilgisayarlaşma", desc: "Temel dijital araçlar münferit kullanılıyor; süreçler büyük ölçüde manuel." },
-  { max: 2.19, name: "Bağlanabilirlik", desc: "Sistemler birbirine bağlanmaya başlamış ama entegrasyon sınırlı." },
-  { max: 2.89, name: "Görünürlük", desc: "Veriler görünür hale geliyor; süreçler izlenebiliyor ama analiz sığ." },
-  { max: 3.59, name: "Şeffaflık", desc: "Veriler ilişkilendirilip yorumlanıyor; kararlar veriye dayanıyor." },
-  { max: 4.29, name: "Öngörü Yeteneği", desc: "Geçmiş veriden geleceğe dair tahmin/öngörü üretilebiliyor." },
-  { max: 5.01, name: "Uyarlanabilirlik", desc: "Sistemler kendi kendine öğreniyor, süreçler otonom şekilde optimize oluyor." },
-];
-
-function levelFor(score) {
-  return LEVELS.find((l) => score <= l.max) ?? LEVELS[LEVELS.length - 1];
-}
-
-function statusFor(score) {
-  if (score < 3) return { label: "Öncelikli gelişim alanı", tone: "low" };
-  if (score < 4) return { label: "Gelişim fırsatı", tone: "mid" };
-  return { label: "Güçlü alan", tone: "high" };
-}
 
 /* ---------------------------------------------------------------
    RADAR / GAUGE GÖRSELLERİ
@@ -345,6 +203,14 @@ function MethodologyModal({ onClose }) {
               <li>• Eksen puanı: o eksendeki soruların aritmetik ortalaması</li>
               <li>• Genel olgunluk puanı: 6 eksen puanının eşit ağırlıklı ortalaması (şeffaflık için ek ağırlıklandırma yapılmamıştır)</li>
               <li>• Genel puan, acatech'in 6 aşamalı modeline uyarlanmış bir ölçekle yorumlanır</li>
+              <li>
+                • <strong>Eksen bazlı yönlendirme:</strong> her eksenin 1-5 puanı, CMMI
+                (Capability Maturity Model Integration, SEI / Carnegie Mellon Üniversitesi)
+                tarafından yaygınlaştırılan jenerik 5 seviyeli olgunluk kademelendirmesine
+                (Başlangıç → Tekrarlanabilir → Tanımlı → Ölçülüyor → Optimize Ediliyor) göre
+                en yakın tam sayıya yuvarlanarak yorumlanır ve her seviye için somut bir
+                aksiyon önerisi sunulur.
+              </li>
             </ul>
           </div>
 
@@ -366,6 +232,7 @@ function MethodologyModal({ onClose }) {
               <li>Westerman, G., Bonnet, D., & McAfee, A. (2014). Leading Digital: Turning Technology into Business Transformation. Harvard Business Review Press.</li>
               <li>Westerman, G., Bonnet, D., & McAfee, A. (2014). The Nine Elements of Digital Transformation. MIT Sloan Management Review.</li>
               <li>European Commission, European Digital Innovation Hubs Network — Digital Maturity Assessment Tool (Open DMAT) for SMEs.</li>
+              <li>CMMI Institute / Software Engineering Institute, Carnegie Mellon University — CMMI Capability Maturity Model Integration (jenerik 5 seviyeli olgunluk kademelendirmesi).</li>
             </ul>
           </div>
         </div>
@@ -455,33 +322,28 @@ export default function App() {
   );
 
   return (
-    <div style={{ "--ink": "#1B2430", "--paper": "#F1EEE4", "--paper2": "#E8E4D6", "--brass": "#B5793A", "--steel": "#4E6A7A", "--grid": "#C9C3B0", "--red": "#A8442F", "--green": "#3F6E52" }}
+    <div style={{ "--ink": "#1B2430", "--paper": "#F7F7F4", "--paper2": "#EFEFEA", "--brass": "#B5793A", "--steel": "#5B6672", "--grid": "#E2E1DB", "--red": "#A8442F", "--green": "#3F6E52" }}
       className="w-full min-h-screen flex items-center justify-center"
     >
       <style>{`
         .dmat-root { font-family: 'IBM Plex Sans', sans-serif; background: var(--paper); color: var(--ink); }
         .dmat-display { font-family: 'Space Grotesk', sans-serif; }
         .dmat-mono { font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.03em; }
-        .dmat-card { background: #FBFAF5; border: 1px solid var(--grid); }
-        .dmat-btn-primary { background: var(--ink); color: var(--paper); }
+        .dmat-card { background: #FFFFFF; border: 1px solid var(--grid); border-radius: 10px; box-shadow: 0 1px 2px rgba(27,36,48,0.04); }
+        .dmat-btn-primary { background: var(--ink); color: #fff; border-radius: 8px; }
         .dmat-btn-primary:hover { background: #2A3546; }
-        .dmat-btn-primary:disabled { background: var(--grid); color: #8A8574; cursor: not-allowed; }
-        .dmat-btn-ghost { border: 1px solid var(--ink); color: var(--ink); background: transparent; }
-        .dmat-btn-ghost:hover { background: var(--ink); color: var(--paper); }
-        .dmat-tick { border: 1px solid var(--grid); background: #FBFAF5; transition: all .15s ease; }
+        .dmat-btn-primary:disabled { background: var(--grid); color: #9A9A92; cursor: not-allowed; }
+        .dmat-btn-ghost { border: 1px solid var(--grid); color: var(--ink); background: #fff; border-radius: 8px; }
+        .dmat-btn-ghost:hover { background: var(--paper2); border-color: var(--steel); }
+        .dmat-tick { border: 1px solid var(--grid); background: #fff; border-radius: 6px; transition: all .15s ease; }
         .dmat-tick:hover { border-color: var(--brass); }
         .dmat-tick.active { background: var(--brass); border-color: var(--brass); color: white; }
-        .dmat-tab { border: 1px solid var(--grid); font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
-        .dmat-tab.done { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+        .dmat-tab { border: 1px solid var(--grid); font-family: 'IBM Plex Mono', monospace; font-size: 11px; border-radius: 6px; background: #fff; }
+        .dmat-tab.done { background: var(--ink); color: #fff; border-color: var(--ink); }
         .dmat-tab.current { border-color: var(--brass); border-width: 2px; }
-        .grid-bg {
-          background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-          background-size: 28px 28px;
-          background-position: center;
-        }
       `}</style>
 
-      <div className="dmat-root w-full min-h-screen grid-bg" style={{ backgroundColor: "var(--paper)" }}>
+      <div className="dmat-root w-full min-h-screen" style={{ backgroundColor: "var(--paper)" }}>
         <div className="max-w-3xl mx-auto px-6 py-12">
 
           {/* HEADER */}
@@ -494,15 +356,6 @@ export default function App() {
               <div className="dmat-mono text-xs text-right" style={{ color: "var(--steel)" }}>
                 {screen === "quiz" ? `EKSEN ${axisIndex + 1} / ${AXES.length}` : "SONUÇ RAPORU"}
               </div>
-            )}
-            {screen === "intro" && (
-              <button
-                onClick={() => setShowMethodology(true)}
-                className="dmat-mono text-xs underline"
-                style={{ color: "var(--steel)" }}
-              >
-                Metodoloji
-              </button>
             )}
           </div>
 
@@ -522,7 +375,7 @@ export default function App() {
                 yönlendirir.
               </p>
 
-              <div className="dmat-card p-5 mb-7" style={{ maxWidth: 520 }}>
+              <div className="dmat-card p-5 mb-5" style={{ maxWidth: 520 }}>
                 <div className="dmat-mono text-xs mb-3" style={{ color: "var(--steel)" }}>DEĞERLENDİRME EKSENLERİ</div>
                 <div className="grid grid-cols-2 gap-2">
                   {AXES.map((a) => (
@@ -532,6 +385,23 @@ export default function App() {
                     </div>
                   ))}
                 </div>
+              </div>
+
+              <div className="dmat-card p-5 mb-7" style={{ maxWidth: 520, borderColor: "var(--brass)" }}>
+                <div className="dmat-mono text-xs mb-2" style={{ color: "var(--brass)" }}>METODOLOJİ</div>
+                <div className="text-sm font-semibold mb-2">Bu değerlendirme neye dayanıyor?</div>
+                <p className="text-sm leading-relaxed mb-3" style={{ color: "#3A4250" }}>
+                  acatech Industrie 4.0 Maturity Index (Almanya Ulusal Bilim ve Mühendislik
+                  Akademisi), MIT & Capgemini Digital Maturity Model (Westerman, Bonnet &
+                  McAfee) ve Avrupa Komisyonu EDIH Open DMAT çerçevelerinden esinlenerek Çorlu
+                  TSO Proje Birimi tarafından özgün olarak geliştirilmiştir.
+                </p>
+                <button
+                  onClick={() => setShowMethodology(true)}
+                  className="dmat-btn-ghost px-4 py-2 text-xs font-medium"
+                >
+                  Detaylı Metodolojiyi ve Kaynakçayı Gör
+                </button>
               </div>
 
               <label className="block mb-2 text-sm font-medium">Firma adı (opsiyonel)</label>
@@ -728,28 +598,43 @@ export default function App() {
                 <div className="text-center">
                   <Gauge value={overall} />
                   <div className="dmat-display text-xl font-bold mt-1" style={{ color: "var(--brass)" }}>{level.name}</div>
-                  <div className="dmat-mono text-[10px]" style={{ color: "var(--steel)" }}>GENEL OLGUNLUK PUANI · 5 ÜZERİNDEN</div>
+                  <div className="dmat-mono text-[10px] mb-3" style={{ color: "var(--steel)" }}>GENEL OLGUNLUK PUANI · 5 ÜZERİNDEN</div>
+                  <div className="text-xs text-left px-3 py-2.5" style={{ background: "var(--paper2)", borderRadius: 6, color: "var(--ink)" }}>
+                    <strong>Öncelik:</strong> {level.recommendation}
+                  </div>
                 </div>
                 <RadarChart scores={scores} />
               </div>
 
               {/* axis breakdown */}
-              <div className="dmat-mono text-xs mb-3" style={{ color: "var(--steel)" }}>EKSEN BAZLI SONUÇLAR</div>
-              <div className="space-y-2.5 mb-9">
+              <div className="dmat-mono text-xs mb-1" style={{ color: "var(--steel)" }}>EKSEN BAZLI SONUÇLAR VE YÖNLENDİRMELER</div>
+              <p className="text-xs mb-4" style={{ color: "var(--steel)" }}>
+                Her eksendeki puan, CMMI'ın 5 seviyeli olgunluk merdivenine (Başlangıç →
+                Tekrarlanabilir → Tanımlı → Ölçülüyor → Optimize Ediliyor) göre yorumlanır.
+              </p>
+              <div className="space-y-3 mb-9">
                 {AXES.map((a) => {
                   const s = scores[a.id];
                   const st = statusFor(s);
+                  const guide = axisLevelGuide(a, s);
                   const barColor = st.tone === "low" ? "var(--red)" : st.tone === "mid" ? "var(--brass)" : "var(--green)";
                   return (
-                    <div key={a.id} className="dmat-card px-4 py-3">
+                    <div key={a.id} className="dmat-card px-4 py-4">
                       <div className="flex items-center justify-between mb-1.5">
                         <span className="text-sm font-medium">{a.no} {a.title}</span>
-                        <span className="dmat-mono text-xs font-semibold">{s.toFixed(2)}</span>
+                        <span className="dmat-mono text-xs font-semibold" style={{ color: barColor }}>{s.toFixed(2)} / 5.00</span>
                       </div>
-                      <div style={{ height: 6, background: "var(--grid)" }}>
+                      <div style={{ height: 6, background: "var(--grid)", borderRadius: 3, overflow: "hidden" }} className="mb-2">
                         <div style={{ width: `${(s / 5) * 100}%`, height: "100%", background: barColor }} />
                       </div>
-                      <div className="dmat-mono text-[10px] mt-1.5" style={{ color: barColor }}>{st.label.toUpperCase()}</div>
+                      <div className="dmat-mono text-[10px] mb-2.5" style={{ color: barColor }}>
+                        SEVİYE {guide.level} — {guide.name.toUpperCase()}
+                      </div>
+                      <p className="text-sm mb-2" style={{ color: "#3A4250" }}>{guide.description}</p>
+                      <div className="flex items-start gap-1.5 text-sm" style={{ color: "var(--ink)" }}>
+                        <span className="font-medium flex-shrink-0">Önerilen adım:</span>
+                        <span>{guide.action}</span>
+                      </div>
                     </div>
                   );
                 })}
@@ -818,12 +703,20 @@ export default function App() {
                 </button>
               </div>
 
-              <button
-                onClick={restart}
-                className="dmat-btn-ghost px-5 py-2.5 text-sm font-medium inline-flex items-center gap-2"
-              >
-                <RotateCcw size={15} /> Yeniden Başlat
-              </button>
+              <div className="flex gap-3 flex-wrap">
+                <button
+                  onClick={() => generatePdfReport({ firmName, scores, overall, answers })}
+                  className="dmat-btn-primary px-5 py-2.5 text-sm font-medium inline-flex items-center gap-2"
+                >
+                  <Download size={15} /> Raporu PDF Olarak İndir
+                </button>
+                <button
+                  onClick={restart}
+                  className="dmat-btn-ghost px-5 py-2.5 text-sm font-medium inline-flex items-center gap-2"
+                >
+                  <RotateCcw size={15} /> Yeniden Başlat
+                </button>
+              </div>
             </div>
           )}
 
