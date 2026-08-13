@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { ArrowRight, ArrowLeft, RotateCcw, ExternalLink, CircleCheck, X, Download } from "lucide-react";
+import { ArrowRight, ArrowLeft, RotateCcw, ExternalLink, CircleCheck, X, Download, GraduationCap } from "lucide-react";
 import { saveAssessment, saveTrainingSignup } from "./lib/supabaseClient";
 import { AXES, SCALE_LABELS, LEVELS, levelFor, statusFor, axisLevelGuide } from "./lib/data";
 import { generatePdfReport } from "./lib/pdfReport";
@@ -342,31 +342,33 @@ export default function App() {
       className="w-full min-h-screen flex items-center justify-center"
     >
       <style>{`
-        .dmat-root { font-family: 'IBM Plex Sans', sans-serif; background: var(--paper); color: var(--ink); }
-        .dmat-display { font-family: 'Space Grotesk', sans-serif; }
-        .dmat-mono { font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.03em; }
-        .dmat-card { background: #FFFFFF; border: 1px solid var(--grid); border-radius: 10px; box-shadow: 0 1px 2px rgba(27,36,48,0.04); }
-        .dmat-btn-primary { background: var(--ink); color: #fff; border-radius: 8px; }
+        .dmat-root { font-family: 'Inter', -apple-system, sans-serif; background: var(--paper); color: var(--ink); font-size: 16px; line-height: 1.55; }
+        .dmat-display { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.01em; }
+        .dmat-mono { font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.04em; }
+        .dmat-card { background: #FFFFFF; border: 1px solid var(--grid); border-radius: 12px; box-shadow: 0 1px 3px rgba(27,36,48,0.05); }
+        .dmat-btn-primary { background: var(--ink); color: #fff; border-radius: 8px; font-weight: 600; }
         .dmat-btn-primary:hover { background: #2A3546; }
         .dmat-btn-primary:disabled { background: var(--grid); color: #9A9A92; cursor: not-allowed; }
-        .dmat-btn-ghost { border: 1px solid var(--grid); color: var(--ink); background: #fff; border-radius: 8px; }
+        .dmat-btn-brass { background: var(--brass); color: #fff; border-radius: 8px; font-weight: 600; }
+        .dmat-btn-brass:hover { background: #9E6530; }
+        .dmat-btn-ghost { border: 1px solid var(--grid); color: var(--ink); background: #fff; border-radius: 8px; font-weight: 500; }
         .dmat-btn-ghost:hover { background: var(--paper2); border-color: var(--steel); }
-        .dmat-tick { border: 1px solid var(--grid); background: #fff; border-radius: 6px; transition: all .15s ease; }
+        .dmat-tick { border: 1px solid var(--grid); background: #fff; border-radius: 7px; transition: all .15s ease; font-weight: 600; }
         .dmat-tick:hover { border-color: var(--brass); }
         .dmat-tick.active { background: var(--brass); border-color: var(--brass); color: white; }
-        .dmat-tab { border: 1px solid var(--grid); font-family: 'IBM Plex Mono', monospace; font-size: 11px; border-radius: 6px; background: #fff; }
+        .dmat-tab { border: 1px solid var(--grid); font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; border-radius: 6px; background: #fff; }
         .dmat-tab.done { background: var(--ink); color: #fff; border-color: var(--ink); }
         .dmat-tab.current { border-color: var(--brass); border-width: 2px; }
       `}</style>
 
       <div className="dmat-root w-full min-h-screen" style={{ backgroundColor: "var(--paper)" }}>
-        <div className="max-w-3xl mx-auto px-6 py-12">
+        <div className="max-w-3xl mx-auto px-6 py-14">
 
           {/* HEADER */}
-          <div className="flex items-center justify-between mb-10 pb-4" style={{ borderBottom: "1px solid var(--grid)" }}>
+          <div className="flex items-center justify-between mb-12 pb-5" style={{ borderBottom: "1px solid var(--grid)" }}>
             <div>
               <div className="dmat-mono text-xs" style={{ color: "var(--steel)" }}>ÇORLU TSO — PROJE BİRİMİ</div>
-              <div className="dmat-display text-lg font-semibold">Dijital Olgunluk Ölçüm Aracı</div>
+              <div className="dmat-display text-xl font-bold">Dijital Olgunluk Ölçüm Aracı</div>
             </div>
             {screen !== "intro" && (
               <div className="dmat-mono text-xs text-right" style={{ color: "var(--steel)" }}>
@@ -381,19 +383,55 @@ export default function App() {
           {screen === "intro" && (
             <div>
               <div className="dmat-mono text-xs mb-3" style={{ color: "var(--brass)" }}>ÖN DEĞERLENDİRME · ~12-15 DAKİKA</div>
-              <h1 className="dmat-display text-4xl font-bold leading-tight mb-5">
+              <h1 className="dmat-display text-5xl font-bold leading-[1.08] mb-5" style={{ letterSpacing: "-0.02em" }}>
                 Firmanızın dijital<br/>olgunluk seviyesini ölçün.
               </h1>
-              <p className="text-base leading-relaxed mb-6" style={{ color: "#3A4250", maxWidth: 520 }}>
+              <p className="text-lg leading-relaxed mb-7" style={{ color: "#3A4250", maxWidth: 560 }}>
                 6 eksende, 30 soruluk kısa bir değerlendirme ile firmanızın dijital dönüşümde
                 bulunduğu noktayı görün. Sonuçlar; hangi alanda güçlü, hangi alanda öncelikli
                 gelişim ihtiyacı olduğunuzu gösterir ve size uygun destek programlarına
                 yönlendirir.
               </p>
 
-              <div className="dmat-card p-5 mb-5" style={{ maxWidth: 520 }}>
+              {/* METODOLOJİ — en üstte, en görünür */}
+              <button
+                onClick={() => setShowMethodology(true)}
+                className="block w-full text-left mb-7 group"
+                style={{ maxWidth: 560 }}
+              >
+                <div
+                  className="p-6 flex items-start gap-4"
+                  style={{
+                    background: "linear-gradient(135deg, rgba(181,121,58,0.08), rgba(181,121,58,0.03))",
+                    border: "1.5px solid var(--brass)",
+                    borderRadius: 12,
+                  }}
+                >
+                  <div
+                    className="flex items-center justify-center flex-shrink-0"
+                    style={{ width: 44, height: 44, background: "var(--brass)", borderRadius: 10 }}
+                  >
+                    <GraduationCap size={22} color="#fff" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="dmat-mono text-xs font-semibold mb-1.5" style={{ color: "var(--brass)" }}>
+                      BİLİMSEL METODOLOJİ VE KAYNAKÇA
+                    </div>
+                    <div className="text-base font-semibold mb-1.5" style={{ color: "var(--ink)" }}>
+                      Bu değerlendirme neye dayanıyor?
+                    </div>
+                    <p className="text-sm leading-relaxed" style={{ color: "#3A4250" }}>
+                      acatech Industrie 4.0 Maturity Index, MIT & Capgemini Digital Maturity
+                      Model ve Avrupa Komisyonu EDIH Open DMAT çerçevelerinden esinlenerek
+                      geliştirildi. Tam kaynakça ve yöntem için tıklayın →
+                    </p>
+                  </div>
+                </div>
+              </button>
+
+              <div className="dmat-card p-5 mb-8" style={{ maxWidth: 560 }}>
                 <div className="dmat-mono text-xs mb-3" style={{ color: "var(--steel)" }}>DEĞERLENDİRME EKSENLERİ</div>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-2.5">
                   {AXES.map((a) => (
                     <div key={a.id} className="flex items-center gap-2 text-sm">
                       <span className="dmat-mono" style={{ color: "var(--brass)" }}>{a.no}</span>
@@ -403,41 +441,24 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="dmat-card p-5 mb-7" style={{ maxWidth: 520, borderColor: "var(--brass)" }}>
-                <div className="dmat-mono text-xs mb-2" style={{ color: "var(--brass)" }}>METODOLOJİ</div>
-                <div className="text-sm font-semibold mb-2">Bu değerlendirme neye dayanıyor?</div>
-                <p className="text-sm leading-relaxed mb-3" style={{ color: "#3A4250" }}>
-                  acatech Industrie 4.0 Maturity Index (Almanya Ulusal Bilim ve Mühendislik
-                  Akademisi), MIT & Capgemini Digital Maturity Model (Westerman, Bonnet &
-                  McAfee) ve Avrupa Komisyonu EDIH Open DMAT çerçevelerinden esinlenerek Çorlu
-                  TSO Proje Birimi tarafından özgün olarak geliştirilmiştir.
-                </p>
-                <button
-                  onClick={() => setShowMethodology(true)}
-                  className="dmat-btn-ghost px-4 py-2 text-xs font-medium"
-                >
-                  Detaylı Metodolojiyi ve Kaynakçayı Gör
-                </button>
-              </div>
-
               <label className="block mb-2 text-sm font-medium">Firma adı (opsiyonel)</label>
               <input
                 value={firmName}
                 onChange={(e) => setFirmName(e.target.value)}
                 placeholder="Örn. ABC Makine Sanayi"
-                className="w-full px-4 py-3 mb-6 text-sm outline-none"
-                style={{ maxWidth: 420, background: "#FBFAF5", border: "1px solid var(--grid)" }}
+                className="w-full px-4 py-3.5 mb-6 text-base outline-none"
+                style={{ maxWidth: 460, background: "#fff", border: "1px solid var(--grid)", borderRadius: 8 }}
               />
 
-              <label className="flex items-start gap-2.5 mb-6 cursor-pointer" style={{ maxWidth: 480 }}>
+              <label className="flex items-start gap-2.5 mb-6 cursor-pointer" style={{ maxWidth: 520 }}>
                 <input
                   type="checkbox"
                   checked={consent}
                   onChange={(e) => setConsent(e.target.checked)}
                   className="mt-0.5"
-                  style={{ width: 16, height: 16, accentColor: "var(--brass)", flexShrink: 0 }}
+                  style={{ width: 17, height: 17, accentColor: "var(--brass)", flexShrink: 0 }}
                 />
-                <span className="text-sm leading-relaxed">
+                <span className="text-base leading-relaxed">
                   <button
                     type="button"
                     onClick={(e) => {
@@ -457,9 +478,9 @@ export default function App() {
                 <button
                   onClick={() => consent && setScreen("quiz")}
                   disabled={!consent}
-                  className="dmat-btn-primary px-6 py-3 text-sm font-medium inline-flex items-center gap-2"
+                  className="dmat-btn-primary px-7 py-3.5 text-base inline-flex items-center gap-2"
                 >
-                  Değerlendirmeye Başla <ArrowRight size={16} />
+                  Değerlendirmeye Başla <ArrowRight size={18} />
                 </button>
               </div>
 
@@ -544,28 +565,28 @@ export default function App() {
               </div>
 
               <div className="dmat-mono text-xs mb-2" style={{ color: "var(--brass)" }}>EKSEN {currentAxis.no}</div>
-              <h2 className="dmat-display text-2xl font-semibold mb-2">{currentAxis.title}</h2>
-              <p className="text-sm mb-8" style={{ color: "#3A4250" }}>{currentAxis.intro}</p>
+              <h2 className="dmat-display text-3xl font-bold mb-2.5">{currentAxis.title}</h2>
+              <p className="text-base mb-9" style={{ color: "#3A4250" }}>{currentAxis.intro}</p>
 
-              <div className="space-y-7 mb-9">
+              <div className="space-y-8 mb-9">
                 {currentAxis.questions.map((q, qi) => {
                   const val = answers[`${currentAxis.id}-${qi}`];
                   return (
                     <div key={qi}>
-                      <p className="text-sm mb-3 leading-relaxed">{q}</p>
+                      <p className="text-base mb-3.5 leading-relaxed font-medium">{q}</p>
                       <div className="flex gap-2">
                         {[1, 2, 3, 4, 5].map((v) => (
                           <button
                             key={v}
                             onClick={() => setAnswer(qi, v)}
-                            className={`dmat-tick flex-1 py-2.5 text-xs font-medium ${val === v ? "active" : ""}`}
+                            className={`dmat-tick flex-1 py-3 text-sm ${val === v ? "active" : ""}`}
                             title={SCALE_LABELS[v - 1]}
                           >
                             {v}
                           </button>
                         ))}
                       </div>
-                      <div className="flex justify-between dmat-mono text-[10px] mt-1.5" style={{ color: "var(--steel)" }}>
+                      <div className="flex justify-between dmat-mono text-[10.5px] mt-2" style={{ color: "var(--steel)" }}>
                         <span>{SCALE_LABELS[0]}</span>
                         <span>{SCALE_LABELS[4]}</span>
                       </div>
@@ -597,7 +618,7 @@ export default function App() {
           {screen === "results" && (
             <div>
               {firmName && <div className="dmat-mono text-xs mb-1" style={{ color: "var(--steel)" }}>{firmName.toUpperCase()}</div>}
-              <h2 className="dmat-display text-2xl font-semibold mb-1">Dijital Olgunluk Sonucu</h2>
+              <h2 className="dmat-display text-3xl font-bold mb-1.5">Dijital Olgunluk Sonucu</h2>
               <p className="text-sm mb-2" style={{ color: "#3A4250" }}>{level.desc}</p>
               {saveState === "saving" && (
                 <p className="dmat-mono text-[10px] mb-6" style={{ color: "var(--steel)" }}>SONUÇ KAYDEDİLİYOR…</p>
@@ -764,10 +785,17 @@ export default function App() {
               </div>
 
               {/* METODOLOJİ ÖZETİ */}
-              <div className="dmat-card p-6 mb-8">
-                <div className="dmat-mono text-xs mb-2" style={{ color: "var(--brass)" }}>METODOLOJİ</div>
-                <div className="text-sm font-semibold mb-2">Bu değerlendirme neye dayanıyor?</div>
-                <p className="text-sm leading-relaxed mb-3" style={{ color: "#3A4250" }}>
+              <div
+                className="p-6 mb-8"
+                style={{
+                  background: "linear-gradient(135deg, rgba(181,121,58,0.08), rgba(181,121,58,0.03))",
+                  border: "1.5px solid var(--brass)",
+                  borderRadius: 12,
+                }}
+              >
+                <div className="dmat-mono text-xs font-semibold mb-2" style={{ color: "var(--brass)" }}>BİLİMSEL METODOLOJİ VE KAYNAKÇA</div>
+                <div className="text-base font-semibold mb-2">Bu değerlendirme neye dayanıyor?</div>
+                <p className="text-sm leading-relaxed mb-4" style={{ color: "#3A4250" }}>
                   Bu araç; acatech Industrie 4.0 Maturity Index (Almanya Ulusal Bilim ve
                   Mühendislik Akademisi), MIT & Capgemini Digital Maturity Model (Westerman,
                   Bonnet & McAfee) ve Avrupa Komisyonu EDIH Open DMAT çerçevelerinden
@@ -777,7 +805,7 @@ export default function App() {
                 </p>
                 <button
                   onClick={() => setShowMethodology(true)}
-                  className="dmat-btn-ghost px-4 py-2 text-xs font-medium"
+                  className="dmat-btn-brass px-5 py-2.5 text-sm"
                 >
                   Detaylı Metodolojiyi ve Kaynakçayı Gör
                 </button>
