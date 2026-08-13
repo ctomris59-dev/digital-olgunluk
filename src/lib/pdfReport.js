@@ -2,8 +2,40 @@ import jsPDF from "jspdf";
 import { AXES, LEVELS, levelFor, statusFor, axisLevelGuide } from "./data";
 
 /* ---------------------------------------------------------------
-   Yardımcılar
+   Türkçe karakter desteği için font gömme
+   (jsPDF'in dahili Helvetica/Courier fontları ğ, ş, ı, İ gibi
+   Türkçe'ye özgü karakterleri desteklemez — bu yüzden Türkçe
+   karakter setini tam destekleyen DejaVu Sans fontu, sadece
+   gerekli karakterlerle küçültülmüş halde gömülür.)
 --------------------------------------------------------------- */
+
+let fontsLoadedPromise = null;
+
+async function arrayBufferToBase64(buffer) {
+  const bytes = new Uint8Array(buffer);
+  let binary = "";
+  const chunkSize = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+  }
+  return btoa(binary);
+}
+
+async function ensureFontsLoaded(doc) {
+  if (!fontsLoadedPromise) {
+    fontsLoadedPromise = Promise.all([
+      fetch("/fonts/DejaVuSans-subset.ttf").then((r) => r.arrayBuffer()),
+      fetch("/fonts/DejaVuSans-Bold-subset.ttf").then((r) => r.arrayBuffer()),
+    ]).then(([regularBuf, boldBuf]) =>
+      Promise.all([arrayBufferToBase64(regularBuf), arrayBufferToBase64(boldBuf)])
+    );
+  }
+  const [regularB64, boldB64] = await fontsLoadedPromise;
+  doc.addFileToVFS("DejaVuSans.ttf", regularB64);
+  doc.addFont("DejaVuSans.ttf", "DejaVuSans", "normal");
+  doc.addFileToVFS("DejaVuSans-Bold.ttf", boldB64);
+  doc.addFont("DejaVuSans-Bold.ttf", "DejaVuSans", "bold");
+}
 
 const INK = [27, 36, 48];
 const STEEL = [78, 106, 122];
@@ -31,10 +63,10 @@ function footer(doc, pageLabel) {
     doc.setDrawColor(...GRID);
     doc.setLineWidth(0.2);
     doc.line(MARGIN, PAGE_H - 15, PAGE_W - MARGIN, PAGE_H - 15);
-    doc.setFont("courier", "normal");
+    doc.setFont("DejaVuSans", "normal");
     doc.setFontSize(7.5);
     doc.setTextColor(...STEEL);
-    doc.text("ÇORLU TSO — PROJE BİRİMİ · DİJİTAL OLGUNLUK ÖLÇÜM ARACI", MARGIN, PAGE_H - 10);
+    doc.text("ÇORLU TİCARET VE SANAYİ ODASI · DİJİTAL OLGUNLUK ÖLÇÜM ARACI", MARGIN, PAGE_H - 10);
     doc.text(`${i} / ${pageCount}`, PAGE_W - MARGIN, PAGE_H - 10, { align: "right" });
   }
 }
@@ -48,7 +80,7 @@ function ensureSpace(doc, y, needed) {
 }
 
 function heading(doc, text, y, size = 13) {
-  doc.setFont("helvetica", "bold");
+  doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(size);
   doc.setTextColor(...INK);
   doc.text(text, MARGIN, y);
@@ -57,7 +89,7 @@ function heading(doc, text, y, size = 13) {
 
 function paragraph(doc, text, y, opts = {}) {
   const { size = 9.5, color = [58, 66, 80], lineHeight = 4.6, width = CONTENT_W } = opts;
-  doc.setFont("helvetica", "normal");
+  doc.setFont("DejaVuSans", "normal");
   doc.setFontSize(size);
   doc.setTextColor(...color);
   const lines = doc.splitTextToSize(text, width);
@@ -113,7 +145,7 @@ function drawRadar(doc, scores, cx, cy, maxR) {
   });
 
   // eksen etiketleri
-  doc.setFont("courier", "bold");
+  doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(7.5);
   doc.setTextColor(...INK);
   AXES.forEach((a, i) => {
@@ -126,8 +158,10 @@ function drawRadar(doc, scores, cx, cy, maxR) {
    Ana rapor oluşturucu
 --------------------------------------------------------------- */
 
-export function generatePdfReport({ firmName, scores, overall, answers }) {
+export async function generatePdfReport({ firmName, scores, overall, answers }) {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
+  await ensureFontsLoaded(doc);
+  doc.setFont("DejaVuSans", "normal");
   const level = levelFor(overall);
   const weakAxes = AXES.filter((a) => scores[a.id] > 0 && scores[a.id] < 3).sort(
     (a, b) => scores[a.id] - scores[b.id]
@@ -136,17 +170,18 @@ export function generatePdfReport({ firmName, scores, overall, answers }) {
 
   /* ---- SAYFA 1 — Kapak / Genel Sonuç ---- */
   let y = MARGIN;
-  doc.setFont("courier", "normal");
+  doc.setFont("DejaVuSans", "normal");
   doc.setFontSize(8);
   doc.setTextColor(...BRASS);
-  doc.text("ÇORLU TSO — PROJE BİRİMİ", MARGIN, y);
-  y += 8;
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(20);
+  doc.text("ÇORLU TİCARET VE SANAYİ ODASI", MARGIN, y);
+  y += 9;
+  doc.setFont("DejaVuSans", "bold");
+  doc.setFontSize(18);
   doc.setTextColor(...INK);
-  doc.text("Dijital Olgunluk Değerlendirme Raporu", MARGIN, y);
-  y += 8;
-  doc.setFont("helvetica", "normal");
+  const titleLines0 = doc.splitTextToSize("Dijital Olgunluk Değerlendirme Raporu", CONTENT_W);
+  doc.text(titleLines0, MARGIN, y);
+  y += titleLines0.length * 7 + 3;
+  doc.setFont("DejaVuSans", "normal");
   doc.setFontSize(10);
   doc.setTextColor(...STEEL);
   doc.text(`${firmName ? firmName : "Firma adı belirtilmedi"}  ·  ${dateStr}`, MARGIN, y);
@@ -158,22 +193,22 @@ export function generatePdfReport({ firmName, scores, overall, answers }) {
   y += 12;
 
   // Genel puan bloğu
-  doc.setFont("helvetica", "bold");
+  doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(34);
   doc.setTextColor(...BRASS);
   doc.text(overall.toFixed(2), MARGIN, y + 4);
-  doc.setFont("courier", "normal");
+  doc.setFont("DejaVuSans", "normal");
   doc.setFontSize(8.5);
   doc.setTextColor(...STEEL);
   doc.text("/ 5.00 — GENEL OLGUNLUK PUANI", MARGIN + 32, y);
-  doc.setFont("helvetica", "bold");
+  doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(15);
   doc.setTextColor(...INK);
   doc.text(level.name, MARGIN + 32, y + 8);
   y += 18;
   y = paragraph(doc, level.desc, y, { size: 10, color: [58, 66, 80] });
   y += 3;
-  doc.setFont("helvetica", "bold");
+  doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(9.5);
   doc.setTextColor(...BRASS);
   const recLines = doc.splitTextToSize(`Öncelik: ${level.recommendation}`, CONTENT_W);
@@ -186,8 +221,8 @@ export function generatePdfReport({ firmName, scores, overall, answers }) {
     doc,
     "Bu rapor, firmanızın 6 eksende ve 30 soruda verdiği cevaplara dayanarak hazırlanmış bir " +
       "dijital olgunluk ön değerlendirmesidir. Puanlama, acatech Industrie 4.0 Maturity Index'in " +
-      "6 aşamalı yapısına (Bilgisayarlaşma → Bağlanabilirlik → Görünürlük → Şeffaflık → Öngörü " +
-      "Yeteneği → Uyarlanabilirlik) uyarlanmıştır. Ayrıntılı yöntem ve kaynakça bu raporun son " +
+      "6 aşamalı yapısına (Bilgisayarlaşma -> Bağlanabilirlik -> Görünürlük -> Şeffaflık -> Öngörü " +
+      "Yeteneği -> Uyarlanabilirlik) uyarlanmıştır. Ayrıntılı yöntem ve kaynakça bu raporun son " +
       "sayfasında yer almaktadır.",
     y
   );
@@ -197,11 +232,11 @@ export function generatePdfReport({ firmName, scores, overall, answers }) {
   y += 5;
   LEVELS.forEach((l) => {
     const isCurrent = l.name === level.name;
-    doc.setFont("helvetica", isCurrent ? "bold" : "normal");
+    doc.setFont("DejaVuSans", isCurrent ? "bold" : "normal");
     doc.setFontSize(9);
     doc.setTextColor(...(isCurrent ? BRASS : STEEL));
-    doc.text(`${isCurrent ? "▶" : "·"}  ${l.name}`, MARGIN, y);
-    doc.setFont("helvetica", "normal");
+    doc.text(`${isCurrent ? ">" : "-"}  ${l.name}`, MARGIN, y);
+    doc.setFont("DejaVuSans", "normal");
     doc.setFontSize(8.3);
     doc.setTextColor(...(isCurrent ? [58, 66, 80] : GRID));
     doc.text(l.desc, MARGIN + 42, y);
@@ -235,11 +270,11 @@ export function generatePdfReport({ firmName, scores, overall, answers }) {
     const guide = axisLevelGuide(a, s);
     const color = toneColor(st.tone);
 
-    doc.setFont("helvetica", "bold");
+    doc.setFont("DejaVuSans", "bold");
     doc.setFontSize(10);
     doc.setTextColor(...INK);
     doc.text(`${a.no}  ${a.title}`, MARGIN, y);
-    doc.setFont("helvetica", "bold");
+    doc.setFont("DejaVuSans", "bold");
     doc.setFontSize(10);
     doc.setTextColor(...color);
     doc.text(`${s.toFixed(2)} / 5.00`, PAGE_W - MARGIN, y, { align: "right" });
@@ -253,20 +288,20 @@ export function generatePdfReport({ firmName, scores, overall, answers }) {
     doc.rect(MARGIN, y, barW * (s / 5), 2, "F");
     y += 5.5;
 
-    doc.setFont("courier", "bold");
+    doc.setFont("DejaVuSans", "bold");
     doc.setFontSize(7.8);
     doc.setTextColor(...color);
     doc.text(`SEVİYE ${guide.level} — ${guide.name.toUpperCase()}  ·  ${a.framework}`, MARGIN, y);
     y += 5;
 
-    doc.setFont("helvetica", "normal");
+    doc.setFont("DejaVuSans", "normal");
     doc.setFontSize(8.8);
     doc.setTextColor(...[58, 66, 80]);
     const descLines = doc.splitTextToSize(guide.description, CONTENT_W);
     doc.text(descLines, MARGIN, y);
     y += descLines.length * 4.2 + 2;
 
-    doc.setFont("helvetica", "bold");
+    doc.setFont("DejaVuSans", "bold");
     doc.setFontSize(8.8);
     doc.setTextColor(...INK);
     const actionLines = doc.splitTextToSize(`Önerilen adım: ${guide.action}`, CONTENT_W);
@@ -291,18 +326,18 @@ export function generatePdfReport({ firmName, scores, overall, answers }) {
 
     weakAxes.forEach((a) => {
       y = ensureSpace(doc, y, 20);
-      doc.setFont("helvetica", "bold");
+      doc.setFont("DejaVuSans", "bold");
       doc.setFontSize(10.5);
       doc.setTextColor(...INK);
       doc.text(`${a.no}  ${a.title}`, MARGIN, y);
       y += 5;
-      doc.setFont("helvetica", "normal");
+      doc.setFont("DejaVuSans", "normal");
       doc.setFontSize(9);
       doc.setTextColor(...BRASS);
-      doc.text(`→  ${a.resource.name}`, MARGIN, y);
+      doc.text(`>  ${a.resource.name}`, MARGIN, y);
       y += 4.5;
       if (a.resource.url) {
-        doc.setFont("courier", "normal");
+        doc.setFont("DejaVuSans", "normal");
         doc.setFontSize(8);
         doc.setTextColor(...STEEL);
         doc.textWithLink(a.resource.url, MARGIN, y, { url: a.resource.url });
@@ -314,7 +349,7 @@ export function generatePdfReport({ firmName, scores, overall, answers }) {
     y = paragraph(
       doc,
       "Değerlendirilen hiçbir eksende 3.00 puanının altında kalınmadı — firmanız genel olarak " +
-        "sağlıklı bir dijital olgunluk seviyesinde. Yine de Çorlu TSO Proje Birimi ile birlikte " +
+        "sağlıklı bir dijital olgunluk seviyesinde. Yine de Çorlu Ticaret ve Sanayi Odası ile birlikte " +
         "sonraki adımları planlamak faydalı olacaktır.",
       y
     );
@@ -343,12 +378,12 @@ export function generatePdfReport({ firmName, scores, overall, answers }) {
     ["KOSGEB Dijital Dönüşüm Danışmanlığı Desteği", "https://www.kosgeb.gov.tr"],
   ].forEach(([name, url]) => {
     y = ensureSpace(doc, y, 8);
-    doc.setFont("helvetica", "normal");
+    doc.setFont("DejaVuSans", "normal");
     doc.setFontSize(9);
     doc.setTextColor(...INK);
     doc.text(`•  ${name}`, MARGIN, y);
     y += 4.3;
-    doc.setFont("courier", "normal");
+    doc.setFont("DejaVuSans", "normal");
     doc.setFontSize(7.6);
     doc.setTextColor(...STEEL);
     doc.textWithLink(url, MARGIN + 4, y, { url });
@@ -370,7 +405,7 @@ export function generatePdfReport({ firmName, scores, overall, answers }) {
   /* ---- SAYFA 4 — Metodoloji ---- */
   doc.addPage();
   y = MARGIN;
-  doc.setFont("courier", "normal");
+  doc.setFont("DejaVuSans", "normal");
   doc.setFontSize(8);
   doc.setTextColor(...BRASS);
   doc.text("METODOLOJİ", MARGIN, y);
@@ -380,7 +415,7 @@ export function generatePdfReport({ firmName, scores, overall, answers }) {
 
   y = paragraph(
     doc,
-    "Bu araç, Çorlu TSO Proje Birimi tarafından özgün olarak geliştirilmiştir. Herhangi bir " +
+    "Bu araç, Çorlu Ticaret ve Sanayi Odası tarafından özgün olarak geliştirilmiştir. Herhangi bir " +
       "ticari veya akademik aracın birebir kopyası değildir — aşağıda listelenen uluslararası " +
       "kabul görmüş dijital olgunluk çerçevelerinin kavramsal yapısından esinlenerek tasarlanmış, " +
       "KOBİ'lere yönelik hafif bir ön-tarama (self-assessment) aracıdır.",
@@ -416,7 +451,7 @@ export function generatePdfReport({ firmName, scores, overall, answers }) {
 
   frameworks.forEach(([title, body]) => {
     y = ensureSpace(doc, y, 20);
-    doc.setFont("helvetica", "bold");
+    doc.setFont("DejaVuSans", "bold");
     doc.setFontSize(9.5);
     doc.setTextColor(...INK);
     const titleLines = doc.splitTextToSize(title, CONTENT_W);
@@ -435,10 +470,10 @@ export function generatePdfReport({ firmName, scores, overall, answers }) {
     "Eksen puanı: o eksendeki soruların aritmetik ortalaması",
     "Genel olgunluk puanı: 6 eksen puanının eşit ağırlıklı ortalaması",
     "Genel puan, acatech'in 6 aşamalı modeline uyarlanmış bir ölçekle yorumlanır",
-    "Eksen bazlı yönlendirme: her eksenin puanı CMMI'ın 5 seviyeli olgunluk merdivenine (Başlangıç→Tekrarlanabilir→Tanımlı→Ölçülüyor→Optimize) göre yorumlanır",
+    "Eksen bazlı yönlendirme: her eksenin puanı CMMI'ın 5 seviyeli olgunluk merdivenine (Başlangıç->Tekrarlanabilir->Tanımlı->Ölçülüyor->Optimize) göre yorumlanır",
   ].forEach((line) => {
     y = ensureSpace(doc, y, 6);
-    doc.setFont("helvetica", "normal");
+    doc.setFont("DejaVuSans", "normal");
     doc.setFontSize(8.8);
     doc.setTextColor(...[58, 66, 80]);
     doc.text(`•  ${line}`, MARGIN, y);
@@ -475,7 +510,7 @@ export function generatePdfReport({ firmName, scores, overall, answers }) {
     "Integration (jenerik 5 seviyeli olgunluk kademelendirmesi).",
   ].forEach((line) => {
     y = ensureSpace(doc, y, 5);
-    doc.setFont("courier", "normal");
+    doc.setFont("DejaVuSans", "normal");
     doc.setFontSize(7.6);
     doc.setTextColor(...STEEL);
     doc.text(line, MARGIN, y);
