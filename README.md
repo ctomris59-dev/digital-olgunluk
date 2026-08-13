@@ -47,17 +47,49 @@ git push -u origin main
 
 Her `git push` sonrası Vercel otomatik olarak yeniden deploy eder.
 
-## Sonraki adımlar (KVKK / veri kaydı)
+## KVKK / Veri Kaydı Kurulumu
 
-Şu anki sürüm **veri kaydetmiyor** — sonuçlar sadece kullanıcının tarayıcısında
-kalıyor, kimseye gönderilmiyor. Firma bazlı sonuçları kaydetmek istersen:
+Uygulamada artık:
+- Giriş ekranında **zorunlu KVKK onay kutusu** var (metnine tıklayınca tam
+  aydınlatma metni açılır); onaylamadan değerlendirmeye başlanamıyor.
+- Sonuç ekranına geçildiğinde cevaplar otomatik olarak Supabase'e kaydedilmeye
+  çalışılır. **Supabase kurulmamışsa uygulama hata vermez** — sadece kayıt
+  yapılmaz, sonuç kullanıcının ekranında görünmeye devam eder.
 
-1. Giriş ekranına aydınlatma metni + açık rıza onay kutusu eklenmeli
-2. Bir backend/veritabanı seçilmeli (Supabase önerilir — Hibe Motoru'nda
-   kullandığın yaklaşıma benzer şekilde)
-3. Ham cevaplara erişim sadece yetkili personelle sınırlı tutulmalı
-4. Toplu/istatistiksel görünüm (ör. "Çorlu sanayisi ortalama olgunluk puanı")
-   ayrı ve anonimleştirilmiş tutulmalı
+Gerçek veri kaydını aktif etmek için:
+
+### 1. Supabase projesi oluştur
+
+1. [supabase.com](https://supabase.com) → ücretsiz hesap aç → **New Project**
+2. Proje adı: `corlu-tso-dijital-olgunluk`, bölge: Frankfurt (Avrupa'ya en yakın)
+3. Proje oluşunca sol menüden **SQL Editor** → bu repodaki `supabase-schema.sql`
+   dosyasının içeriğini yapıştır → **Run**. Bu, `assessments` tablosunu ve
+   güvenlik kurallarını (RLS) oluşturur — ziyaretçiler sadece kayıt
+   ekleyebilir, var olan kayıtları okuyamaz.
+4. Sol menüden **Project Settings → API** → `Project URL` ve `anon public`
+   anahtarını kopyala
+
+### 2. Yerel geliştirmede kullan (opsiyonel)
+
+`.env.example` dosyasını `.env.local` olarak kopyala, içine yapıştır:
+```
+VITE_SUPABASE_URL=https://xxxx.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJ...
+```
+
+### 3. Vercel'de aktif et (canlı site için asıl gereken adım)
+
+1. Vercel proje sayfan → **Settings → Environment Variables**
+2. `VITE_SUPABASE_URL` ve `VITE_SUPABASE_ANON_KEY` değerlerini ekle
+   (Production + Preview + Development hepsini işaretle)
+3. **Deployments → en son deploy → Redeploy** (yeni env değişkenlerinin
+   devreye girmesi için yeniden build gerekir)
+
+### 4. Kayıtları görüntüleme
+
+Supabase Dashboard → **Table Editor → assessments**. Sadece senin (proje
+sahibi) hesabınla görülebilir; RLS sayesinde web sitesi ziyaretçileri veya
+başka biri bu verilere erişemez.
 
 ## Proje yapısı
 
