@@ -193,7 +193,51 @@ function MethodologyModal({ onClose }) {
                 metodolojisinin genel bilimsel temelini oluşturur; anket tabanlı
                 öz-değerlendirme yaklaşımımız bu geleneği takip eder.
               </li>
+              <li>
+                <strong>5. ISO/IEC 33001 Standart Ailesi</strong> (Bilgi Teknolojisi — Süreç
+                Değerlendirmesi) — ISO/IEC 15504 (SPICE)'ın halefi olan bu uluslararası
+                standart, süreçlerin "Eksik"ten "Yenilikçi"ye uzanan yetkinlik seviyelerine
+                göre değerlendirilmesi için resmi terminoloji ve metodolojik çerçeve sağlar.
+                Eksen bazlı seviye kademelendirmemizin resmi standardizasyon referansıdır.
+              </li>
+              <li>
+                <strong>6. OECD Going Digital Toolkit</strong> — OECD'nin, ülkelerin dijital
+                dönüşümünü Altyapıya Erişim, Etkin Kullanım, İnovasyon, Nitelikli İşler,
+                Sosyal Kapsayıcılık, Dijital Çağda Güven ve Pazar Açıklığı olmak üzere 7
+                politika boyutunda ölçtüğü gösterge çerçevesi. Müşteri/Pazar, Dijital
+                Yetkinlik ve Siber Güvenlik eksenlerimizdeki gösterge seçim mantığına ek bir
+                makro referans noktası sağlamıştır.
+              </li>
             </ul>
+          </div>
+
+          <div>
+            <div className="text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>Eksen — Çerçeve Eşleştirme Tablosu</div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs" style={{ borderCollapse: "collapse" }}>
+                <thead>
+                  <tr style={{ borderBottom: "1.5px solid var(--grid)" }}>
+                    <th className="text-left py-1.5 pr-2 font-semibold" style={{ color: "var(--ink)" }}>Eksen</th>
+                    <th className="text-left py-1.5 font-semibold" style={{ color: "var(--ink)" }}>Ana Referans Çerçeve(ler)</th>
+                  </tr>
+                </thead>
+                <tbody style={{ color: "var(--steel)" }}>
+                  {[
+                    ["01 Süreç Dijitalleşmesi", "acatech (Bilgi Sistemleri) · ISO/IEC 33001 ailesi"],
+                    ["02 Veri Yönetimi ve Analitik", "acatech (Bilgi Sistemleri) · EDIH (Veri Yönetimi)"],
+                    ["03 Müşteri/Pazar Dijital Varlığı", "MIT & Capgemini · EDIH (Dijital İş Stratejisi) · OECD (Etkin Kullanım)"],
+                    ["04 Otomasyon ve Yapay Zeka", "acatech (Kaynaklar) · EDIH (Otomasyon & YZ)"],
+                    ["05 Dijital Yetkinlik ve İnsan Kaynağı", "acatech (Org. Yapı/Kültür) · MIT & Capgemini · OECD (Nitelikli İşler)"],
+                    ["06 Siber Güvenlik ve Altyapı", "acatech (Kaynaklar) · OECD (Dijital Çağda Güven)"],
+                  ].map(([axis, fw]) => (
+                    <tr key={axis} style={{ borderBottom: "1px solid var(--grid)" }}>
+                      <td className="py-1.5 pr-2">{axis}</td>
+                      <td className="py-1.5">{fw}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           <div>
@@ -216,13 +260,41 @@ function MethodologyModal({ onClose }) {
           </div>
 
           <div>
+            <div className="text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>Bilimsel Yaklaşım ve Doğrulama Notu</div>
+            <p className="mb-2">
+              Bu aracın soru seti, yukarıdaki kurumsal/akademik çerçevelerin kavramsal
+              içeriğine dayanan bir <strong>içerik geçerliliği</strong> (content validity) ve{" "}
+              <strong>yüzey geçerliliği</strong> (face validity) yaklaşımıyla tasarlanmıştır —
+              yani sorular, alanında tanınmış modellerin ölçmeyi amaçladığı yapıları uzman
+              değerlendirmesiyle yansıtacak şekilde oluşturulmuştur.
+            </p>
+            <p>
+              Şeffaflık gereği belirtilmelidir: bu aracın henüz geniş bir örneklemde{" "}
+              <strong>ampirik psikometrik doğrulaması</strong> (ör. iç tutarlılık/Cronbach's
+              alpha analizi, faktör analizi) yapılmamıştır. Çorlu TSO, aracı zamanla kalibre
+              etmek amacıyla anonimleştirilmiş toplu yanıt verilerini periyodik olarak analiz
+              etmeyi ve gerektiğinde soru/ağırlıklandırma güncellemeleri yapmayı
+              planlamaktadır.
+            </p>
+          </div>
+
+          <div>
+            <div className="text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>Sonuçların Yorumlanması İçin Rehber İlkeler</div>
+            <ul className="space-y-1.5 list-none">
+              <li>• Bu araç bir ön-tarama enstrümanıdır; kesin bir yargı değil, bir yönlendirmenin başlangıç noktasıdır.</li>
+              <li>• Eşik değerlere yakın sonuçlar tek başına karar vermek yerine bir görüşmeyle teyit edilmelidir.</li>
+              <li>• Eksen bazlı sonuçlar, tek bir genel puandan daha fazla aksiyon değeri taşır — genel puan "büyük resmi", eksen puanları "nereden başlanacağını" gösterir.</li>
+              <li>• Sonuçlar, cevap veren kişinin firma hakkındaki bilgi düzeyine bağlıdır; farklı bir yetkilinin cevapları farklı sonuç verebilir.</li>
+            </ul>
+          </div>
+
+          <div>
             <div className="text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>Sınırlamalar</div>
             <p>
-              Şeffaflık gereği belirtilmelidir: bu bir <strong>öz-beyan (self-report)</strong>{" "}
-              anketidir, üçüncü taraf doğrulaması içermez. Sertifikalı bir değerlendirme
-              değildir — TÜBİTAK TÜSSİDE D3A/DDX veya EDIH Open DMAT gibi resmi araçların
-              yerine geçmez; onlara <strong>ön hazırlık</strong> niteliğindedir. Sonuçlar,
-              cevap veren kişinin firma hakkındaki bilgi düzeyine bağlıdır.
+              Bu bir <strong>öz-beyan (self-report)</strong> anketidir, üçüncü taraf
+              doğrulaması içermez. Sertifikalı bir değerlendirme değildir — TÜBİTAK TÜSSİDE
+              D3A/DDX veya EDIH Open DMAT gibi resmi araçların yerine geçmez; onlara{" "}
+              <strong>ön hazırlık</strong> niteliğindedir.
             </p>
           </div>
 
@@ -234,6 +306,8 @@ function MethodologyModal({ onClose }) {
               <li>Westerman, G., Bonnet, D., & McAfee, A. (2014). The Nine Elements of Digital Transformation. MIT Sloan Management Review.</li>
               <li>European Commission, European Digital Innovation Hubs Network — Digital Maturity Assessment Tool (Open DMAT) for SMEs.</li>
               <li>CMMI Institute / Software Engineering Institute, Carnegie Mellon University — CMMI Capability Maturity Model Integration (jenerik 5 seviyeli olgunluk kademelendirmesi).</li>
+              <li>ISO/IEC 33001:2015, ISO/IEC 33002:2015, ISO/IEC 33020:2019 — Information technology — Process assessment. International Organization for Standardization.</li>
+              <li>OECD (2019). Going Digital: Shaping Policies, Improving Lives. OECD Publishing, Paris. www.oecd.org/going-digital-toolkit.</li>
             </ul>
           </div>
         </div>
@@ -430,7 +504,7 @@ export default function App() {
                       BİLİMSEL METODOLOJİ VE KAYNAKÇA
                     </div>
                     <p className="text-sm leading-snug" style={{ color: "var(--ink)" }}>
-                      acatech, MIT & Capgemini ve AB EDIH çerçevelerine dayanır — tam kaynakça için tıklayın →
+                      acatech, MIT & Capgemini, AB EDIH, ISO/IEC 33001 ve OECD çerçevelerine dayanır — tam kaynakça için tıklayın →
                     </p>
                   </div>
                 </div>
@@ -821,10 +895,11 @@ export default function App() {
                 <p className="text-sm leading-relaxed mb-4" style={{ color: "#3A4250" }}>
                   Bu araç; acatech Industrie 4.0 Maturity Index (Almanya Ulusal Bilim ve
                   Mühendislik Akademisi), MIT & Capgemini Digital Maturity Model (Westerman,
-                  Bonnet & McAfee) ve Avrupa Komisyonu EDIH Open DMAT çerçevelerinden
-                  esinlenerek Çorlu Ticaret ve Sanayi Odası tarafından özgün olarak geliştirilmiştir.
-                  Sertifikalı bir değerlendirme değildir; resmi araçlara ön hazırlık
-                  niteliğindedir.
+                  Bonnet & McAfee), Avrupa Komisyonu EDIH Open DMAT, ISO/IEC 33001 süreç
+                  değerlendirme standardı ve OECD Going Digital Toolkit çerçevelerinden
+                  esinlenerek Çorlu Ticaret ve Sanayi Odası tarafından özgün olarak
+                  geliştirilmiştir. Sertifikalı bir değerlendirme değildir; resmi araçlara
+                  ön hazırlık niteliğindedir.
                 </p>
                 <button
                   onClick={() => setShowMethodology(true)}
