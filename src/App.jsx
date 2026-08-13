@@ -340,30 +340,33 @@ export default function App() {
   );
 
   return (
-    <div style={{ "--ink": "#1B2430", "--paper": "#F7F7F4", "--paper2": "#EFEFEA", "--brass": "#B5793A", "--steel": "#5B6672", "--grid": "#E2E1DB", "--red": "#A8442F", "--green": "#3F6E52" }}
+    <div style={{ "--ink": "#13234A", "--paper": "#F5F7FA", "--paper2": "#E8EEF6", "--brass": "#2451A0", "--steel": "#4A6280", "--grid": "#D7E0EC", "--red": "#A8442F", "--green": "#3F6E52" }}
       className="w-full min-h-screen flex items-center justify-center"
     >
       <style>{`
         .dmat-root { font-family: 'Inter', -apple-system, sans-serif; background: var(--paper); color: var(--ink); font-size: 16px; line-height: 1.55; }
         .dmat-display { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.01em; }
         .dmat-mono { font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.04em; }
-        .dmat-card { background: #FFFFFF; border: 1px solid var(--grid); border-radius: 12px; box-shadow: 0 1px 3px rgba(27,36,48,0.05); }
-        .dmat-btn-primary { background: var(--ink); color: #fff; border-radius: 8px; font-weight: 600; }
-        .dmat-btn-primary:hover { background: #2A3546; }
-        .dmat-btn-primary:disabled { background: var(--grid); color: #9A9A92; cursor: not-allowed; }
-        .dmat-btn-brass { background: var(--brass); color: #fff; border-radius: 8px; font-weight: 600; }
-        .dmat-btn-brass:hover { background: #9E6530; }
-        .dmat-btn-ghost { border: 1px solid var(--grid); color: var(--ink); background: #fff; border-radius: 8px; font-weight: 500; }
-        .dmat-btn-ghost:hover { background: var(--paper2); border-color: var(--steel); }
+        .dmat-card { background: #FFFFFF; border: 1px solid var(--grid); border-radius: 12px; box-shadow: 0 1px 3px rgba(19,35,74,0.06); transition: box-shadow .2s ease; }
+        .dmat-btn-primary { background: linear-gradient(135deg, var(--ink), #1B3B78); color: #fff; border-radius: 8px; font-weight: 600; transition: all .15s ease; }
+        .dmat-btn-primary:hover { background: linear-gradient(135deg, #1B3B78, var(--brass)); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(36,81,160,0.25); }
+        .dmat-btn-primary:disabled { background: var(--grid); color: #9A9A92; cursor: not-allowed; transform: none; box-shadow: none; }
+        .dmat-btn-brass { background: linear-gradient(135deg, var(--brass), #1B3B78); color: #fff; border-radius: 8px; font-weight: 600; transition: all .15s ease; }
+        .dmat-btn-brass:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(36,81,160,0.3); }
+        .dmat-btn-ghost { border: 1px solid var(--grid); color: var(--ink); background: #fff; border-radius: 8px; font-weight: 500; transition: all .15s ease; }
+        .dmat-btn-ghost:hover { background: var(--paper2); border-color: var(--brass); color: var(--brass); }
         .dmat-tick { border: 1px solid var(--grid); background: #fff; border-radius: 7px; transition: all .15s ease; font-weight: 600; }
-        .dmat-tick:hover { border-color: var(--brass); }
-        .dmat-tick.active { background: var(--brass); border-color: var(--brass); color: white; }
-        .dmat-tab { border: 1px solid var(--grid); font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; border-radius: 6px; background: #fff; }
+        .dmat-tick:hover { border-color: var(--brass); color: var(--brass); }
+        .dmat-tick.active { background: linear-gradient(135deg, var(--brass), #1B3B78); border-color: var(--brass); color: white; }
+        .dmat-tab { border: 1px solid var(--grid); font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; border-radius: 6px; background: #fff; transition: all .15s ease; }
         .dmat-tab.done { background: var(--ink); color: #fff; border-color: var(--ink); }
-        .dmat-tab.current { border-color: var(--brass); border-width: 2px; }
+        .dmat-tab.current { border-color: var(--brass); border-width: 2px; color: var(--brass); }
       `}</style>
 
-      <div className="dmat-root w-full min-h-screen" style={{ backgroundColor: "var(--paper)" }}>
+      <div
+        className="dmat-root w-full min-h-screen"
+        style={{ background: "linear-gradient(180deg, #EEF3FA 0%, var(--paper) 320px)" }}
+      >
         <div className="max-w-3xl mx-auto px-5 sm:px-6 py-6 sm:py-8">
 
           {/* HEADER */}
@@ -411,7 +414,7 @@ export default function App() {
                 <div
                   className="p-4 flex items-center gap-3.5"
                   style={{
-                    background: "linear-gradient(135deg, rgba(181,121,58,0.09), rgba(181,121,58,0.03))",
+                    background: "linear-gradient(135deg, rgba(36,81,160,0.10), rgba(36,81,160,0.03))",
                     border: "1.5px solid var(--brass)",
                     borderRadius: 12,
                   }}
@@ -513,7 +516,7 @@ export default function App() {
                 </div>
                 <div className="text-sm space-y-3 leading-relaxed" style={{ color: "#3A4250" }}>
                   <p>
-                    <strong>Veri Sorumlusu:</strong> Çorlu Ticaret ve Sanayi Odası (Çorlu TSO), Tekirdağ.
+                    <strong>Veri Sorumlusu:</strong> Çorlu Ticaret ve Sanayi Odası (Çorlu TSO), Çorlu / Tekirdağ.
                   </p>
                   <p>
                     <strong>İşlenen Veriler:</strong> Firma adı (opsiyonel) ve bu değerlendirme
@@ -521,23 +524,20 @@ export default function App() {
                   </p>
                   <p>
                     <strong>İşleme Amacı:</strong> Firmanızın dijital olgunluk seviyesini ölçmek,
-                    size özel bir sonuç raporu oluşturmak ve Çorlu Ticaret ve Sanayi Odası'nın size uygun
-                    destek programına (KOSGEB, EDIH, TÜBİTAK TÜSSİDE vb.) yönlendirme yapabilmesini
-                    sağlamaktır.
+                    size özel bir sonuç raporu oluşturmak ve size uygun destek programına (KOSGEB,
+                    EDIH, TÜBİTAK TÜSSİDE vb.) yönlendirme yapabilmesini sağlamaktır.
                   </p>
                   <p>
-                    <strong>Saklama Süresi:</strong> Veriler, yönlendirme ve takip süreci
-                    tamamlanana kadar, en fazla 24 ay saklanır.
+                    <strong>Saklama Süresi:</strong> Verileriniz saklanmamaktadır.
                   </p>
                   <p>
-                    <strong>Paylaşım:</strong> Verileriniz yalnızca Çorlu Ticaret ve Sanayi Odası personeli
-                    tarafından görülebilir; üçüncü kişi/kurumlarla yalnızca sizin açık isteğiniz
-                    üzerine (ör. bir destek programına yönlendirme talebiniz olduğunda) paylaşılır.
+                    <strong>Paylaşım:</strong> Verileriniz yalnızca Çorlu TSO tarafından
+                    görülebilir; üçüncü kişi/kurumlarla paylaşılmaz.
                   </p>
                   <p>
                     <strong>Haklarınız:</strong> KVKK'nın 11. maddesi kapsamında verilerinize erişme,
                     düzeltme, silinmesini talep etme haklarına sahipsiniz. Talepleriniz için Çorlu
-                    TSO Proje Birimi ile iletişime geçebilirsiniz.
+                    TSO Proje Servisi ile iletişime geçebilirsiniz.
                   </p>
                 </div>
                 <button
@@ -811,7 +811,7 @@ export default function App() {
               <div
                 className="p-6 mb-8"
                 style={{
-                  background: "linear-gradient(135deg, rgba(181,121,58,0.08), rgba(181,121,58,0.03))",
+                  background: "linear-gradient(135deg, rgba(36,81,160,0.09), rgba(36,81,160,0.03))",
                   border: "1.5px solid var(--brass)",
                   borderRadius: 12,
                 }}
