@@ -623,17 +623,35 @@ export default function App() {
             <div>
               {firmName && <div className="dmat-mono text-xs mb-1" style={{ color: "var(--steel)" }}>{firmName.toUpperCase()}</div>}
               <h2 className="dmat-display text-3xl font-bold mb-1.5">Dijital Olgunluk Sonucu</h2>
-              <p className="text-sm mb-2" style={{ color: "#3A4250" }}>{level.desc}</p>
-              {saveState === "saving" && (
-                <p className="dmat-mono text-[10px] mb-6" style={{ color: "var(--steel)" }}>SONUÇ KAYDEDİLİYOR…</p>
+              <p className="text-sm mb-5" style={{ color: "#3A4250" }}>{level.desc}</p>
+
+              <div className="flex gap-3 flex-wrap mb-2">
+                <button
+                  onClick={async () => {
+                    setPdfState("generating");
+                    try {
+                      await generatePdfReport({ firmName, scores, overall, answers });
+                      setPdfState("idle");
+                    } catch (e) {
+                      console.error(e);
+                      setPdfState("error");
+                    }
+                  }}
+                  disabled={pdfState === "generating"}
+                  className="dmat-btn-primary px-5 py-2.5 text-sm font-medium inline-flex items-center gap-2"
+                >
+                  <Download size={15} /> {pdfState === "generating" ? "Rapor Hazırlanıyor…" : "Raporu PDF Olarak İndir"}
+                </button>
+              </div>
+              {pdfState === "error" && (
+                <p className="text-xs mb-2" style={{ color: "var(--red)" }}>
+                  PDF oluşturulamadı. Lütfen tekrar deneyin; sorun devam ederse Proje Birimi ile iletişime geçin.
+                </p>
               )}
               {saveState === "saved" && (
-                <p className="dmat-mono text-[10px] mb-6" style={{ color: "var(--green)" }}>✓ SONUÇ ÇORLU TİCARET VE SANAYİ ODASI'NA İLETİLDİ</p>
+                <p className="dmat-mono text-[10px] mb-2" style={{ color: "var(--green)" }}>✓ SONUÇ ÇORLU TİCARET VE SANAYİ ODASI'NA İLETİLDİ</p>
               )}
-              {saveState === "error" && (
-                <p className="dmat-mono text-[10px] mb-6" style={{ color: "var(--steel)" }}>SONUÇ YALNIZCA BU EKRANDA GÖRÜNTÜLENİYOR (kayıt şu an aktif değil)</p>
-              )}
-              {saveState === "idle" && <div className="mb-6" />}
+              <div className="mb-6" />
 
               <div className="dmat-card p-6 mb-8 grid md:grid-cols-2 gap-6 items-center">
                 <div className="text-center">
@@ -816,23 +834,7 @@ export default function App() {
                 </button>
               </div>
 
-              <div className="flex gap-3 flex-wrap">
-                <button
-                  onClick={async () => {
-                    setPdfState("generating");
-                    try {
-                      await generatePdfReport({ firmName, scores, overall, answers });
-                      setPdfState("idle");
-                    } catch (e) {
-                      console.error(e);
-                      setPdfState("error");
-                    }
-                  }}
-                  disabled={pdfState === "generating"}
-                  className="dmat-btn-primary px-5 py-2.5 text-sm font-medium inline-flex items-center gap-2"
-                >
-                  <Download size={15} /> {pdfState === "generating" ? "Rapor Hazırlanıyor…" : "Raporu PDF Olarak İndir"}
-                </button>
+              <div>
                 <button
                   onClick={restart}
                   className="dmat-btn-ghost px-5 py-2.5 text-sm font-medium inline-flex items-center gap-2"
