@@ -328,13 +328,42 @@ export function generatePdfReport({ firmName, scores, overall, answers }) {
   doc.line(MARGIN, y, PAGE_W - MARGIN, y);
   y += 10;
 
-  y = heading(doc, "Sonraki Adım", y, 13);
+  y = heading(doc, "Destek Programları", y, 13);
   y += 4;
   y = paragraph(
     doc,
-    "Sonuçlarınızı Çorlu TSO Proje Birimi ile birlikte değerlendirmek, uygun destek programına " +
-      "(TÜBİTAK TÜSSİDE D3A/DDX, EDIH Open DMAT veya KOSGEB Dijital Dönüşüm Danışmanlığı Desteği) " +
-      "yönlendirilmek için bizimle iletişime geçebilirsiniz.",
+    "Aşağıdaki resmi destek programları, dijital dönüşüm sürecinizde başvurabileceğiniz " +
+      "bağımsız kaynaklardır:",
+    y
+  );
+  y += 5;
+  [
+    ["TÜBİTAK TÜSSİDE D3A / DDX Modeli", "https://ddxmodel.tubitak.gov.tr"],
+    ["EDIH Open DMAT (Avrupa Komisyonu)", "https://european-digital-innovation-hubs.ec.europa.eu"],
+    ["KOSGEB Dijital Dönüşüm Danışmanlığı Desteği", "https://www.kosgeb.gov.tr"],
+  ].forEach(([name, url]) => {
+    y = ensureSpace(doc, y, 8);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(...INK);
+    doc.text(`•  ${name}`, MARGIN, y);
+    y += 4.3;
+    doc.setFont("courier", "normal");
+    doc.setFontSize(7.6);
+    doc.setTextColor(...STEEL);
+    doc.textWithLink(url, MARGIN + 4, y, { url });
+    y += 6;
+  });
+  y += 4;
+
+  y = ensureSpace(doc, y, 30);
+  y = heading(doc, "Ücretsiz Eğitimler", y, 13);
+  y += 4;
+  y = paragraph(
+    doc,
+    "Çorlu TSO'nun Dijital Dönüşüm, Yapay Zeka ve Dijitalleşme konularındaki ücretsiz " +
+      "eğitimlerinden haberdar olmak için değerlendirme web sayfasındaki kayıt formunu " +
+      "doldurabilirsiniz.",
     y
   );
 
