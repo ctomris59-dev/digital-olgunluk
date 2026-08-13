@@ -37,10 +37,10 @@ async function ensureFontsLoaded(doc) {
   doc.addFont("DejaVuSans-Bold.ttf", "DejaVuSans", "bold");
 }
 
-const INK = [27, 36, 48];
-const STEEL = [78, 106, 122];
-const BRASS = [181, 121, 58];
-const GRID = [201, 195, 176];
+const INK = [19, 35, 74];
+const STEEL = [74, 98, 128];
+const BRASS = [36, 81, 160];
+const GRID = [215, 224, 236];
 const GREEN = [63, 110, 82];
 const RED = [168, 68, 47];
 const PAPER = [251, 250, 245];
