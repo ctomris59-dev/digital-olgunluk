@@ -117,15 +117,68 @@ radar grafik + eksen detayları, öneriler + sonraki adım, ve tam metodoloji +
 kaynakça. Ekranda gösterilen sorular/skorlar ile PDF içeriği `src/lib/data.js`
 dosyasından beslenir — ikisi arasında tutarsızlık oluşmaz.
 
+## Eğitim Bildirimi E-postası Kurulumu
+
+"Ücretsiz Eğitimlerden Haberdar Olun" formu dolduran firmaların bilgisi
+otomatik olarak Supabase'e kaydedilir (`training_signups` tablosu). Ayrıca,
+her yeni kayıtta **sana otomatik bir e-posta bildirimi** gönderilmesi için
+[EmailJS](https://www.emailjs.com) (ücretsiz, sunucu gerektirmeyen bir
+e-posta servisi) kullanılır.
+
+### Kurulum
+
+1. [emailjs.com](https://www.emailjs.com) → ücretsiz hesap aç
+2. **Email Services** → **Add New Service** → Gmail (veya kullandığın
+   e-posta sağlayıcısı) hesabını bağla → bir **Service ID** oluşur
+3. **Email Templates** → **Create New Template**. İçeriği örneğin:
+   ```
+   Konu: Yeni Eğitim Kaydı — {{firm_name}}
+
+   Firma: {{firm_name}}
+   E-posta: {{signup_email}}
+   Telefon: {{signup_phone}}
+   Tarih: {{sent_at}}
+   ```
+   Template'in **"To Email"** alanına kendi e-posta adresini yaz (bildirimin
+   nereye düşeceğini burada belirliyorsun) → bir **Template ID** oluşur
+4. **Account → General** → **Public Key**'i kopyala
+
+### Vercel'de aktif et
+
+Vercel → Settings → Environment Variables → şu üç değişkeni ekle:
+```
+VITE_EMAILJS_SERVICE_ID=service_xxxxxxx
+VITE_EMAILJS_TEMPLATE_ID=template_xxxxxxx
+VITE_EMAILJS_PUBLIC_KEY=xxxxxxxxxxxxxxxx
+```
+Ardından **Deployments → Redeploy**. Bu değişkenler yoksa form yine
+Supabase'e kaydeder, sadece e-posta bildirimi gitmez (hata vermez).
+
+Ücretsiz plan ayda 200 e-postaya kadar yeterlidir — bu araç için fazlasıyla
+yeterli.
+
+## Türkçe Karakter Desteği (PDF)
+
+jsPDF'in dahili fontları (Helvetica/Courier) ğ, ş, ı, İ gibi Türkçe'ye özgü
+karakterleri desteklemez. Bunun için `public/fonts/` içine, sadece gerekli
+karakterlerle küçültülmüş (subset) bir DejaVu Sans fontu gömülüdür ve PDF
+motoru bunu çalışma zamanında yükleyip belgeye gömer — böylece PDF'teki tüm
+Türkçe karakterler doğru görüntülenir. Bu dosyaları silme/taşıma; silinirse
+PDF oluşturma çalışmaz.
+
 ## Proje yapısı
 
 ```
 src/
-  App.jsx           → tüm uygulama mantığı (ekranlar, puanlama, radar/gauge grafikleri)
-  main.jsx          → React giriş noktası
-  index.css         → Tailwind
-  lib/data.js       → sorular, eksenler, olgunluk skalası (ekran + PDF ortak kaynağı)
-  lib/pdfReport.js  → çok sayfalı PDF rapor motoru
-  lib/supabaseClient.js → veri kaydı (opsiyonel)
-index.html          → Google Fonts + kök HTML
+  App.jsx                → tüm uygulama mantığı (ekranlar, puanlama, radar/gauge grafikleri)
+  main.jsx                → React giriş noktası
+  index.css               → Tailwind
+  lib/data.js              → sorular, eksenler, olgunluk skalası (ekran + PDF ortak kaynağı)
+  lib/pdfReport.js         → çok sayfalı PDF rapor motoru (Türkçe font gömülü)
+  lib/supabaseClient.js    → değerlendirme + eğitim kaydı veri kaydı (opsiyonel)
+  lib/emailNotify.js       → eğitim kaydı e-posta bildirimi (opsiyonel)
+public/
+  ctso-logo.jpg            → Çorlu TSO logosu
+  fonts/                   → PDF için gömülü Türkçe font (DOKUNMA)
+index.html                 → Google Fonts + kök HTML
 ```
