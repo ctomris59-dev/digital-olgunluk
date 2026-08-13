@@ -27,3 +27,24 @@ create policy "Anonim kullanıcı sadece ekleyebilir"
 -- Not: select/update/delete için hiçbir policy tanımlanmadı,
 -- yani anon rolü bu tabloyu okuyamaz. Sadece Supabase Dashboard'daki
 -- "Table Editor" üzerinden (senin hesabınla) kayıtları görebilirsin.
+
+-- ---------------------------------------------------------------
+-- Eğitim bildirimi kayıt formu (sonuç ekranındaki "Ücretsiz
+-- Eğitimlerden Haberdar Olun" formu için)
+-- ---------------------------------------------------------------
+
+create table if not exists training_signups (
+  id uuid primary key default gen_random_uuid(),
+  firm_name text,
+  email text not null,
+  phone text,
+  created_at timestamptz not null default now()
+);
+
+alter table training_signups enable row level security;
+
+create policy "Anonim kullanıcı sadece ekleyebilir (eğitim kaydı)"
+  on training_signups
+  for insert
+  to anon
+  with check (true);

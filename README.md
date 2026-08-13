@@ -100,9 +100,14 @@ VITE_SUPABASE_ANON_KEY=eyJ...
 
 ### 4. Kayıtları görüntüleme
 
-Supabase Dashboard → **Table Editor → assessments**. Sadece senin (proje
-sahibi) hesabınla görülebilir; RLS sayesinde web sitesi ziyaretçileri veya
-başka biri bu verilere erişemez.
+Supabase Dashboard → **Table Editor**. İki tablo oluşur:
+- **assessments** — tamamlanan değerlendirmelerin cevap/skor kayıtları
+- **training_signups** — "Ücretsiz Eğitimlerden Haberdar Olun" formunu dolduran
+  firmaların e-posta/telefon bilgileri (Dijital Dönüşüm, YZ, Dijitalleşme
+  eğitim duyuruları için)
+
+Her iki tablo da sadece senin (proje sahibi) hesabınla görülebilir; RLS
+sayesinde web sitesi ziyaretçileri veya başka biri bu verilere erişemez.
 
 ## PDF Rapor
 
