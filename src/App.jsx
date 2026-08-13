@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { ArrowRight, ArrowLeft, RotateCcw, ExternalLink, CircleCheck, X, Download } from "lucide-react";
-import { saveAssessment } from "./lib/supabaseClient";
+import { saveAssessment, saveTrainingSignup } from "./lib/supabaseClient";
 import { AXES, SCALE_LABELS, LEVELS, levelFor, statusFor, axisLevelGuide } from "./lib/data";
 import { generatePdfReport } from "./lib/pdfReport";
 
@@ -249,6 +249,16 @@ function MethodologyModal({ onClose }) {
 }
 
 /* ---------------------------------------------------------------
+   DESTEK PROGRAMLARI — sade, yorumsuz liste
+--------------------------------------------------------------- */
+
+const SUPPORT_PROGRAMS = [
+  { name: "TÜBİTAK TÜSSİDE D3A / DDX Modeli", url: "https://ddxmodel.tubitak.gov.tr" },
+  { name: "EDIH Open DMAT (Avrupa Komisyonu)", url: "https://european-digital-innovation-hubs.ec.europa.eu" },
+  { name: "KOSGEB Dijital Dönüşüm Danışmanlığı Desteği", url: "https://www.kosgeb.gov.tr" },
+];
+
+/* ---------------------------------------------------------------
    ANA UYGULAMA
 --------------------------------------------------------------- */
 
@@ -261,6 +271,9 @@ export default function App() {
   const [showConsentText, setShowConsentText] = useState(false);
   const [showMethodology, setShowMethodology] = useState(false);
   const [saveState, setSaveState] = useState("idle"); // idle | saving | saved | error
+  const [trainingEmail, setTrainingEmail] = useState("");
+  const [trainingPhone, setTrainingPhone] = useState("");
+  const [trainingState, setTrainingState] = useState("idle"); // idle | saving | saved | error
 
   const currentAxis = AXES[axisIndex];
   const answeredCount = currentAxis.questions.filter((_, qi) => answers[`${currentAxis.id}-${qi}`]).length;
@@ -314,6 +327,9 @@ export default function App() {
     setFirmName("");
     setConsent(false);
     setSaveState("idle");
+    setTrainingEmail("");
+    setTrainingPhone("");
+    setTrainingState("idle");
     setScreen("intro");
   };
 
@@ -667,19 +683,83 @@ export default function App() {
                 </div>
               )}
 
-              {/* CTA */}
-              <div className="dmat-card p-6 mb-6" style={{ borderColor: "var(--ink)" }}>
-                <div className="flex items-start gap-3">
+              {/* EĞİTİM KAYIT FORMU */}
+              <div className="dmat-card p-6 mb-6">
+                <div className="flex items-start gap-3 mb-4">
                   <CircleCheck size={20} style={{ color: "var(--green)", marginTop: 2, flexShrink: 0 }} />
                   <div>
-                    <div className="text-sm font-semibold mb-1">Sonraki Adım</div>
+                    <div className="text-sm font-semibold mb-1">Ücretsiz Eğitimlerden Haberdar Olun</div>
                     <p className="text-sm leading-relaxed" style={{ color: "#3A4250" }}>
-                      Sonuçlarınızı Çorlu TSO Proje Birimi ile birlikte değerlendirmek, uygun
-                      destek programına (TÜBİTAK TÜSSİDE D3A/DDX, EDIH Open DMAT veya KOSGEB
-                      Dijital Dönüşüm Danışmanlığı Desteği) yönlendirilmek için bizimle
-                      iletişime geçebilirsiniz.
+                      Çorlu TSO'nun Dijital Dönüşüm, Yapay Zeka ve Dijitalleşme konularındaki
+                      ücretsiz eğitimlerinden haberdar olmak isterseniz, iletişim bilgilerinizi
+                      bırakabilirsiniz.
                     </p>
                   </div>
+                </div>
+
+                {trainingState === "saved" ? (
+                  <div className="text-sm px-4 py-3" style={{ background: "var(--paper2)", borderRadius: 8, color: "var(--green)" }}>
+                    ✓ Kaydınız alındı. Eğitim duyuruları e-posta/telefon ile size iletilecek.
+                  </div>
+                ) : (
+                  <div className="grid sm:grid-cols-2 gap-3 mb-3">
+                    <input
+                      value={trainingEmail}
+                      onChange={(e) => setTrainingEmail(e.target.value)}
+                      placeholder="E-posta adresiniz *"
+                      type="email"
+                      className="w-full px-3.5 py-2.5 text-sm outline-none"
+                      style={{ background: "#fff", border: "1px solid var(--grid)", borderRadius: 8 }}
+                    />
+                    <input
+                      value={trainingPhone}
+                      onChange={(e) => setTrainingPhone(e.target.value)}
+                      placeholder="Telefon (opsiyonel)"
+                      type="tel"
+                      className="w-full px-3.5 py-2.5 text-sm outline-none"
+                      style={{ background: "#fff", border: "1px solid var(--grid)", borderRadius: 8 }}
+                    />
+                  </div>
+                )}
+
+                {trainingState !== "saved" && (
+                  <button
+                    onClick={async () => {
+                      if (!trainingEmail) return;
+                      setTrainingState("saving");
+                      const ok = await saveTrainingSignup({ firmName, email: trainingEmail, phone: trainingPhone });
+                      setTrainingState(ok ? "saved" : "error");
+                    }}
+                    disabled={!trainingEmail || trainingState === "saving"}
+                    className="dmat-btn-primary px-5 py-2.5 text-sm font-medium"
+                  >
+                    {trainingState === "saving" ? "Kaydediliyor…" : "Eğitim Bildirimlerine Kaydol"}
+                  </button>
+                )}
+                {trainingState === "error" && (
+                  <p className="text-xs mt-2" style={{ color: "var(--red)" }}>
+                    Kayıt şu an alınamadı — lütfen daha sonra tekrar deneyin.
+                  </p>
+                )}
+              </div>
+
+              {/* DESTEK PROGRAMLARI — sade liste, yorum yok */}
+              <div className="dmat-card p-6 mb-6">
+                <div className="text-sm font-semibold mb-3">Destek Programları</div>
+                <div className="space-y-2">
+                  {SUPPORT_PROGRAMS.map((p) => (
+                    <a
+                      key={p.name}
+                      href={p.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center justify-between px-4 py-3 text-sm"
+                      style={{ background: "var(--paper2)", borderRadius: 8, color: "var(--ink)" }}
+                    >
+                      <span>{p.name}</span>
+                      <ExternalLink size={14} style={{ color: "var(--steel)", flexShrink: 0 }} />
+                    </a>
+                  ))}
                 </div>
               </div>
 
