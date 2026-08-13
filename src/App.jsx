@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { ArrowRight, ArrowLeft, RotateCcw, ExternalLink, CircleCheck, X, Download, GraduationCap } from "lucide-react";
 import { saveAssessment, saveTrainingSignup } from "./lib/supabaseClient";
+import { notifyTrainingSignup } from "./lib/emailNotify";
 import { AXES, SCALE_LABELS, LEVELS, levelFor, statusFor, axisLevelGuide } from "./lib/data";
 import { generatePdfReport } from "./lib/pdfReport";
 
@@ -154,7 +155,7 @@ function MethodologyModal({ onClose }) {
 
         <div className="text-sm space-y-4 leading-relaxed" style={{ color: "#3A4250" }}>
           <p>
-            Bu araç, Çorlu TSO Proje Birimi tarafından özgün olarak geliştirilmiştir.
+            Bu araç, Çorlu Ticaret ve Sanayi Odası tarafından özgün olarak geliştirilmiştir.
             Herhangi bir ticari veya akademik aracın birebir kopyası değildir — aşağıda
             listelenen uluslararası kabul görmüş dijital olgunluk çerçevelerinin
             kavramsal yapısından esinlenerek tasarlanmış, KOBİ'lere yönelik hafif bir
@@ -274,6 +275,7 @@ export default function App() {
   const [trainingEmail, setTrainingEmail] = useState("");
   const [trainingPhone, setTrainingPhone] = useState("");
   const [trainingState, setTrainingState] = useState("idle"); // idle | saving | saved | error
+  const [pdfState, setPdfState] = useState("idle"); // idle | generating | error
 
   const currentAxis = AXES[axisIndex];
   const answeredCount = currentAxis.questions.filter((_, qi) => answers[`${currentAxis.id}-${qi}`]).length;
@@ -362,16 +364,23 @@ export default function App() {
       `}</style>
 
       <div className="dmat-root w-full min-h-screen" style={{ backgroundColor: "var(--paper)" }}>
-        <div className="max-w-3xl mx-auto px-6 py-14">
+        <div className="max-w-3xl mx-auto px-5 sm:px-6 py-6 sm:py-8">
 
           {/* HEADER */}
-          <div className="flex items-center justify-between mb-12 pb-5" style={{ borderBottom: "1px solid var(--grid)" }}>
-            <div>
-              <div className="dmat-mono text-xs" style={{ color: "var(--steel)" }}>ÇORLU TSO — PROJE BİRİMİ</div>
-              <div className="dmat-display text-xl font-bold">Dijital Olgunluk Ölçüm Aracı</div>
+          <div className="flex items-center justify-between gap-3 mb-6 sm:mb-8 pb-4" style={{ borderBottom: "1px solid var(--grid)" }}>
+            <div className="flex items-center gap-3">
+              <img
+                src="/ctso-logo.jpg"
+                alt="Çorlu Ticaret ve Sanayi Odası"
+                style={{ width: 40, height: 40, borderRadius: "50%", flexShrink: 0, objectFit: "cover" }}
+              />
+              <div>
+                <div className="dmat-mono text-[11px]" style={{ color: "var(--steel)" }}>ÇORLU TİCARET VE SANAYİ ODASI</div>
+                <div className="dmat-display text-lg sm:text-xl font-bold leading-tight">Dijital Olgunluk Ölçüm Aracı</div>
+              </div>
             </div>
             {screen !== "intro" && (
-              <div className="dmat-mono text-xs text-right" style={{ color: "var(--steel)" }}>
+              <div className="dmat-mono text-xs text-right flex-shrink-0" style={{ color: "var(--steel)" }}>
                 {screen === "quiz" ? `EKSEN ${axisIndex + 1} / ${AXES.length}` : "SONUÇ RAPORU"}
               </div>
             )}
@@ -382,11 +391,11 @@ export default function App() {
           {/* INTRO */}
           {screen === "intro" && (
             <div>
-              <div className="dmat-mono text-xs mb-3" style={{ color: "var(--brass)" }}>ÖN DEĞERLENDİRME · ~12-15 DAKİKA</div>
-              <h1 className="dmat-display text-5xl font-bold leading-[1.08] mb-5" style={{ letterSpacing: "-0.02em" }}>
-                Firmanızın dijital<br/>olgunluk seviyesini ölçün.
+              <div className="dmat-mono text-xs mb-2.5" style={{ color: "var(--brass)" }}>ÖN DEĞERLENDİRME · ~12-15 DAKİKA</div>
+              <h1 className="dmat-display text-3xl sm:text-4xl font-bold leading-[1.12] mb-3.5" style={{ letterSpacing: "-0.02em" }}>
+                Firmanızın dijital olgunluk seviyesini ölçün.
               </h1>
-              <p className="text-lg leading-relaxed mb-7" style={{ color: "#3A4250", maxWidth: 560 }}>
+              <p className="text-base leading-relaxed mb-5" style={{ color: "#3A4250", maxWidth: 560 }}>
                 6 eksende, 30 soruluk kısa bir değerlendirme ile firmanızın dijital dönüşümde
                 bulunduğu noktayı görün. Sonuçlar; hangi alanda güçlü, hangi alanda öncelikli
                 gelişim ihtiyacı olduğunuzu gösterir ve size uygun destek programlarına
@@ -396,61 +405,56 @@ export default function App() {
               {/* METODOLOJİ — en üstte, en görünür */}
               <button
                 onClick={() => setShowMethodology(true)}
-                className="block w-full text-left mb-7 group"
+                className="block w-full text-left mb-4 group"
                 style={{ maxWidth: 560 }}
               >
                 <div
-                  className="p-6 flex items-start gap-4"
+                  className="p-4 flex items-center gap-3.5"
                   style={{
-                    background: "linear-gradient(135deg, rgba(181,121,58,0.08), rgba(181,121,58,0.03))",
+                    background: "linear-gradient(135deg, rgba(181,121,58,0.09), rgba(181,121,58,0.03))",
                     border: "1.5px solid var(--brass)",
                     borderRadius: 12,
                   }}
                 >
                   <div
                     className="flex items-center justify-center flex-shrink-0"
-                    style={{ width: 44, height: 44, background: "var(--brass)", borderRadius: 10 }}
+                    style={{ width: 38, height: 38, background: "var(--brass)", borderRadius: 9 }}
                   >
-                    <GraduationCap size={22} color="#fff" />
+                    <GraduationCap size={19} color="#fff" />
                   </div>
                   <div className="flex-1">
-                    <div className="dmat-mono text-xs font-semibold mb-1.5" style={{ color: "var(--brass)" }}>
+                    <div className="dmat-mono text-[10.5px] font-semibold mb-0.5" style={{ color: "var(--brass)" }}>
                       BİLİMSEL METODOLOJİ VE KAYNAKÇA
                     </div>
-                    <div className="text-base font-semibold mb-1.5" style={{ color: "var(--ink)" }}>
-                      Bu değerlendirme neye dayanıyor?
-                    </div>
-                    <p className="text-sm leading-relaxed" style={{ color: "#3A4250" }}>
-                      acatech Industrie 4.0 Maturity Index, MIT & Capgemini Digital Maturity
-                      Model ve Avrupa Komisyonu EDIH Open DMAT çerçevelerinden esinlenerek
-                      geliştirildi. Tam kaynakça ve yöntem için tıklayın →
+                    <p className="text-sm leading-snug" style={{ color: "var(--ink)" }}>
+                      acatech, MIT & Capgemini ve AB EDIH çerçevelerine dayanır — tam kaynakça için tıklayın →
                     </p>
                   </div>
                 </div>
               </button>
 
-              <div className="dmat-card p-5 mb-8" style={{ maxWidth: 560 }}>
-                <div className="dmat-mono text-xs mb-3" style={{ color: "var(--steel)" }}>DEĞERLENDİRME EKSENLERİ</div>
-                <div className="grid grid-cols-2 gap-2.5">
+              <div className="dmat-card p-4 mb-5" style={{ maxWidth: 560 }}>
+                <div className="dmat-mono text-[10.5px] mb-2.5" style={{ color: "var(--steel)" }}>DEĞERLENDİRME EKSENLERİ</div>
+                <div className="grid grid-cols-2 gap-2">
                   {AXES.map((a) => (
-                    <div key={a.id} className="flex items-center gap-2 text-sm">
-                      <span className="dmat-mono" style={{ color: "var(--brass)" }}>{a.no}</span>
+                    <div key={a.id} className="flex items-center gap-1.5 text-sm">
+                      <span className="dmat-mono text-xs" style={{ color: "var(--brass)" }}>{a.no}</span>
                       <span>{a.title}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <label className="block mb-2 text-sm font-medium">Firma adı (opsiyonel)</label>
+              <label className="block mb-1.5 text-sm font-medium">Firma adı (opsiyonel)</label>
               <input
                 value={firmName}
                 onChange={(e) => setFirmName(e.target.value)}
                 placeholder="Örn. ABC Makine Sanayi"
-                className="w-full px-4 py-3.5 mb-6 text-base outline-none"
+                className="w-full px-4 py-2.5 mb-4 text-sm outline-none"
                 style={{ maxWidth: 460, background: "#fff", border: "1px solid var(--grid)", borderRadius: 8 }}
               />
 
-              <label className="flex items-start gap-2.5 mb-6 cursor-pointer" style={{ maxWidth: 520 }}>
+              <label className="flex items-start gap-2.5 mb-4 cursor-pointer" style={{ maxWidth: 520 }}>
                 <input
                   type="checkbox"
                   checked={consent}
@@ -458,7 +462,7 @@ export default function App() {
                   className="mt-0.5"
                   style={{ width: 17, height: 17, accentColor: "var(--brass)", flexShrink: 0 }}
                 />
-                <span className="text-base leading-relaxed">
+                <span className="text-sm leading-relaxed">
                   <button
                     type="button"
                     onClick={(e) => {
@@ -478,15 +482,15 @@ export default function App() {
                 <button
                   onClick={() => consent && setScreen("quiz")}
                   disabled={!consent}
-                  className="dmat-btn-primary px-7 py-3.5 text-base inline-flex items-center gap-2"
+                  className="dmat-btn-primary px-6 py-2.5 text-sm inline-flex items-center gap-2"
                 >
-                  Değerlendirmeye Başla <ArrowRight size={18} />
+                  Değerlendirmeye Başla <ArrowRight size={16} />
                 </button>
               </div>
 
-              <p className="dmat-mono text-xs mt-8" style={{ color: "var(--steel)", maxWidth: 480 }}>
-                VERİ KULLANIMI: Cevaplarınız yalnızca bu raporu oluşturmak ve Çorlu TSO
-                Proje Birimi'nin size uygun destek programı önerebilmesi için kullanılır.
+              <p className="dmat-mono text-[10.5px] mt-4" style={{ color: "var(--steel)", maxWidth: 480 }}>
+                VERİ KULLANIMI: Cevaplarınız yalnızca firmanız için bu raporu oluşturmak ve
+                size uygun destek programı önerilebilmesi için kullanılır.
               </p>
             </div>
           )}
@@ -517,7 +521,7 @@ export default function App() {
                   </p>
                   <p>
                     <strong>İşleme Amacı:</strong> Firmanızın dijital olgunluk seviyesini ölçmek,
-                    size özel bir sonuç raporu oluşturmak ve Çorlu TSO Proje Birimi'nin size uygun
+                    size özel bir sonuç raporu oluşturmak ve Çorlu Ticaret ve Sanayi Odası'nın size uygun
                     destek programına (KOSGEB, EDIH, TÜBİTAK TÜSSİDE vb.) yönlendirme yapabilmesini
                     sağlamaktır.
                   </p>
@@ -526,7 +530,7 @@ export default function App() {
                     tamamlanana kadar, en fazla 24 ay saklanır.
                   </p>
                   <p>
-                    <strong>Paylaşım:</strong> Verileriniz yalnızca Çorlu TSO Proje Birimi personeli
+                    <strong>Paylaşım:</strong> Verileriniz yalnızca Çorlu Ticaret ve Sanayi Odası personeli
                     tarafından görülebilir; üçüncü kişi/kurumlarla yalnızca sizin açık isteğiniz
                     üzerine (ör. bir destek programına yönlendirme talebiniz olduğunda) paylaşılır.
                   </p>
@@ -624,7 +628,7 @@ export default function App() {
                 <p className="dmat-mono text-[10px] mb-6" style={{ color: "var(--steel)" }}>SONUÇ KAYDEDİLİYOR…</p>
               )}
               {saveState === "saved" && (
-                <p className="dmat-mono text-[10px] mb-6" style={{ color: "var(--green)" }}>✓ SONUÇ ÇORLU TSO PROJE BİRİMİ'NE İLETİLDİ</p>
+                <p className="dmat-mono text-[10px] mb-6" style={{ color: "var(--green)" }}>✓ SONUÇ ÇORLU TİCARET VE SANAYİ ODASI'NA İLETİLDİ</p>
               )}
               {saveState === "error" && (
                 <p className="dmat-mono text-[10px] mb-6" style={{ color: "var(--steel)" }}>SONUÇ YALNIZCA BU EKRANDA GÖRÜNTÜLENİYOR (kayıt şu an aktif değil)</p>
@@ -749,6 +753,7 @@ export default function App() {
                       if (!trainingEmail) return;
                       setTrainingState("saving");
                       const ok = await saveTrainingSignup({ firmName, email: trainingEmail, phone: trainingPhone });
+                      notifyTrainingSignup({ firmName, email: trainingEmail, phone: trainingPhone });
                       setTrainingState(ok ? "saved" : "error");
                     }}
                     disabled={!trainingEmail || trainingState === "saving"}
@@ -799,7 +804,7 @@ export default function App() {
                   Bu araç; acatech Industrie 4.0 Maturity Index (Almanya Ulusal Bilim ve
                   Mühendislik Akademisi), MIT & Capgemini Digital Maturity Model (Westerman,
                   Bonnet & McAfee) ve Avrupa Komisyonu EDIH Open DMAT çerçevelerinden
-                  esinlenerek Çorlu TSO Proje Birimi tarafından özgün olarak geliştirilmiştir.
+                  esinlenerek Çorlu Ticaret ve Sanayi Odası tarafından özgün olarak geliştirilmiştir.
                   Sertifikalı bir değerlendirme değildir; resmi araçlara ön hazırlık
                   niteliğindedir.
                 </p>
@@ -813,10 +818,20 @@ export default function App() {
 
               <div className="flex gap-3 flex-wrap">
                 <button
-                  onClick={() => generatePdfReport({ firmName, scores, overall, answers })}
+                  onClick={async () => {
+                    setPdfState("generating");
+                    try {
+                      await generatePdfReport({ firmName, scores, overall, answers });
+                      setPdfState("idle");
+                    } catch (e) {
+                      console.error(e);
+                      setPdfState("error");
+                    }
+                  }}
+                  disabled={pdfState === "generating"}
                   className="dmat-btn-primary px-5 py-2.5 text-sm font-medium inline-flex items-center gap-2"
                 >
-                  <Download size={15} /> Raporu PDF Olarak İndir
+                  <Download size={15} /> {pdfState === "generating" ? "Rapor Hazırlanıyor…" : "Raporu PDF Olarak İndir"}
                 </button>
                 <button
                   onClick={restart}
