@@ -10,6 +10,7 @@ import { AXES, LEVELS, levelFor, statusFor, axisLevelGuide } from "./data";
 --------------------------------------------------------------- */
 
 let fontsLoadedPromise = null;
+let ACTIVE_FONT = "helvetica"; // font gömme başarısız olursa bu yedek (Türkçe karakter desteği sınırlı ama PDF yine de iner
 
 async function arrayBufferToBase64(buffer) {
   const bytes = new Uint8Array(buffer);
@@ -22,19 +23,37 @@ async function arrayBufferToBase64(buffer) {
 }
 
 async function ensureFontsLoaded(doc) {
-  if (!fontsLoadedPromise) {
-    fontsLoadedPromise = Promise.all([
-      fetch("/fonts/DejaVuSans-subset.ttf").then((r) => r.arrayBuffer()),
-      fetch("/fonts/DejaVuSans-Bold-subset.ttf").then((r) => r.arrayBuffer()),
-    ]).then(([regularBuf, boldBuf]) =>
-      Promise.all([arrayBufferToBase64(regularBuf), arrayBufferToBase64(boldBuf)])
+  try {
+    if (!fontsLoadedPromise) {
+      fontsLoadedPromise = Promise.all([
+        fetch("/fonts/DejaVuSans-subset.ttf").then((r) => {
+          if (!r.ok) throw new Error(`Font yüklenemedi: ${r.status}`);
+          return r.arrayBuffer();
+        }),
+        fetch("/fonts/DejaVuSans-Bold-subset.ttf").then((r) => {
+          if (!r.ok) throw new Error(`Font yüklenemedi: ${r.status}`);
+          return r.arrayBuffer();
+        }),
+      ]).then(([regularBuf, boldBuf]) =>
+        Promise.all([arrayBufferToBase64(regularBuf), arrayBufferToBase64(boldBuf)])
+      );
+    }
+    const [regularB64, boldB64] = await fontsLoadedPromise;
+    doc.addFileToVFS("DejaVuSans.ttf", regularB64);
+    doc.addFont("DejaVuSans.ttf", "DejaVuSans", "normal");
+    doc.addFileToVFS("DejaVuSans-Bold.ttf", boldB64);
+    doc.addFont("DejaVuSans-Bold.ttf", "DejaVuSans", "bold");
+    ACTIVE_FONT = "DejaVuSans";
+  } catch (err) {
+    // Font dosyalarına erişilemedi (deploy edilmemiş / ağ hatası vb.)
+    // — PDF'i yine de üret, sadece dahili Helvetica fontuna düş.
+    console.warn(
+      "[dijital-olgunluk] Türkçe font gömülemedi, dahili fonta geçiliyor. " +
+        "public/fonts/ klasörünün deploy edildiğinden emin olun.",
+      err
     );
+    ACTIVE_FONT = "helvetica";
   }
-  const [regularB64, boldB64] = await fontsLoadedPromise;
-  doc.addFileToVFS("DejaVuSans.ttf", regularB64);
-  doc.addFont("DejaVuSans.ttf", "DejaVuSans", "normal");
-  doc.addFileToVFS("DejaVuSans-Bold.ttf", boldB64);
-  doc.addFont("DejaVuSans-Bold.ttf", "DejaVuSans", "bold");
 }
 
 const INK = [19, 35, 74];
@@ -63,7 +82,7 @@ function footer(doc, pageLabel) {
     doc.setDrawColor(...GRID);
     doc.setLineWidth(0.2);
     doc.line(MARGIN, PAGE_H - 15, PAGE_W - MARGIN, PAGE_H - 15);
-    doc.setFont("DejaVuSans", "normal");
+    doc.setFont(ACTIVE_FONT, "normal");
     doc.setFontSize(7.5);
     doc.setTextColor(...STEEL);
     doc.text("ÇORLU TİCARET VE SANAYİ ODASI · DİJİTAL OLGUNLUK ÖLÇÜM ARACI", MARGIN, PAGE_H - 10);
@@ -80,7 +99,7 @@ function ensureSpace(doc, y, needed) {
 }
 
 function heading(doc, text, y, size = 13) {
-  doc.setFont("DejaVuSans", "bold");
+  doc.setFont(ACTIVE_FONT, "bold");
   doc.setFontSize(size);
   doc.setTextColor(...INK);
   doc.text(text, MARGIN, y);
@@ -89,7 +108,7 @@ function heading(doc, text, y, size = 13) {
 
 function paragraph(doc, text, y, opts = {}) {
   const { size = 9.5, color = [58, 66, 80], lineHeight = 4.6, width = CONTENT_W } = opts;
-  doc.setFont("DejaVuSans", "normal");
+  doc.setFont(ACTIVE_FONT, "normal");
   doc.setFontSize(size);
   doc.setTextColor(...color);
   const lines = doc.splitTextToSize(text, width);
@@ -145,7 +164,7 @@ function drawRadar(doc, scores, cx, cy, maxR) {
   });
 
   // eksen etiketleri
-  doc.setFont("DejaVuSans", "bold");
+  doc.setFont(ACTIVE_FONT, "bold");
   doc.setFontSize(7.5);
   doc.setTextColor(...INK);
   AXES.forEach((a, i) => {
@@ -161,7 +180,7 @@ function drawRadar(doc, scores, cx, cy, maxR) {
 export async function generatePdfReport({ firmName, scores, overall, answers }) {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
   await ensureFontsLoaded(doc);
-  doc.setFont("DejaVuSans", "normal");
+  doc.setFont(ACTIVE_FONT, "normal");
   const level = levelFor(overall);
   const weakAxes = AXES.filter((a) => scores[a.id] > 0 && scores[a.id] < 3).sort(
     (a, b) => scores[a.id] - scores[b.id]
@@ -170,18 +189,18 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
 
   /* ---- SAYFA 1 — Kapak / Genel Sonuç ---- */
   let y = MARGIN;
-  doc.setFont("DejaVuSans", "normal");
+  doc.setFont(ACTIVE_FONT, "normal");
   doc.setFontSize(8);
   doc.setTextColor(...BRASS);
   doc.text("ÇORLU TİCARET VE SANAYİ ODASI", MARGIN, y);
   y += 9;
-  doc.setFont("DejaVuSans", "bold");
+  doc.setFont(ACTIVE_FONT, "bold");
   doc.setFontSize(18);
   doc.setTextColor(...INK);
   const titleLines0 = doc.splitTextToSize("Dijital Olgunluk Değerlendirme Raporu", CONTENT_W);
   doc.text(titleLines0, MARGIN, y);
   y += titleLines0.length * 7 + 3;
-  doc.setFont("DejaVuSans", "normal");
+  doc.setFont(ACTIVE_FONT, "normal");
   doc.setFontSize(10);
   doc.setTextColor(...STEEL);
   doc.text(`${firmName ? firmName : "Firma adı belirtilmedi"}  ·  ${dateStr}`, MARGIN, y);
@@ -193,22 +212,22 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   y += 12;
 
   // Genel puan bloğu
-  doc.setFont("DejaVuSans", "bold");
+  doc.setFont(ACTIVE_FONT, "bold");
   doc.setFontSize(34);
   doc.setTextColor(...BRASS);
   doc.text(overall.toFixed(2), MARGIN, y + 4);
-  doc.setFont("DejaVuSans", "normal");
+  doc.setFont(ACTIVE_FONT, "normal");
   doc.setFontSize(8.5);
   doc.setTextColor(...STEEL);
   doc.text("/ 5.00 — GENEL OLGUNLUK PUANI", MARGIN + 32, y);
-  doc.setFont("DejaVuSans", "bold");
+  doc.setFont(ACTIVE_FONT, "bold");
   doc.setFontSize(15);
   doc.setTextColor(...INK);
   doc.text(level.name, MARGIN + 32, y + 8);
   y += 18;
   y = paragraph(doc, level.desc, y, { size: 10, color: [58, 66, 80] });
   y += 3;
-  doc.setFont("DejaVuSans", "bold");
+  doc.setFont(ACTIVE_FONT, "bold");
   doc.setFontSize(9.5);
   doc.setTextColor(...BRASS);
   const recLines = doc.splitTextToSize(`Öncelik: ${level.recommendation}`, CONTENT_W);
@@ -232,11 +251,11 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   y += 5;
   LEVELS.forEach((l) => {
     const isCurrent = l.name === level.name;
-    doc.setFont("DejaVuSans", isCurrent ? "bold" : "normal");
+    doc.setFont(ACTIVE_FONT, isCurrent ? "bold" : "normal");
     doc.setFontSize(9);
     doc.setTextColor(...(isCurrent ? BRASS : STEEL));
     doc.text(`${isCurrent ? ">" : "-"}  ${l.name}`, MARGIN, y);
-    doc.setFont("DejaVuSans", "normal");
+    doc.setFont(ACTIVE_FONT, "normal");
     doc.setFontSize(8.3);
     doc.setTextColor(...(isCurrent ? [58, 66, 80] : GRID));
     doc.text(l.desc, MARGIN + 42, y);
@@ -270,11 +289,11 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
     const guide = axisLevelGuide(a, s);
     const color = toneColor(st.tone);
 
-    doc.setFont("DejaVuSans", "bold");
+    doc.setFont(ACTIVE_FONT, "bold");
     doc.setFontSize(10);
     doc.setTextColor(...INK);
     doc.text(`${a.no}  ${a.title}`, MARGIN, y);
-    doc.setFont("DejaVuSans", "bold");
+    doc.setFont(ACTIVE_FONT, "bold");
     doc.setFontSize(10);
     doc.setTextColor(...color);
     doc.text(`${s.toFixed(2)} / 5.00`, PAGE_W - MARGIN, y, { align: "right" });
@@ -288,20 +307,20 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
     doc.rect(MARGIN, y, barW * (s / 5), 2, "F");
     y += 5.5;
 
-    doc.setFont("DejaVuSans", "bold");
+    doc.setFont(ACTIVE_FONT, "bold");
     doc.setFontSize(7.8);
     doc.setTextColor(...color);
     doc.text(`SEVİYE ${guide.level} — ${guide.name.toUpperCase()}  ·  ${a.framework}`, MARGIN, y);
     y += 5;
 
-    doc.setFont("DejaVuSans", "normal");
+    doc.setFont(ACTIVE_FONT, "normal");
     doc.setFontSize(8.8);
     doc.setTextColor(...[58, 66, 80]);
     const descLines = doc.splitTextToSize(guide.description, CONTENT_W);
     doc.text(descLines, MARGIN, y);
     y += descLines.length * 4.2 + 2;
 
-    doc.setFont("DejaVuSans", "bold");
+    doc.setFont(ACTIVE_FONT, "bold");
     doc.setFontSize(8.8);
     doc.setTextColor(...INK);
     const actionLines = doc.splitTextToSize(`Önerilen adım: ${guide.action}`, CONTENT_W);
@@ -326,18 +345,18 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
 
     weakAxes.forEach((a) => {
       y = ensureSpace(doc, y, 20);
-      doc.setFont("DejaVuSans", "bold");
+      doc.setFont(ACTIVE_FONT, "bold");
       doc.setFontSize(10.5);
       doc.setTextColor(...INK);
       doc.text(`${a.no}  ${a.title}`, MARGIN, y);
       y += 5;
-      doc.setFont("DejaVuSans", "normal");
+      doc.setFont(ACTIVE_FONT, "normal");
       doc.setFontSize(9);
       doc.setTextColor(...BRASS);
       doc.text(`>  ${a.resource.name}`, MARGIN, y);
       y += 4.5;
       if (a.resource.url) {
-        doc.setFont("DejaVuSans", "normal");
+        doc.setFont(ACTIVE_FONT, "normal");
         doc.setFontSize(8);
         doc.setTextColor(...STEEL);
         doc.textWithLink(a.resource.url, MARGIN, y, { url: a.resource.url });
@@ -378,12 +397,12 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
     ["KOSGEB Dijital Dönüşüm Danışmanlığı Desteği", "https://www.kosgeb.gov.tr"],
   ].forEach(([name, url]) => {
     y = ensureSpace(doc, y, 8);
-    doc.setFont("DejaVuSans", "normal");
+    doc.setFont(ACTIVE_FONT, "normal");
     doc.setFontSize(9);
     doc.setTextColor(...INK);
     doc.text(`•  ${name}`, MARGIN, y);
     y += 4.3;
-    doc.setFont("DejaVuSans", "normal");
+    doc.setFont(ACTIVE_FONT, "normal");
     doc.setFontSize(7.6);
     doc.setTextColor(...STEEL);
     doc.textWithLink(url, MARGIN + 4, y, { url });
@@ -405,7 +424,7 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   /* ---- SAYFA 4 — Metodoloji ---- */
   doc.addPage();
   y = MARGIN;
-  doc.setFont("DejaVuSans", "normal");
+  doc.setFont(ACTIVE_FONT, "normal");
   doc.setFontSize(8);
   doc.setTextColor(...BRASS);
   doc.text("METODOLOJİ", MARGIN, y);
@@ -447,11 +466,25 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
       "Kademeli olgunluk seviyesiyle süreç değerlendirme metodolojisinin genel bilimsel " +
         "temelini oluşturur; anket tabanlı öz-değerlendirme yaklaşımımız bu geleneği takip eder.",
     ],
+    [
+      "5. ISO/IEC 33001 Standart Ailesi (Bilgi Teknolojisi — Süreç Değerlendirmesi)",
+      "ISO/IEC 15504 (SPICE)'ın halefi olan bu uluslararası standart, süreçlerin \"Eksik\"ten " +
+        "\"Yenilikçi\"ye uzanan yetkinlik seviyelerine göre değerlendirilmesi için resmi " +
+        "terminoloji ve metodolojik çerçeve sağlar; eksen bazlı seviye kademelendirmemizin " +
+        "resmi standardizasyon referansıdır.",
+    ],
+    [
+      "6. OECD Going Digital Toolkit",
+      "OECD'nin, ülkelerin dijital dönüşümünü Altyapıya Erişim, Etkin Kullanım, İnovasyon, " +
+        "Nitelikli İşler, Sosyal Kapsayıcılık, Dijital Çağda Güven ve Pazar Açıklığı olmak üzere " +
+        "7 politika boyutunda ölçtüğü gösterge çerçevesi; gösterge seçim mantığımıza ek bir " +
+        "makro referans noktası sağlamıştır.",
+    ],
   ];
 
   frameworks.forEach(([title, body]) => {
     y = ensureSpace(doc, y, 20);
-    doc.setFont("DejaVuSans", "bold");
+    doc.setFont(ACTIVE_FONT, "bold");
     doc.setFontSize(9.5);
     doc.setTextColor(...INK);
     const titleLines = doc.splitTextToSize(title, CONTENT_W);
@@ -473,11 +506,85 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
     "Eksen bazlı yönlendirme: her eksenin puanı CMMI'ın 5 seviyeli olgunluk merdivenine (Başlangıç->Tekrarlanabilir->Tanımlı->Ölçülüyor->Optimize) göre yorumlanır",
   ].forEach((line) => {
     y = ensureSpace(doc, y, 6);
-    doc.setFont("DejaVuSans", "normal");
+    doc.setFont(ACTIVE_FONT, "normal");
     doc.setFontSize(8.8);
     doc.setTextColor(...[58, 66, 80]);
-    doc.text(`•  ${line}`, MARGIN, y);
-    y += 5;
+    const wLines = doc.splitTextToSize(`•  ${line}`, CONTENT_W);
+    doc.text(wLines, MARGIN, y);
+    y += wLines.length * 4.4;
+  });
+  y += 5;
+
+  y = ensureSpace(doc, y, 50);
+  y = heading(doc, "Eksen — Çerçeve Eşleştirme Tablosu", y, 12);
+  y += 8;
+  [
+    ["01 Süreç Dijitalleşmesi", "acatech (Bilgi Sistemleri) · ISO/IEC 33001 ailesi"],
+    ["02 Veri Yönetimi ve Analitik", "acatech (Bilgi Sistemleri) · EDIH (Veri Yönetimi)"],
+    ["03 Müşteri/Pazar Dijital Varlığı", "MIT & Capgemini · EDIH · OECD (Etkin Kullanım)"],
+    ["04 Otomasyon ve Yapay Zeka", "acatech (Kaynaklar) · EDIH (Otomasyon & YZ)"],
+    ["05 Dijital Yetkinlik ve İnsan Kaynağı", "acatech (Org. Yapı/Kültür) · MIT & Capgemini · OECD"],
+    ["06 Siber Güvenlik ve Altyapı", "acatech (Kaynaklar) · OECD (Dijital Çağda Güven)"],
+  ].forEach(([axisName, fw], i) => {
+    y = ensureSpace(doc, y, 9);
+    doc.setDrawColor(...GRID);
+    doc.setLineWidth(i === 0 ? 0.4 : 0.15);
+    doc.line(MARGIN, y - 4.5, PAGE_W - MARGIN, y - 4.5);
+    doc.setFont(ACTIVE_FONT, "bold");
+    doc.setFontSize(8);
+    doc.setTextColor(...INK);
+    doc.text(axisName, MARGIN, y);
+    doc.setFont(ACTIVE_FONT, "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(...STEEL);
+    doc.text(fw, MARGIN + 62, y);
+    y += 7;
+  });
+  doc.setDrawColor(...GRID);
+  doc.setLineWidth(0.4);
+  doc.line(MARGIN, y - 4.5, PAGE_W - MARGIN, y - 4.5);
+  y += 6;
+
+  y = ensureSpace(doc, y, 40);
+  y = heading(doc, "Bilimsel Yaklaşım ve Doğrulama Notu", y, 12);
+  y += 5;
+  y = paragraph(
+    doc,
+    "Bu aracın soru seti, yukarıdaki kurumsal/akademik çerçevelerin kavramsal içeriğine " +
+      "dayanan bir içerik geçerliliği (content validity) ve yüzey geçerliliği (face validity) " +
+      "yaklaşımıyla tasarlanmıştır — sorular, tanınmış modellerin ölçmeyi amaçladığı yapıları " +
+      "uzman değerlendirmesiyle yansıtacak şekilde oluşturulmuştur.",
+    y,
+    { size: 8.8 }
+  );
+  y += 4;
+  y = paragraph(
+    doc,
+    "Şeffaflık gereği belirtilmelidir: bu aracın henüz geniş bir örneklemde ampirik " +
+      "psikometrik doğrulaması (ör. iç tutarlılık/Cronbach's alpha analizi, faktör analizi) " +
+      "yapılmamıştır. Çorlu TSO, aracı zamanla kalibre etmek amacıyla anonimleştirilmiş toplu " +
+      "yanıt verilerini periyodik olarak analiz etmeyi planlamaktadır.",
+    y,
+    { size: 8.8 }
+  );
+  y += 10;
+
+  y = ensureSpace(doc, y, 40);
+  y = heading(doc, "Sonuçların Yorumlanması İçin Rehber İlkeler", y, 12);
+  y += 5;
+  [
+    "Bu araç bir ön-tarama enstrümanıdır; kesin bir yargı değil, bir yönlendirmenin başlangıç noktasıdır.",
+    "Eşik değerlere yakın sonuçlar tek başına karar vermek yerine bir görüşmeyle teyit edilmelidir.",
+    "Eksen bazlı sonuçlar, tek bir genel puandan daha fazla aksiyon değeri taşır.",
+    "Sonuçlar, cevap veren kişinin firma hakkındaki bilgi düzeyine bağlıdır.",
+  ].forEach((line) => {
+    y = ensureSpace(doc, y, 6);
+    doc.setFont(ACTIVE_FONT, "normal");
+    doc.setFontSize(8.8);
+    doc.setTextColor(...[58, 66, 80]);
+    const lines = doc.splitTextToSize(`•  ${line}`, CONTENT_W);
+    doc.text(lines, MARGIN, y);
+    y += lines.length * 4.4;
   });
   y += 5;
 
@@ -486,15 +593,15 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   y += 5;
   y = paragraph(
     doc,
-    "Şeffaflık gereği belirtilmelidir: bu bir öz-beyan (self-report) anketidir, üçüncü taraf " +
-      "doğrulaması içermez. Sertifikalı bir değerlendirme değildir — TÜBİTAK TÜSSİDE D3A/DDX " +
-      "veya EDIH Open DMAT gibi resmi araçların yerine geçmez; onlara ön hazırlık niteliğindedir.",
+    "Bu bir öz-beyan (self-report) anketidir, üçüncü taraf doğrulaması içermez. Sertifikalı " +
+      "bir değerlendirme değildir — TÜBİTAK TÜSSİDE D3A/DDX veya EDIH Open DMAT gibi resmi " +
+      "araçların yerine geçmez; onlara ön hazırlık niteliğindedir.",
     y,
     { size: 8.8 }
   );
   y += 10;
 
-  y = ensureSpace(doc, y, 40);
+  y = ensureSpace(doc, y, 50);
   y = heading(doc, "Kaynakça", y, 12);
   y += 5;
   [
@@ -508,9 +615,13 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
     "Assessment Tool (Open DMAT) for SMEs.",
     "CMMI Institute / SEI, Carnegie Mellon University — Capability Maturity Model",
     "Integration (jenerik 5 seviyeli olgunluk kademelendirmesi).",
+    "ISO/IEC 33001:2015, ISO/IEC 33002:2015, ISO/IEC 33020:2019 — Information technology —",
+    "Process assessment. International Organization for Standardization.",
+    "OECD (2019). Going Digital: Shaping Policies, Improving Lives. OECD Publishing, Paris.",
+    "www.oecd.org/going-digital-toolkit.",
   ].forEach((line) => {
     y = ensureSpace(doc, y, 5);
-    doc.setFont("DejaVuSans", "normal");
+    doc.setFont(ACTIVE_FONT, "normal");
     doc.setFontSize(7.6);
     doc.setTextColor(...STEEL);
     doc.text(line, MARGIN, y);
