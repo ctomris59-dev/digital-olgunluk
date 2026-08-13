@@ -1,10 +1,13 @@
 # Çorlu TSO — Dijital Olgunluk Ölçüm Aracı
 
 6 eksen / 30 sorudan oluşan, üye firmaların dijital dönüşüm olgunluğunu
-ölçen interaktif değerlendirme aracı. Sonuç ekranında radar grafik, eksen
-bazlı skorlar, acatech Industrie 4.0 Maturity Index'e uyarlanmış 6 aşamalı
-olgunluk seviyesi, zayıf eksenlere özel destek programı önerileri (KOSGEB,
-EDIH, TÜBİTAK TÜSSİDE) ve tam kaynakçalı bir **Metodoloji** bölümü sunulur.
+ölçen interaktif değerlendirme aracı. Sonuç ekranında radar grafik,
+**eksen bazlı ve genel puan bazlı ayrı ayrı, CMMI'ın 5 seviyeli olgunluk
+merdivenine dayanan somut aksiyon önerileri**, acatech Industrie 4.0
+Maturity Index'e uyarlanmış 6 aşamalı genel olgunluk seviyesi, zayıf
+eksenlere özel destek programı önerileri (KOSGEB, EDIH, TÜBİTAK TÜSSİDE),
+tam kaynakçalı bir **Metodoloji** bölümü (ana sayfada ve rapor sonunda) ve
+**çok sayfalı, açıklamalı PDF rapor indirme** özelliği sunulur.
 
 ## Metodoloji
 
@@ -101,12 +104,23 @@ Supabase Dashboard → **Table Editor → assessments**. Sadece senin (proje
 sahibi) hesabınla görülebilir; RLS sayesinde web sitesi ziyaretçileri veya
 başka biri bu verilere erişemez.
 
+## PDF Rapor
+
+Sonuç ekranındaki **"Raporu PDF Olarak İndir"** butonu, `src/lib/pdfReport.js`
+içindeki motoru kullanarak 4 sayfalık bir rapor üretir: kapak + genel puan,
+radar grafik + eksen detayları, öneriler + sonraki adım, ve tam metodoloji +
+kaynakça. Ekranda gösterilen sorular/skorlar ile PDF içeriği `src/lib/data.js`
+dosyasından beslenir — ikisi arasında tutarsızlık oluşmaz.
+
 ## Proje yapısı
 
 ```
 src/
-  App.jsx        → tüm uygulama mantığı (sorular, puanlama, radar/gauge grafikleri)
-  main.jsx       → React giriş noktası
-  index.css      → Tailwind
-index.html       → Google Fonts + kök HTML
+  App.jsx           → tüm uygulama mantığı (ekranlar, puanlama, radar/gauge grafikleri)
+  main.jsx          → React giriş noktası
+  index.css         → Tailwind
+  lib/data.js       → sorular, eksenler, olgunluk skalası (ekran + PDF ortak kaynağı)
+  lib/pdfReport.js  → çok sayfalı PDF rapor motoru
+  lib/supabaseClient.js → veri kaydı (opsiyonel)
+index.html          → Google Fonts + kök HTML
 ```
