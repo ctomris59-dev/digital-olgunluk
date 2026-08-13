@@ -283,7 +283,7 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   y += 6;
 
   AXES.forEach((a) => {
-    y = ensureSpace(doc, y, 32);
+    y = ensureSpace(doc, y, 38);
     const s = scores[a.id];
     const st = statusFor(s);
     const guide = axisLevelGuide(a, s);
@@ -310,8 +310,9 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
     doc.setFont(ACTIVE_FONT, "bold");
     doc.setFontSize(7.8);
     doc.setTextColor(...color);
-    doc.text(`SEVİYE ${guide.level} — ${guide.name.toUpperCase()}  ·  ${a.framework}`, MARGIN, y);
-    y += 5;
+    const levelLine = doc.splitTextToSize(`SEVİYE ${guide.level} — ${guide.name.toUpperCase()}  ·  ${a.framework}`, CONTENT_W);
+    doc.text(levelLine, MARGIN, y);
+    y += levelLine.length * 3.6 + 1.5;
 
     doc.setFont(ACTIVE_FONT, "normal");
     doc.setFontSize(8.8);
@@ -521,7 +522,7 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   [
     ["01 Süreç Dijitalleşmesi", "acatech (Bilgi Sistemleri) · ISO/IEC 33001 ailesi"],
     ["02 Veri Yönetimi ve Analitik", "acatech (Bilgi Sistemleri) · EDIH (Veri Yönetimi)"],
-    ["03 Müşteri/Pazar Dijital Varlığı", "MIT & Capgemini · EDIH · OECD (Etkin Kullanım)"],
+    ["03 Müşteri/Pazar Dijital Varlığı", "MIT & Capgemini · EDIH (Dijital İş Stratejisi)"],
     ["04 Otomasyon ve Yapay Zeka", "acatech (Kaynaklar) · EDIH (Otomasyon & YZ)"],
     ["05 Dijital Yetkinlik ve İnsan Kaynağı", "acatech (Org. Yapı/Kültür) · MIT & Capgemini · OECD"],
     ["06 Siber Güvenlik ve Altyapı", "acatech (Kaynaklar) · OECD (Dijital Çağda Güven)"],
