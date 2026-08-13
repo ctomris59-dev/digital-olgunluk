@@ -13,11 +13,13 @@ const AXES = [
     short: "Süreç",
     title: "Süreç Dijitalleşmesi",
     intro: "İş süreçlerinizin kağıt/manuel mi, yoksa yazılım destekli mi yürüdüğünü ölçer.",
+    framework: "acatech — Bilgi Sistemleri",
     questions: [
       "Muhasebe, stok, satış gibi temel iş süreçlerimiz kağıt/Excel yerine bir yazılım üzerinden yürütülür.",
       "Departmanlar arası bilgi akışı, manuel tekrar girişi gerektirmeden dijital bir sistem üzerinden aktarılır.",
       "İş süreçlerindeki darboğazları düzenli olarak dijital araçlarla (raporlama, dashboard) takip ederiz.",
       "Yeni bir dijital araç devreye alma kararı, tanımlı bir sorumlu/süreç üzerinden yürütülür.",
+      "İş süreçlerimize ait performans göstergeleri (KPI) düzenli olarak tanımlanır, ölçülür ve raporlanır.",
     ],
     resource: {
       name: "KOSGEB İşletme Geliştirme Destek Programı",
@@ -30,11 +32,13 @@ const AXES = [
     short: "Veri",
     title: "Veri Yönetimi ve Analitik",
     intro: "Verinin toplanma, saklanma ve karar almada kullanılma biçimini ölçer.",
+    framework: "acatech — Bilgi Sistemleri / EDIH — Veri Yönetimi",
     questions: [
       "Satış, üretim veya müşteri verilerimiz dağınık Excel dosyaları yerine merkezi bir sistemde toplanır.",
       "Yönetim kararları alınırken güncel veriye dayalı raporlar kullanılır.",
       "Verilerimizin yedeklenmesi düzenli ve otomatik olarak yapılır.",
       "Veri kalitesinden (doğruluk, güncellik, tutarlılık) sorumlu bir kişi veya süreç vardır.",
+      "Farklı sistemlerden (satış, üretim, finans) gelen veriler birbiriyle ilişkilendirilerek analiz edilebilir.",
     ],
     resource: {
       name: "EDIH West Marmara — Veri Yönetimi Danışmanlığı",
@@ -47,11 +51,13 @@ const AXES = [
     short: "Pazar",
     title: "Müşteri / Pazar Dijital Varlığı",
     intro: "E-ticaret, dijital pazarlama ve online müşteri ilişkilerindeki olgunluğu ölçer.",
+    framework: "MIT & Capgemini — Dijital Yoğunluk / EDIH — Dijital İş Stratejisi",
     questions: [
       "Güncel tutulan bir web sitemiz ve/veya aktif sosyal medya hesabımız vardır.",
       "Ürün/hizmetlerimizi online kanallardan (e-ticaret, pazaryeri, B2B platform) satabiliyoruz.",
       "Müşteri talep ve şikayetleri dijital bir sistem (CRM, ticket sistemi) üzerinden takip edilir.",
       "Dijital pazarlama faaliyetlerimizin sonuçlarını ölçüp değerlendiririz.",
+      "Rakip analizi veya pazar trendlerini takip etmek için dijital araç/veri kaynakları kullanırız.",
     ],
     resource: {
       name: "KOSGEB E-Ticaret Destek Programı",
@@ -64,11 +70,13 @@ const AXES = [
     short: "Otomasyon",
     title: "Otomasyon ve Yapay Zeka",
     intro: "Üretim ve operasyonda otomasyon ile YZ araçlarının benimsenme düzeyini ölçer.",
+    framework: "acatech — Kaynaklar / EDIH — Otomasyon ve YZ",
     questions: [
       "Üretim/operasyon süreçlerimizde otomasyon sistemleri (PLC, robotik, otomatik hat) kullanılır.",
       "Tekrarlayan idari işler için otomasyon araçları veya yazılım robotları kullanılır.",
       "Firmamızda yapay zeka destekli araçlar deneniyor veya kullanılıyor.",
       "Makine/ekipman verilerimiz (IoT sensör, performans verisi) dijital olarak izlenip analiz ediliyor.",
+      "Operasyonel kararlarımız (bakım zamanlaması, stok, üretim planı vb.) geçmiş verilere dayalı öngörü/tahmin modelleriyle destekleniyor.",
     ],
     resource: {
       name: "EDIH — Test-Before-Invest Hizmetleri",
@@ -80,12 +88,14 @@ const AXES = [
     no: "05",
     short: "Yetkinlik",
     title: "Dijital Yetkinlik ve İnsan Kaynağı",
-    intro: "Çalışan yetkinliği ve yönetimin dijital dönüşüme verdiği önceliği ölçer.",
+    intro: "Çalışan yetkinliği, organizasyonel yapı ve yönetimin dijital dönüşüme verdiği önceliği ölçer.",
+    framework: "acatech — Organizasyonel Yapı ve Kültür / MIT & Capgemini — Dönüşüm Yönetimi",
     questions: [
       "Çalışanlarımız günlük işlerinde kullandıkları dijital araçlar konusunda yeterli eğitim almıştır.",
       "Firmamızda dijital dönüşüm/yeni teknoloji konularında düzenli eğitim faaliyetleri yürütülür.",
       "Yönetim, dijital dönüşümü stratejik öncelik olarak görür ve kaynak ayırır.",
       "Çalışanlarımız yeni dijital araç ve sistemlere geçişte genel olarak açık ve uyumludur.",
+      "Firmamızda dijital dönüşüm sürecini yürüten veya bu konuda sorumluluk üstlenen tanımlı bir kişi/ekip vardır.",
     ],
     resource: {
       name: "Çorlu TSO Eğitim Programları",
@@ -98,11 +108,13 @@ const AXES = [
     short: "Güvenlik",
     title: "Siber Güvenlik ve Altyapı",
     intro: "IT altyapısı, veri güvenliği ve KVKK uyum farkındalığını ölçer.",
+    framework: "acatech — Kaynaklar",
     questions: [
       "İnternet, sunucu, bulut altyapımız güncel ve ihtiyaçlarımızı karşılayacak durumdadır.",
       "Sistemlerimize erişim yetkilendirme ile kontrol edilir; şifre/erişim politikalarımız vardır.",
       "Siber saldırı, veri sızıntısı gibi risklere karşı önlemlerimiz (antivirüs, güvenlik duvarı vb.) mevcuttur.",
       "KVKK ve veri güvenliği yükümlülüklerimiz konusunda farkındalığımız ve uyum sürecimiz vardır.",
+      "Sistem arızası veya veri kaybı durumuna karşı bir iş sürekliliği/kurtarma planımız vardır.",
     ],
     resource: {
       name: "KOSGEB Bilgi Yönetimi Destek Programı",
@@ -113,12 +125,16 @@ const AXES = [
 
 const SCALE_LABELS = ["Hiç yok", "Başlangıç", "Kısmen var", "Sistematik", "Tam entegre"];
 
+// Genel olgunluk skalası, acatech Industrie 4.0 Maturity Index'in 6 aşamalı
+// yapısına (Bilgisayarlaşma → Bağlanabilirlik → Görünürlük → Şeffaflık →
+// Öngörü Yeteneği → Uyarlanabilirlik) uyarlanmıştır. Bkz. Metodoloji bölümü.
 const LEVELS = [
-  { max: 1.99, name: "Başlangıç", desc: "Dijitalleşme büyük ölçüde yok veya plansız ilerliyor." },
-  { max: 2.99, name: "Gelişen", desc: "Bazı adımlar atılmış ama dağınık ve sistemsiz." },
-  { max: 3.99, name: "Yapılanan", desc: "Sistematik uygulamalar var, entegrasyon eksik." },
-  { max: 4.49, name: "Olgun", desc: "Süreçler dijital ve entegre, sürekli takip var." },
-  { max: 5.01, name: "Lider", desc: "Tam entegre, sürekli iyileştirme kültürü yerleşmiş." },
+  { max: 1.49, name: "Bilgisayarlaşma", desc: "Temel dijital araçlar münferit kullanılıyor; süreçler büyük ölçüde manuel." },
+  { max: 2.19, name: "Bağlanabilirlik", desc: "Sistemler birbirine bağlanmaya başlamış ama entegrasyon sınırlı." },
+  { max: 2.89, name: "Görünürlük", desc: "Veriler görünür hale geliyor; süreçler izlenebiliyor ama analiz sığ." },
+  { max: 3.59, name: "Şeffaflık", desc: "Veriler ilişkilendirilip yorumlanıyor; kararlar veriye dayanıyor." },
+  { max: 4.29, name: "Öngörü Yeteneği", desc: "Geçmiş veriden geleceğe dair tahmin/öngörü üretilebiliyor." },
+  { max: 5.01, name: "Uyarlanabilirlik", desc: "Sistemler kendi kendine öğreniyor, süreçler otonom şekilde optimize oluyor." },
 ];
 
 function levelFor(score) {
@@ -255,6 +271,117 @@ function Gauge({ value }) {
 }
 
 /* ---------------------------------------------------------------
+   METODOLOJİ İÇERİĞİ
+--------------------------------------------------------------- */
+
+function MethodologyModal({ onClose }) {
+  return (
+    <div
+      className="fixed inset-0 flex items-center justify-center p-6 z-50"
+      style={{ background: "rgba(27,36,48,0.55)" }}
+      onClick={onClose}
+    >
+      <div
+        className="dmat-card p-6 max-w-2xl w-full"
+        style={{ maxHeight: "85vh", overflowY: "auto" }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <div className="dmat-mono text-xs mb-1" style={{ color: "var(--brass)" }}>METODOLOJİ</div>
+            <div className="dmat-display text-lg font-semibold">Bu Değerlendirmenin Bilimsel Dayanağı</div>
+          </div>
+          <button onClick={onClose}><X size={18} /></button>
+        </div>
+
+        <div className="text-sm space-y-4 leading-relaxed" style={{ color: "#3A4250" }}>
+          <p>
+            Bu araç, Çorlu TSO Proje Birimi tarafından özgün olarak geliştirilmiştir.
+            Herhangi bir ticari veya akademik aracın birebir kopyası değildir — aşağıda
+            listelenen uluslararası kabul görmüş dijital olgunluk çerçevelerinin
+            kavramsal yapısından esinlenerek tasarlanmış, KOBİ'lere yönelik hafif bir
+            <strong> ön-tarama (self-assessment) aracıdır.</strong>
+          </p>
+
+          <div>
+            <div className="text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>Referans Alınan Çerçeveler</div>
+            <ul className="space-y-2.5 list-none">
+              <li>
+                <strong>1. acatech Industrie 4.0 Maturity Index</strong> — Almanya Ulusal Bilim
+                ve Mühendislik Akademisi (Schuh vd., 2017/2020). Kaynaklar, Bilgi Sistemleri,
+                Organizasyonel Yapı ve Kültür olmak üzere 4 yapısal alanda, 6 aşamalı
+                (Bilgisayarlaşma → Bağlanabilirlik → Görünürlük → Şeffaflık → Öngörü
+                Yeteneği → Uyarlanabilirlik) bir olgunluk modeli sunar. Aracımızın genel
+                olgunluk seviyeleri bu 6 aşamalı yapıdan uyarlanmıştır.
+              </li>
+              <li>
+                <strong>2. MIT Center for Digital Business & Capgemini — Digital Maturity Model</strong> —
+                Westerman, Bonnet & McAfee (2014), <em>"Leading Digital"</em>, Harvard Business
+                Review Press. Dijital Yoğunluk ile Dönüşüm Yönetimi Yoğunluğu'nun birlikte
+                ölçülmesi gerektiği ilkesi, aracımızın Dijital Yetkinlik ve İnsan Kaynağı
+                eksenine yansıtılmıştır.
+              </li>
+              <li>
+                <strong>3. Avrupa Komisyonu EDIH Ağı — Open DMAT</strong> (Digital Maturity
+                Assessment Tool for SMEs). Dijital İş Stratejisi, Dijital Hazırlık, İnsan
+                Odaklı Dijitalleşme, Veri Yönetimi, Otomasyon & Yapay Zeka ve Yeşil
+                Dijitalleşme eksenlerini kapsar; aracımızın 6 ekseni kavramsal olarak bu
+                yapıyla örtüşecek şekilde tasarlanmıştır.
+              </li>
+              <li>
+                <strong>4. Capability Maturity Model (CMMI Institute / SEI, Carnegie Mellon
+                Üniversitesi)</strong> — Kademeli olgunluk seviyesiyle süreç değerlendirme
+                metodolojisinin genel bilimsel temelini oluşturur; anket tabanlı
+                öz-değerlendirme yaklaşımımız bu geleneği takip eder.
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <div className="text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>Yöntem</div>
+            <ul className="space-y-1.5 list-none">
+              <li>• 6 eksen, eksen başına 5 soru — toplam 30 soru</li>
+              <li>• Her soru 1 (hiç yok) – 5 (tam entegre) arası Likert ölçeğiyle yanıtlanır</li>
+              <li>• Eksen puanı: o eksendeki soruların aritmetik ortalaması</li>
+              <li>• Genel olgunluk puanı: 6 eksen puanının eşit ağırlıklı ortalaması (şeffaflık için ek ağırlıklandırma yapılmamıştır)</li>
+              <li>• Genel puan, acatech'in 6 aşamalı modeline uyarlanmış bir ölçekle yorumlanır</li>
+            </ul>
+          </div>
+
+          <div>
+            <div className="text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>Sınırlamalar</div>
+            <p>
+              Şeffaflık gereği belirtilmelidir: bu bir <strong>öz-beyan (self-report)</strong>{" "}
+              anketidir, üçüncü taraf doğrulaması içermez. Sertifikalı bir değerlendirme
+              değildir — TÜBİTAK TÜSSİDE D3A/DDX veya EDIH Open DMAT gibi resmi araçların
+              yerine geçmez; onlara <strong>ön hazırlık</strong> niteliğindedir. Sonuçlar,
+              cevap veren kişinin firma hakkındaki bilgi düzeyine bağlıdır.
+            </p>
+          </div>
+
+          <div>
+            <div className="text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>Kaynakça</div>
+            <ul className="space-y-1.5 list-none dmat-mono text-xs" style={{ color: "var(--steel)" }}>
+              <li>Schuh, G., Anderl, R., Gausemeier, J., ten Hompel, M., & Wahlster, W. (Eds.). (2020). Industrie 4.0 Maturity Index: Managing the Digital Transformation of Companies. acatech STUDY. Munich: Herbert Utz Verlag.</li>
+              <li>Westerman, G., Bonnet, D., & McAfee, A. (2014). Leading Digital: Turning Technology into Business Transformation. Harvard Business Review Press.</li>
+              <li>Westerman, G., Bonnet, D., & McAfee, A. (2014). The Nine Elements of Digital Transformation. MIT Sloan Management Review.</li>
+              <li>European Commission, European Digital Innovation Hubs Network — Digital Maturity Assessment Tool (Open DMAT) for SMEs.</li>
+            </ul>
+          </div>
+        </div>
+
+        <button
+          onClick={onClose}
+          className="dmat-btn-primary px-5 py-2.5 text-sm font-medium mt-6"
+        >
+          Kapat
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------------------------------------------------------
    ANA UYGULAMA
 --------------------------------------------------------------- */
 
@@ -265,6 +392,7 @@ export default function App() {
   const [answers, setAnswers] = useState({});
   const [consent, setConsent] = useState(false);
   const [showConsentText, setShowConsentText] = useState(false);
+  const [showMethodology, setShowMethodology] = useState(false);
   const [saveState, setSaveState] = useState("idle"); // idle | saving | saved | error
 
   const currentAxis = AXES[axisIndex];
@@ -367,17 +495,28 @@ export default function App() {
                 {screen === "quiz" ? `EKSEN ${axisIndex + 1} / ${AXES.length}` : "SONUÇ RAPORU"}
               </div>
             )}
+            {screen === "intro" && (
+              <button
+                onClick={() => setShowMethodology(true)}
+                className="dmat-mono text-xs underline"
+                style={{ color: "var(--steel)" }}
+              >
+                Metodoloji
+              </button>
+            )}
           </div>
+
+          {showMethodology && <MethodologyModal onClose={() => setShowMethodology(false)} />}
 
           {/* INTRO */}
           {screen === "intro" && (
             <div>
-              <div className="dmat-mono text-xs mb-3" style={{ color: "var(--brass)" }}>ÖN DEĞERLENDİRME · ~10 DAKİKA</div>
+              <div className="dmat-mono text-xs mb-3" style={{ color: "var(--brass)" }}>ÖN DEĞERLENDİRME · ~12-15 DAKİKA</div>
               <h1 className="dmat-display text-4xl font-bold leading-tight mb-5">
                 Firmanızın dijital<br/>olgunluk seviyesini ölçün.
               </h1>
               <p className="text-base leading-relaxed mb-6" style={{ color: "#3A4250", maxWidth: 520 }}>
-                6 eksende, 24 soruluk kısa bir değerlendirme ile firmanızın dijital dönüşümde
+                6 eksende, 30 soruluk kısa bir değerlendirme ile firmanızın dijital dönüşümde
                 bulunduğu noktayı görün. Sonuçlar; hangi alanda güçlü, hangi alanda öncelikli
                 gelişim ihtiyacı olduğunuzu gösterir ve size uygun destek programlarına
                 yönlendirir.
@@ -644,7 +783,7 @@ export default function App() {
               )}
 
               {/* CTA */}
-              <div className="dmat-card p-6 mb-8" style={{ borderColor: "var(--ink)" }}>
+              <div className="dmat-card p-6 mb-6" style={{ borderColor: "var(--ink)" }}>
                 <div className="flex items-start gap-3">
                   <CircleCheck size={20} style={{ color: "var(--green)", marginTop: 2, flexShrink: 0 }} />
                   <div>
@@ -657,6 +796,26 @@ export default function App() {
                     </p>
                   </div>
                 </div>
+              </div>
+
+              {/* METODOLOJİ ÖZETİ */}
+              <div className="dmat-card p-6 mb-8">
+                <div className="dmat-mono text-xs mb-2" style={{ color: "var(--brass)" }}>METODOLOJİ</div>
+                <div className="text-sm font-semibold mb-2">Bu değerlendirme neye dayanıyor?</div>
+                <p className="text-sm leading-relaxed mb-3" style={{ color: "#3A4250" }}>
+                  Bu araç; acatech Industrie 4.0 Maturity Index (Almanya Ulusal Bilim ve
+                  Mühendislik Akademisi), MIT & Capgemini Digital Maturity Model (Westerman,
+                  Bonnet & McAfee) ve Avrupa Komisyonu EDIH Open DMAT çerçevelerinden
+                  esinlenerek Çorlu TSO Proje Birimi tarafından özgün olarak geliştirilmiştir.
+                  Sertifikalı bir değerlendirme değildir; resmi araçlara ön hazırlık
+                  niteliğindedir.
+                </p>
+                <button
+                  onClick={() => setShowMethodology(true)}
+                  className="dmat-btn-ghost px-4 py-2 text-xs font-medium"
+                >
+                  Detaylı Metodolojiyi ve Kaynakçayı Gör
+                </button>
               </div>
 
               <button
