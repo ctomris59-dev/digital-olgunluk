@@ -178,13 +178,12 @@ function drawRadar(doc, scores, cx, cy, maxR) {
 }
 
 /* ---------------------------------------------------------------
-   EKSEN KART ÇİZİM YARDIMCISI (DİNAMİK YÜKSEKLİK VE %100 SIĞMA)
+   EKSEN KART ÇİZİM YARDIMCISI (DİNAMİK KUTU VE TAŞMA ENGELLEYİCİ)
 --------------------------------------------------------------- */
 
 function drawAxisCard(doc, axis, score, x, y, width) {
   const guide = axisLevelGuide(axis, score);
 
-  // Metinlerin Satır Sayılarını Önceden Hesaplama
   doc.setFont("DejaVuSans", "normal");
   doc.setFontSize(8);
   const descLines = doc.splitTextToSize(guide.description, width - 12);
@@ -196,46 +195,38 @@ function drawAxisCard(doc, axis, score, x, y, width) {
   const halfW = (width - 16) / 2;
   doc.setFontSize(6.8);
   const kpiText = axis.kpis ? axis.kpis.slice(0, 2).join(" • ") : "";
-  const kpiLines = doc.splitTextToSize(kpiText, halfW - 4);
+  const kpiLines = doc.splitTextToSize(kpiText, halfW - 6);
 
   const qwText = axis.quickWin || "";
-  const qwLines = doc.splitTextToSize(qwText, halfW - 4);
+  const qwLines = doc.splitTextToSize(qwText, halfW - 6);
 
-  // Alt Kutuların İhtiyaç Duyduğu Yükseklik
   const subBoxContentH = Math.max(kpiLines.length, qwLines.length) * 3.2;
-  const subBoxH = Math.max(13, 6 + subBoxContentH);
+  const subBoxH = Math.max(14, 6 + subBoxContentH);
 
-  // Toplam Kart Yüksekliği Hesabı
   const cardHeight = 16 + (descLines.length * 3.8) + 4 + (actionLines.length * 3.6) + 4 + subBoxH + 4;
 
-  // Kart Arka Planı
   doc.setFillColor(...LIGHT_BG);
   doc.setDrawColor(...GRID);
   doc.roundedRect(x, y, width, cardHeight, 2, 2, "FD");
 
-  // Sol Mavi Dikey Şerit
   doc.setFillColor(...BLUE);
   doc.rect(x, y, 2.5, cardHeight, "F");
 
-  // Başlık Satırı
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(9.5);
   doc.setTextColor(...NAVY);
   doc.text(`${axis.no}. ${axis.title}`, x + 6, y + 6);
 
-  // Puan
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(10);
   doc.setTextColor(...BLUE);
   doc.text(`${score.toFixed(2)} / 5.00`, x + width - 6, y + 6, { align: "right" });
 
-  // Seviye Rozeti
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(8);
   doc.setTextColor(...AMBER);
   doc.text(`SEVİYE ${guide.level}: ${guide.name.toUpperCase()}`, x + 6, y + 11.5);
 
-  // Açıklama Metni
   doc.setFont("DejaVuSans", "normal");
   doc.setFontSize(8);
   doc.setTextColor(51, 65, 85);
@@ -243,7 +234,6 @@ function drawAxisCard(doc, axis, score, x, y, width) {
 
   let currentY = y + 16 + descLines.length * 3.8 + 1;
 
-  // Aksiyon Yol Haritası
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(8);
   doc.setTextColor(...NAVY);
@@ -257,7 +247,6 @@ function drawAxisCard(doc, axis, score, x, y, width) {
 
   currentY += actionLines.length * 3.6 + 3;
 
-  // KPI Kutusu (Sol)
   doc.setFillColor(241, 245, 249);
   doc.setDrawColor(226, 232, 240);
   doc.roundedRect(x + 6, currentY, halfW, subBoxH, 1, 1, "FD");
@@ -272,7 +261,6 @@ function drawAxisCard(doc, axis, score, x, y, width) {
   doc.setTextColor(...STEEL);
   doc.text(kpiLines, x + 8, currentY + 7.5);
 
-  // Quick Win Kutusu (Sağ)
   doc.setFillColor(254, 243, 199);
   doc.setDrawColor(252, 211, 77);
   doc.roundedRect(x + 8 + halfW, currentY, halfW, subBoxH, 1, 1, "FD");
@@ -309,7 +297,6 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   drawHeaderBanner(doc, logoBase64);
   let y = 26;
 
-  // Başlık Kutusu
   doc.setFillColor(...LIGHT_BG);
   doc.setDrawColor(...GRID);
   doc.roundedRect(MARGIN, y, CONTENT_W, 15, 2, 2, "FD");
@@ -323,7 +310,6 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   doc.text(`Rapor Tarihi: ${dateStr}  ·  Çorlu TSO Proje Servisi Danışmanlık Hizmetleri`, MARGIN + 5, y + 11.5);
   y += 19;
 
-  // Genel Skor Kartı
   doc.setFillColor(239, 246, 255);
   doc.setDrawColor(191, 219, 254);
   doc.roundedRect(MARGIN, y, CONTENT_W, 30, 3, 3, "FD");
@@ -352,7 +338,6 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
 
   y += 36;
 
-  // Rapor Açıklaması
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(11);
   doc.setTextColor(...NAVY);
@@ -369,7 +354,6 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   );
   y += 8;
 
-  // Seviye Skalası
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(11);
   doc.setTextColor(...NAVY);
@@ -404,15 +388,12 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   doc.text("Eksen Bazlı Olgunluk Analizi ve Puan Karnesi", MARGIN, y);
   y += 5;
 
-  // ÜST DASHBOARD KUTUSU (Sol: Radar, Sağ: Özet Tablo)
   doc.setFillColor(...LIGHT_BG);
   doc.setDrawColor(...GRID);
   doc.roundedRect(MARGIN, y, CONTENT_W, 52, 2, 2, "FD");
 
-  // Sol: Radar Grafiği
   drawRadar(doc, scores, MARGIN + 40, y + 26, 18);
 
-  // Sağ: Puan Özeti Tablosu
   const rightX = MARGIN + 84;
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(9);
@@ -433,7 +414,6 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
     doc.setTextColor(...BLUE);
     doc.text(`${score.toFixed(2)}`, rightX + 34, rowY, { align: "right" });
 
-    // İlerleme Barı
     doc.setFillColor(226, 232, 240);
     doc.rect(rightX + 38, rowY - 2.5, 48, 3.5, "F");
     doc.setFillColor(...BLUE);
@@ -442,7 +422,6 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
 
   y += 56;
 
-  // Eksen 1, 2, 3 Kartları
   AXES.slice(0, 3).forEach((a) => {
     const score = scores[a.id];
     const h = drawAxisCard(doc, a, score, MARGIN, y, CONTENT_W);
@@ -460,7 +439,6 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   doc.text("Eksen Bazlı Detaylı Analiz ve Yol Haritası (Devam)", MARGIN, y);
   y += 6;
 
-  // Eksen 4, 5, 6 Kartları
   AXES.slice(3, 6).forEach((a) => {
     const score = scores[a.id];
     const h = drawAxisCard(doc, a, score, MARGIN, y, CONTENT_W);
@@ -472,7 +450,6 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   drawHeaderBanner(doc, logoBase64);
   y = 26;
 
-  // 1. İkiz Dönüşüm (Yeşil & Dijital) Bölümü
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(11);
   doc.setTextColor(...NAVY);
@@ -499,7 +476,6 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
 
   y += 41;
 
-  // 2. Öncelikli Gelişim Alanları
   if (weakAxes.length > 0) {
     doc.setFont("DejaVuSans", "bold");
     doc.setFontSize(11);
@@ -544,7 +520,6 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
     y += 2;
   }
 
-  // 3. Eşleştirilmiş Resmi Destek Programları
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(11);
   doc.setTextColor(...NAVY);
@@ -581,7 +556,7 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
 
   y += 3;
 
-  // 4. Çorlu TSO Proje Servisi Çağrı Kutusu (DÜZELTİLDİ VE ÇOK SATIRLI HİZALANDI)
+  // 4. ÇORLU TSO PROJE SERVİSİ ÇAĞRI KUTUSU (GÜNCELLENDİ VE AŞAĞI KIVRILMA DESTEKLENDİ)
   doc.setFont("DejaVuSans", "normal");
   doc.setFontSize(7.5);
   const calloutText = "Rapor sonuçlarınızı detaylandırmak ve firmanıza özel yol haritası oluşturmak için Odamız uzmanlarıyla birebir danışmanlık randevusu alabilirsiniz.";
@@ -600,7 +575,7 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   doc.setFont("DejaVuSans", "normal");
   doc.setFontSize(7.5);
   doc.setTextColor(255, 255, 255);
-  doc.text(calloutLines, MARGIN + 5, y + 10.5);
+  doc.text(calloutLines, MARGIN + 5, y + 10);
 
   /* ================= SAYFA 5: BİLİMSEL METODOLOJİ VE AKADEMİK KAYNAKÇA ================= */
   doc.addPage();
