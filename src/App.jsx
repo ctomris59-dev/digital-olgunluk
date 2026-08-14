@@ -6,6 +6,48 @@ import { AXES, SCALE_LABELS, LEVELS, levelFor, statusFor, axisLevelGuide } from 
 import { generatePdfReport } from "./lib/pdfReport";
 
 /* ---------------------------------------------------------------
+   RENK SKALASI DİNAMİK YARDIMCI FONKSİYONU
+--------------------------------------------------------------- */
+function getScoreColorConfig(score) {
+  if (score < 2.0) {
+    return {
+      barBg: "bg-red-500",
+      badgeBg: "bg-red-50 text-red-700 border-red-200",
+      text: "text-red-600",
+      label: "Kritik"
+    };
+  } else if (score < 3.0) {
+    return {
+      barBg: "bg-orange-500",
+      badgeBg: "bg-orange-50 text-orange-700 border-orange-200",
+      text: "text-orange-600",
+      label: "Gelişime Açık"
+    };
+  } else if (score < 4.0) {
+    return {
+      barBg: "bg-amber-500",
+      badgeBg: "bg-amber-50 text-amber-800 border-amber-200",
+      text: "text-amber-700",
+      label: "Orta Seviye"
+    };
+  } else if (score < 4.5) {
+    return {
+      barBg: "bg-emerald-500",
+      badgeBg: "bg-emerald-50 text-emerald-800 border-emerald-200",
+      text: "text-emerald-700",
+      label: "İyi Seviye"
+    };
+  } else {
+    return {
+      barBg: "bg-blue-600",
+      badgeBg: "bg-blue-50 text-blue-800 border-blue-200",
+      text: "text-blue-800",
+      label: "Lider"
+    };
+  }
+}
+
+/* ---------------------------------------------------------------
    RADAR / GAUGE GÖRSELLERİ
 --------------------------------------------------------------- */
 
@@ -127,7 +169,7 @@ function Gauge({ value }) {
 }
 
 /* ---------------------------------------------------------------
-   METODOLOJİ İÇERİĞİ (TAM VE OLUŞTURULMUŞ METİN KORUNDU)
+   METODOLOJİ İÇERİĞİ
 --------------------------------------------------------------- */
 
 function MethodologyModal({ onClose }) {
@@ -742,28 +784,33 @@ export default function App() {
               <div>
                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">EKSEN BAZLI SONUÇLAR VE YÖNLENDİRMELER</h3>
                 <p className="text-xs text-slate-500 mt-1">
-                  Her eksendeki puan, CMMI'ın 5 seviyeli olgunluk merdivenine (Başlangıç → Tekrarlanabilir → Tanımlı → Ölçülüyor → Optimize Ediliyor) göre yorumlanır.
+                  Her eksendeki puan, CMMI'ın 5 seviyeli olgunluk merdivenine göre renk skalası ile değerlendirilir.
                 </p>
               </div>
 
               <div className="grid gap-3">
                 {AXES.map((a) => {
                   const s = scores[a.id];
-                  const st = statusFor(s);
+                  const colorCfg = getScoreColorConfig(s);
                   const guide = axisLevelGuide(a, s);
                   return (
                     <div key={a.id} className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between gap-2">
                         <span className="text-sm font-bold text-slate-900">{a.no} {a.title}</span>
-                        <span className="text-sm font-extrabold text-blue-900 bg-blue-50 px-2.5 py-1 rounded border border-blue-100">
+                        <span className={`text-xs font-extrabold px-3 py-1 rounded-full border ${colorCfg.badgeBg}`}>
                           {s.toFixed(2)} / 5.00
                         </span>
                       </div>
-                      <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-blue-900 rounded-full transition-all duration-500" style={{ width: `${(s / 5) * 100}%` }} />
+                      <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                        <div className={`h-full ${colorCfg.barBg} rounded-full transition-all duration-500`} style={{ width: `${(s / 5) * 100}%` }} />
                       </div>
-                      <div className="text-xs font-bold text-blue-900 uppercase tracking-wider">
-                        SEVİYE {guide.level} — {guide.name.toUpperCase()}
+                      <div className="flex items-center justify-between text-xs">
+                        <span className={`font-bold uppercase tracking-wider ${colorCfg.text}`}>
+                          SEVİYE {guide.level} — {guide.name.toUpperCase()}
+                        </span>
+                        <span className="text-[11px] font-medium text-slate-400">
+                          {colorCfg.label}
+                        </span>
                       </div>
                       <p className="text-xs text-slate-600 leading-relaxed">{guide.description}</p>
                       <div className="p-2.5 bg-slate-50 rounded-lg text-xs text-slate-800 font-medium border border-slate-100">
