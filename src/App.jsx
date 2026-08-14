@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { ArrowRight, ArrowLeft, RotateCcw, ExternalLink, CircleCheck, X, Download, GraduationCap, ShieldCheck, CheckCircle2, ChevronRight } from "lucide-react";
+import { ArrowRight, ArrowLeft, RotateCcw, ExternalLink, CircleCheck, X, Download, GraduationCap, ShieldCheck, CheckCircle2, ChevronRight, Award } from "lucide-react";
 import { saveAssessment, saveTrainingSignup } from "./lib/supabaseClient";
 import { notifyTrainingSignup } from "./lib/emailNotify";
 import { AXES, SCALE_LABELS, LEVELS, levelFor, statusFor, axisLevelGuide } from "./lib/data";
@@ -458,27 +458,42 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900">
-      {/* KURUMSAL ÜST HEADER BANNER */}
-      <header className="bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-40 shadow-md">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
-          <div className="flex items-center gap-3.5">
-            <img
-              src="/ctso-logo.jpg"
-              alt="Çorlu TSO Logo"
-              className="h-10 w-10 object-contain bg-white rounded p-0.5"
-            />
+      {/* VURGULU VE PRESTİJLİ KURUMSAL HEADER */}
+      <header className="bg-slate-950 border-b-2 border-amber-500/80 text-white sticky top-0 z-40 shadow-xl">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
+          
+          {/* VURGULU LOGO VE KURUM BAŞLIĞI */}
+          <div className="flex items-center gap-4">
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-amber-500/30 rounded-xl blur-sm group-hover:bg-amber-500/50 transition-all"></div>
+              <img
+                src="/ctso-logo.jpg"
+                alt="Çorlu TSO Logo"
+                className="relative h-12 w-12 object-contain bg-white rounded-lg p-1 shadow-md border border-slate-200"
+              />
+            </div>
             <div>
-              <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider leading-none">
-                Çorlu Ticaret ve Sanayi Odası
+              <div className="text-[11px] font-black text-amber-400 uppercase tracking-widest leading-none flex items-center gap-1.5">
+                <span>ÇORLU TİCARET VE SANAYİ ODASI</span>
               </div>
-              <div className="text-base font-bold text-white tracking-tight mt-1">
+              <div className="text-lg sm:text-xl font-black text-white tracking-tight mt-1 flex items-center gap-2">
                 Dijital Olgunluk Ölçüm Aracı
               </div>
             </div>
           </div>
+
+          {/* SAĞ TARAFTA RESMİ HİZMET ROZETİ */}
+          <div className="hidden md:flex items-center gap-3">
+            <div className="text-right border-r border-slate-800 pr-3">
+              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">RESMİ HİZMET PORTALI</div>
+              <div className="text-xs font-semibold text-slate-200">Çorlu TSO Tarafından Geliştirilmiştir</div>
+            </div>
+            <Award className="text-amber-400 flex-shrink-0" size={24} />
+          </div>
+
           {screen !== "intro" && (
-            <span className="hidden sm:inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700">
-              {screen === "quiz" ? `EKSEN ${axisIndex + 1} / ${AXES.length}` : "SONUÇ RAPORU"}
+            <span className="md:hidden inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold bg-slate-800 text-amber-400 border border-slate-700">
+              {screen === "quiz" ? `${axisIndex + 1}/${AXES.length}` : "RAPOR"}
             </span>
           )}
         </div>
@@ -491,17 +506,21 @@ export default function App() {
         {/* EKRAN 1: INTRO */}
         {screen === "intro" && (
           <div className="space-y-8">
-            {/* HERO BÖLÜMÜ */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm">
-              <div className="flex items-center gap-2 text-xs font-semibold text-blue-900 uppercase tracking-wider mb-2">
-                <ShieldCheck size={16} />
-                <span>ÖN DEĞERLENDİRME · ~12-15 DAKİKA</span>
+            {/* HERO BÖLÜMÜ - ÇORLU TSO VURGUSU İLE */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-amber-500 text-slate-950 text-[10px] font-extrabold uppercase px-3 py-1 rounded-bl-lg tracking-wider">
+                Resmi Üye Hizmeti
+              </div>
+              
+              <div className="flex items-center gap-2 text-xs font-bold text-blue-900 uppercase tracking-wider mb-2">
+                <ShieldCheck size={18} className="text-amber-600" />
+                <span>ÇORLU TSO PROJE SERVİSİ DİJİTAL DÖNÜŞÜM HİZMETİ</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight mb-3">
                 Firmanızın dijital olgunluk seviyesini ölçün.
               </h1>
               <p className="text-slate-600 text-base leading-relaxed max-w-2xl mb-6">
-                6 eksende, 30 soruluk kısa bir değerlendirme ile firmanızın dijital dönüşümde bulunduğu noktayı görün. Sonuçlar; hangi alanda güçlü, hangi alanda öncelikli gelişim ihtiyacı olduğunuzu gösterir ve size uygun destek programlarına yönlendirir.
+                Çorlu Ticaret ve Sanayi Odası tarafından bölgemizdeki işletmelerin dijitalleşme süreçlerini desteklemek amacıyla geliştirilen bu ön değerlendirme aracı ile 6 stratejik eksende yetkinliklerinizi analiz edin.
               </p>
 
               {/* BİLGİ ROZETLERİ */}
@@ -524,20 +543,22 @@ export default function App() {
             {/* BİLİMSEL METODOLOJİ BANNERİ */}
             <div 
               onClick={() => setShowMethodology(true)}
-              className="bg-slate-900 text-white rounded-xl p-5 shadow-sm border border-slate-800 flex items-center justify-between gap-4 cursor-pointer hover:bg-slate-800 transition-all group"
+              className="bg-slate-950 text-white rounded-xl p-5 shadow-sm border border-slate-800 flex items-center justify-between gap-4 cursor-pointer hover:bg-slate-900 transition-all group"
             >
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-blue-900/50 border border-blue-700/50 rounded-lg text-blue-300">
+                <div className="p-3 bg-blue-950 border border-blue-800 rounded-lg text-amber-400">
                   <GraduationCap size={22} />
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-white uppercase tracking-wider">BİLİMSEL METODOLOJİ VE KAYNAKÇA</h4>
+                  <h4 className="text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2">
+                    <span>BİLİMSEL METODOLOJİ VE KAYNAKÇA</span>
+                  </h4>
                   <p className="text-xs text-slate-300 mt-0.5">
                     acatech, MIT & Capgemini, AB EDIH, ISO/IEC 33001 ve OECD çerçevelerine dayanır — tam kaynakça için tıklayın →
                   </p>
                 </div>
               </div>
-              <div className="flex items-center text-xs font-semibold text-blue-300 group-hover:translate-x-0.5 transition-transform">
+              <div className="flex items-center text-xs font-semibold text-amber-400 group-hover:translate-x-0.5 transition-transform">
                 Detaylar <ChevronRight size={16} className="ml-1" />
               </div>
             </div>
@@ -952,6 +973,14 @@ export default function App() {
           </div>
         )}
       </main>
+
+      {/* FOOTER KURUMSAL İMZA */}
+      <footer className="border-t border-slate-200 bg-white py-6 mt-12 text-center text-xs text-slate-500">
+        <div className="max-w-4xl mx-auto px-4">
+          <p className="font-semibold text-slate-700">Çorlu Ticaret ve Sanayi Odası © {new Date().getFullYear()}</p>
+          <p className="mt-1 text-[11px] text-slate-400">Proje Servisi — Dijital Dönüşüm Hizmetleri Portal Girişimi</p>
+        </div>
+      </footer>
     </div>
   );
 }
