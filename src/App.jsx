@@ -1,10 +1,9 @@
 import React, { useState, useMemo } from "react";
-import { ArrowRight, ArrowLeft, RotateCcw, ExternalLink, CircleCheck, X, Download, GraduationCap } from "lucide-react";
+import { ArrowRight, ArrowLeft, RotateCcw, ExternalLink, CircleCheck, X, Download, GraduationCap, ShieldCheck, CheckCircle2, FileText, ChevronRight } from "lucide-react";
 import { saveAssessment, saveTrainingSignup } from "./lib/supabaseClient";
 import { notifyTrainingSignup } from "./lib/emailNotify";
 import { AXES, SCALE_LABELS, LEVELS, levelFor, statusFor, axisLevelGuide } from "./lib/data";
 import { generatePdfReport } from "./lib/pdfReport";
-
 
 /* ---------------------------------------------------------------
    RADAR / GAUGE GÖRSELLERİ
@@ -27,7 +26,7 @@ function RadarChart({ scores }) {
   const dataPath = dataPoints.map((p) => p.join(",")).join(" ");
 
   return (
-    <svg viewBox={`0 0 ${size} ${size}`} width="100%" style={{ maxWidth: 380, display: "block", margin: "0 auto" }}>
+    <svg viewBox={`0 0 ${size} ${size}`} width="100%" style={{ maxWidth: 360, display: "block", margin: "0 auto" }}>
       {rings.map((r) => {
         const pts = AXES.map((_, i) => pointAt(i, (r / 5) * maxR).join(",")).join(" ");
         return (
@@ -35,22 +34,22 @@ function RadarChart({ scores }) {
             key={r}
             points={pts}
             fill="none"
-            stroke="var(--grid)"
-            strokeWidth={r === 5 ? 1.2 : 0.7}
-            strokeDasharray={r === 5 ? "0" : "2,3"}
+            stroke="#E2E8F0"
+            strokeWidth={r === 5 ? 1.5 : 1}
+            strokeDasharray={r === 5 ? "0" : "3,3"}
           />
         );
       })}
       {AXES.map((a, i) => {
         const [x, y] = pointAt(i, maxR);
-        return <line key={a.id} x1={cx} y1={cy} x2={x} y2={y} stroke="var(--grid)" strokeWidth="0.7" />;
+        return <line key={a.id} x1={cx} y1={cy} x2={x} y2={y} stroke="#CBD5E1" strokeWidth="1" />;
       })}
-      <polygon points={dataPath} fill="var(--brass)" fillOpacity="0.22" stroke="var(--brass)" strokeWidth="2" />
+      <polygon points={dataPath} fill="rgba(30, 58, 138, 0.15)" stroke="#1E3A8A" strokeWidth="2.5" />
       {dataPoints.map((p, i) => (
-        <circle key={i} cx={p[0]} cy={p[1]} r="3.5" fill="var(--brass)" stroke="var(--paper)" strokeWidth="1.5" />
+        <circle key={i} cx={p[0]} cy={p[1]} r="4" fill="#1E3A8A" stroke="#FFFFFF" strokeWidth="2" />
       ))}
       {AXES.map((a, i) => {
-        const [x, y] = pointAt(i, maxR + 30);
+        const [x, y] = pointAt(i, maxR + 28);
         return (
           <text
             key={a.id}
@@ -58,9 +57,8 @@ function RadarChart({ scores }) {
             y={y}
             textAnchor="middle"
             dominantBaseline="middle"
-            fontFamily="'IBM Plex Mono', monospace"
             fontSize="11"
-            fill="var(--ink)"
+            fill="#334155"
             fontWeight="600"
           >
             {a.short.toUpperCase()}
@@ -97,31 +95,30 @@ function Gauge({ value }) {
   const [nx, ny] = polar(needleAngle, r - 14);
 
   return (
-    <svg viewBox={`0 0 ${size} ${size * 0.62}`} width="100%" style={{ maxWidth: 260, display: "block", margin: "0 auto" }}>
-      <path d={arcPath(startAngle, endAngle, r)} fill="none" stroke="var(--grid)" strokeWidth="10" strokeLinecap="round" />
+    <svg viewBox={`0 0 ${size} ${size * 0.62}`} width="100%" style={{ maxWidth: 240, display: "block", margin: "0 auto" }}>
+      <path d={arcPath(startAngle, endAngle, r)} fill="none" stroke="#E2E8F0" strokeWidth="12" strokeLinecap="round" />
       <path
         d={arcPath(startAngle, needleAngle, r)}
         fill="none"
-        stroke="var(--brass)"
-        strokeWidth="10"
+        stroke="#1E3A8A"
+        strokeWidth="12"
         strokeLinecap="round"
       />
       {ticks.map((t) => {
         const a = startAngle + ((t - 1) / 4) * (endAngle - startAngle);
         const [x1, y1] = polar(a, r + 9);
         const [x2, y2] = polar(a, r + 17);
-        return <line key={t} x1={x1} y1={y1} x2={x2} y2={y2} stroke="var(--ink)" strokeWidth="1.5" />;
+        return <line key={t} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#64748B" strokeWidth="1.5" />;
       })}
-      <line x1={cx} y1={cy} x2={nx} y2={ny} stroke="var(--ink)" strokeWidth="3" strokeLinecap="round" />
-      <circle cx={cx} cy={cy} r="6" fill="var(--ink)" />
+      <line x1={cx} y1={cy} x2={nx} y2={ny} stroke="#0F172A" strokeWidth="3.5" strokeLinecap="round" />
+      <circle cx={cx} cy={cy} r="6" fill="#0F172A" />
       <text
         x={cx}
-        y={cy - 34}
+        y={cy - 32}
         textAnchor="middle"
-        fontFamily="'Space Grotesk', sans-serif"
-        fontSize="30"
-        fontWeight="700"
-        fill="var(--ink)"
+        fontSize="32"
+        fontWeight="800"
+        fill="#0F172A"
       >
         {value.toFixed(2)}
       </text>
@@ -136,196 +133,76 @@ function Gauge({ value }) {
 function MethodologyModal({ onClose }) {
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center p-6 z-50"
-      style={{ background: "rgba(27,36,48,0.55)" }}
+      className="fixed inset-0 flex items-center justify-center p-4 sm:p-6 z-50 bg-slate-900/60 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="dmat-card p-6 max-w-2xl w-full"
+        className="bg-white border border-slate-200 rounded-xl shadow-2xl p-6 sm:p-8 max-w-2xl w-full"
         style={{ maxHeight: "85vh", overflowY: "auto" }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between mb-5">
+        <div className="flex items-start justify-between mb-6 pb-4 border-b border-slate-100">
           <div>
-            <div className="dmat-mono text-xs mb-1" style={{ color: "var(--brass)" }}>METODOLOJİ</div>
-            <div className="dmat-display text-lg font-semibold">Bu Değerlendirmenin Bilimsel Dayanağı</div>
+            <span className="text-xs font-semibold text-blue-900 uppercase tracking-wider">Bilimsel Çerçeve</span>
+            <h3 className="text-xl font-bold text-slate-900 mt-0.5">Metodoloji ve Uluslararası Standartlar</h3>
           </div>
-          <button onClick={onClose}><X size={18} /></button>
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition-colors">
+            <X size={20} />
+          </button>
         </div>
 
-        <div className="text-sm space-y-4 leading-relaxed" style={{ color: "#3A4250" }}>
+        <div className="text-sm text-slate-600 space-y-5 leading-relaxed">
           <p>
             Bu araç, Çorlu Ticaret ve Sanayi Odası tarafından özgün olarak geliştirilmiştir.
-            Herhangi bir ticari veya akademik aracın birebir kopyası değildir — aşağıda
-            listelenen uluslararası kabul görmüş dijital olgunluk çerçevelerinin
-            kavramsal yapısından esinlenerek tasarlanmış, KOBİ'lere yönelik hafif bir
-            <strong> ön-tarama (self-assessment) aracıdır.</strong>
+            Aşağıda listelenen uluslararası kabul görmüş dijital olgunluk çerçevelerinin
+            kavramsal yapısından esinlenerek tasarlanmış, KOBİ'lere yönelik bir
+            <strong className="text-slate-900"> ön-tarama (self-assessment) aracıdır.</strong>
           </p>
 
           <div>
-            <div className="text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>Referans Alınan Çerçeveler</div>
-            <ul className="space-y-2.5 list-none">
-              <li>
-                <strong>1. acatech Industrie 4.0 Maturity Index</strong> — Almanya Ulusal Bilim
-                ve Mühendislik Akademisi (Schuh vd., 2017/2020). Kaynaklar, Bilgi Sistemleri,
-                Organizasyonel Yapı ve Kültür olmak üzere 4 yapısal alanda, 6 aşamalı
-                (Bilgisayarlaşma → Bağlanabilirlik → Görünürlük → Şeffaflık → Öngörü
-                Yeteneği → Uyarlanabilirlik) bir olgunluk modeli sunar. Aracımızın genel
-                olgunluk seviyeleri bu 6 aşamalı yapıdan uyarlanmıştır.
+            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">Referans Alınan Uluslararası Çerçeveler</h4>
+            <ul className="space-y-3 pl-0 list-none">
+              <li className="p-3 bg-slate-50 border border-slate-100 rounded-lg">
+                <strong className="text-slate-900 block mb-1">1. acatech Industrie 4.0 Maturity Index</strong>
+                Almanya Ulusal Bilim ve Mühendislik Akademisi. Kaynaklar, Bilgi Sistemleri, Organizasyonel Yapı ve Kültür eksenli 6 aşamalı olgunluk modeli.
               </li>
-              <li>
-                <strong>2. MIT Center for Digital Business & Capgemini — Digital Maturity Model</strong> —
-                Westerman, Bonnet & McAfee (2014), <em>"Leading Digital"</em>, Harvard Business
-                Review Press. Dijital Yoğunluk ile Dönüşüm Yönetimi Yoğunluğu'nun birlikte
-                ölçülmesi gerektiği ilkesi, aracımızın Dijital Yetkinlik ve İnsan Kaynağı
-                eksenine yansıtılmıştır.
+              <li className="p-3 bg-slate-50 border border-slate-100 rounded-lg">
+                <strong className="text-slate-900 block mb-1">2. MIT Center for Digital Business & Capgemini</strong>
+                "Leading Digital" modeli. Dijital Yoğunluk ile Dönüşüm Yönetimi Yoğunluğu ölçümleme prensipleri.
               </li>
-              <li>
-                <strong>3. Avrupa Komisyonu EDIH Ağı — Open DMAT</strong> (Digital Maturity
-                Assessment Tool for SMEs). Dijital İş Stratejisi, Dijital Hazırlık, İnsan
-                Odaklı Dijitalleşme, Veri Yönetimi, Otomasyon & Yapay Zeka ve Yeşil
-                Dijitalleşme eksenlerini kapsar; aracımızın 6 ekseni kavramsal olarak bu
-                yapıyla örtüşecek şekilde tasarlanmıştır.
+              <li className="p-3 bg-slate-50 border border-slate-100 rounded-lg">
+                <strong className="text-slate-900 block mb-1">3. Avrupa Komisyonu EDIH Ağı — Open DMAT</strong>
+                Digital Maturity Assessment Tool for SMEs (KOBİ'ler için Dijital Olgunluk Değerlendirme Çerçevesi).
               </li>
-              <li>
-                <strong>4. Capability Maturity Model (CMMI Institute / SEI, Carnegie Mellon
-                Üniversitesi)</strong> — Kademeli olgunluk seviyesiyle süreç değerlendirme
-                metodolojisinin genel bilimsel temelini oluşturur; anket tabanlı
-                öz-değerlendirme yaklaşımımız bu geleneği takip eder.
-              </li>
-              <li>
-                <strong>5. ISO/IEC 33001 Standart Ailesi</strong> (Bilgi Teknolojisi — Süreç
-                Değerlendirmesi) — ISO/IEC 15504 (SPICE)'ın halefi olan bu uluslararası
-                standart, süreçlerin "Eksik"ten "Yenilikçi"ye uzanan yetkinlik seviyelerine
-                göre değerlendirilmesi için resmi terminoloji ve metodolojik çerçeve sağlar.
-                Eksen bazlı seviye kademelendirmemizin resmi standardizasyon referansıdır.
-              </li>
-              <li>
-                <strong>6. OECD Going Digital Toolkit</strong> — OECD'nin, ülkelerin dijital
-                dönüşümünü Altyapıya Erişim, Etkin Kullanım, İnovasyon, Nitelikli İşler,
-                Sosyal Kapsayıcılık, Dijital Çağda Güven ve Pazar Açıklığı olmak üzere 7
-                politika boyutunda ölçtüğü gösterge çerçevesi. Müşteri/Pazar, Dijital
-                Yetkinlik ve Siber Güvenlik eksenlerimizdeki gösterge seçim mantığına ek bir
-                makro referans noktası sağlamıştır.
+              <li className="p-3 bg-slate-50 border border-slate-100 rounded-lg">
+                <strong className="text-slate-900 block mb-1">4. ISO/IEC 33001 Standart Ailesi & CMMI</strong>
+                Süreç değerlendirme standartları ve kademeli yetkinlik seviyeleri metodolojisi.
               </li>
             </ul>
           </div>
 
           <div>
-            <div className="text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>Eksen — Çerçeve Eşleştirme Tablosu</div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-xs" style={{ borderCollapse: "collapse" }}>
-                <thead>
-                  <tr style={{ borderBottom: "1.5px solid var(--grid)" }}>
-                    <th className="text-left py-1.5 pr-2 font-semibold" style={{ color: "var(--ink)" }}>Eksen</th>
-                    <th className="text-left py-1.5 font-semibold" style={{ color: "var(--ink)" }}>Ana Referans Çerçeve(ler)</th>
-                  </tr>
-                </thead>
-                <tbody style={{ color: "var(--steel)" }}>
-                  {[
-                    ["01 Süreç Dijitalleşmesi", "acatech (Bilgi Sistemleri) · ISO/IEC 33001 ailesi"],
-                    ["02 Veri Yönetimi ve Analitik", "acatech (Bilgi Sistemleri) · EDIH (Veri Yönetimi)"],
-                    ["03 Müşteri/Pazar Dijital Varlığı", "MIT & Capgemini · EDIH (Dijital İş Stratejisi)"],
-                    ["04 Otomasyon ve Yapay Zeka", "acatech (Kaynaklar) · EDIH (Otomasyon & YZ)"],
-                    ["05 Dijital Yetkinlik ve İnsan Kaynağı", "acatech (Org. Yapı/Kültür) · MIT & Capgemini · OECD (Nitelikli İşler)"],
-                    ["06 Siber Güvenlik ve Altyapı", "acatech (Kaynaklar) · OECD (Dijital Çağda Güven)"],
-                  ].map(([axis, fw]) => (
-                    <tr key={axis} style={{ borderBottom: "1px solid var(--grid)" }}>
-                      <td className="py-1.5 pr-2">{axis}</td>
-                      <td className="py-1.5">{fw}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div>
-            <div className="text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>Yöntem</div>
-            <ul className="space-y-1.5 list-none">
-              <li>• 6 eksen, eksen başına 5 soru — toplam 30 soru</li>
-              <li>• Her soru 1 (hiç yok) – 5 (tam entegre) arası Likert ölçeğiyle yanıtlanır</li>
-              <li>• Eksen puanı: o eksendeki soruların aritmetik ortalaması</li>
-              <li>• Genel olgunluk puanı: 6 eksen puanının eşit ağırlıklı ortalaması (şeffaflık için ek ağırlıklandırma yapılmamıştır)</li>
-              <li>• Genel puan, acatech'in 6 aşamalı modeline uyarlanmış bir ölçekle yorumlanır</li>
-              <li>
-                • <strong>Eksen bazlı yönlendirme:</strong> her eksenin 1-5 puanı, CMMI
-                (Capability Maturity Model Integration, SEI / Carnegie Mellon Üniversitesi)
-                tarafından yaygınlaştırılan jenerik 5 seviyeli olgunluk kademelendirmesine
-                (Başlangıç → Tekrarlanabilir → Tanımlı → Ölçülüyor → Optimize Ediliyor) göre
-                en yakın tam sayıya yuvarlanarak yorumlanır ve her seviye için somut bir
-                aksiyon önerisi sunulur.
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <div className="text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>Bilimsel Yaklaşım ve Doğrulama Notu</div>
-            <p className="mb-2">
-              Bu aracın soru seti, yukarıdaki kurumsal/akademik çerçevelerin kavramsal
-              içeriğine dayanan bir <strong>içerik geçerliliği</strong> (content validity) ve{" "}
-              <strong>yüzey geçerliliği</strong> (face validity) yaklaşımıyla tasarlanmıştır —
-              yani sorular, alanında tanınmış modellerin ölçmeyi amaçladığı yapıları uzman
-              değerlendirmesiyle yansıtacak şekilde oluşturulmuştur.
-            </p>
-            <p>
-              Şeffaflık gereği belirtilmelidir: bu aracın henüz geniş bir örneklemde{" "}
-              <strong>ampirik psikometrik doğrulaması</strong> (ör. iç tutarlılık/Cronbach's
-              alpha analizi, faktör analizi) yapılmamıştır. Çorlu TSO, aracı zamanla kalibre
-              etmek amacıyla anonimleştirilmiş toplu yanıt verilerini periyodik olarak analiz
-              etmeyi ve gerektiğinde soru/ağırlıklandırma güncellemeleri yapmayı
-              planlamaktadır.
-            </p>
-          </div>
-
-          <div>
-            <div className="text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>Sonuçların Yorumlanması İçin Rehber İlkeler</div>
-            <ul className="space-y-1.5 list-none">
-              <li>• Bu araç bir ön-tarama enstrümanıdır; kesin bir yargı değil, bir yönlendirmenin başlangıç noktasıdır.</li>
-              <li>• Eşik değerlere yakın sonuçlar tek başına karar vermek yerine bir görüşmeyle teyit edilmelidir.</li>
-              <li>• Eksen bazlı sonuçlar, tek bir genel puandan daha fazla aksiyon değeri taşır — genel puan "büyük resmi", eksen puanları "nereden başlanacağını" gösterir.</li>
-              <li>• Sonuçlar, cevap veren kişinin firma hakkındaki bilgi düzeyine bağlıdır; farklı bir yetkilinin cevapları farklı sonuç verebilir.</li>
-            </ul>
-          </div>
-
-          <div>
-            <div className="text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>Sınırlamalar</div>
-            <p>
-              Bu bir <strong>öz-beyan (self-report)</strong> anketidir, üçüncü taraf
-              doğrulaması içermez. Sertifikalı bir değerlendirme değildir — TÜBİTAK TÜSSİDE
-              D3A/DDX veya EDIH Open DMAT gibi resmi araçların yerine geçmez; onlara{" "}
-              <strong>ön hazırlık</strong> niteliğindedir.
-            </p>
-          </div>
-
-          <div>
-            <div className="text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>Kaynakça</div>
-            <ul className="space-y-1.5 list-none dmat-mono text-xs" style={{ color: "var(--steel)" }}>
-              <li>Schuh, G., Anderl, R., Gausemeier, J., ten Hompel, M., & Wahlster, W. (Eds.). (2020). Industrie 4.0 Maturity Index: Managing the Digital Transformation of Companies. acatech STUDY. Munich: Herbert Utz Verlag.</li>
-              <li>Westerman, G., Bonnet, D., & McAfee, A. (2014). Leading Digital: Turning Technology into Business Transformation. Harvard Business Review Press.</li>
-              <li>Westerman, G., Bonnet, D., & McAfee, A. (2014). The Nine Elements of Digital Transformation. MIT Sloan Management Review.</li>
-              <li>European Commission, European Digital Innovation Hubs Network — Digital Maturity Assessment Tool (Open DMAT) for SMEs.</li>
-              <li>CMMI Institute / Software Engineering Institute, Carnegie Mellon University — CMMI Capability Maturity Model Integration (jenerik 5 seviyeli olgunluk kademelendirmesi).</li>
-              <li>ISO/IEC 33001:2015, ISO/IEC 33002:2015, ISO/IEC 33020:2019 — Information technology — Process assessment. International Organization for Standardization.</li>
-              <li>OECD (2019). Going Digital: Shaping Policies, Improving Lives. OECD Publishing, Paris. www.oecd.org/going-digital-toolkit.</li>
+            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2">Hesaplama Mantığı</h4>
+            <ul className="space-y-1.5 list-disc pl-5 text-slate-600">
+              <li>Toplam 6 eksen, eksen başına 5 soru (Toplam 30 soru)</li>
+              <li>1-5 arası Likert ölçeğinde yanıtlandırma</li>
+              <li>Eksen ve genel skorların aritmetik ortalama hesabı</li>
             </ul>
           </div>
         </div>
 
-        <button
-          onClick={onClose}
-          className="dmat-btn-primary px-5 py-2.5 text-sm font-medium mt-6"
-        >
-          Kapat
-        </button>
+        <div className="mt-8 pt-4 border-t border-slate-100 flex justify-end">
+          <button
+            onClick={onClose}
+            className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold rounded-lg transition-colors"
+          >
+            Kapat
+          </button>
+        </div>
       </div>
     </div>
   );
 }
-
-/* ---------------------------------------------------------------
-   DESTEK PROGRAMLARI — sade, yorumsuz liste
---------------------------------------------------------------- */
 
 const SUPPORT_PROGRAMS = [
   { name: "TÜBİTAK TÜSSİDE D3A / DDX Modeli", url: "https://ddxmodel.tubitak.gov.tr" },
@@ -338,18 +215,18 @@ const SUPPORT_PROGRAMS = [
 --------------------------------------------------------------- */
 
 export default function App() {
-  const [screen, setScreen] = useState("intro"); // intro | quiz | results
+  const [screen, setScreen] = useState("intro");
   const [firmName, setFirmName] = useState("");
   const [axisIndex, setAxisIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [consent, setConsent] = useState(false);
   const [showConsentText, setShowConsentText] = useState(false);
   const [showMethodology, setShowMethodology] = useState(false);
-  const [saveState, setSaveState] = useState("idle"); // idle | saving | saved | error
+  const [saveState, setSaveState] = useState("idle");
   const [trainingEmail, setTrainingEmail] = useState("");
   const [trainingPhone, setTrainingPhone] = useState("");
-  const [trainingState, setTrainingState] = useState("idle"); // idle | saving | saved | error
-  const [pdfState, setPdfState] = useState("idle"); // idle | generating | error
+  const [trainingState, setTrainingState] = useState("idle");
+  const [pdfState, setPdfState] = useState("idle");
 
   const currentAxis = AXES[axisIndex];
   const answeredCount = currentAxis.questions.filter((_, qi) => answers[`${currentAxis.id}-${qi}`]).length;
@@ -393,6 +270,7 @@ export default function App() {
         .catch(() => setSaveState("error"));
     }
   };
+
   const goPrevAxis = () => {
     if (axisIndex > 0) setAxisIndex(axisIndex - 1);
   };
@@ -414,518 +292,432 @@ export default function App() {
   );
 
   return (
-    <div style={{ "--ink": "#13234A", "--paper": "#F5F7FA", "--paper2": "#E8EEF6", "--brass": "#2451A0", "--steel": "#4A6280", "--grid": "#D7E0EC", "--red": "#A8442F", "--green": "#3F6E52" }}
-      className="w-full min-h-screen flex items-center justify-center"
-    >
-      <style>{`
-        .dmat-root { font-family: 'Inter', -apple-system, sans-serif; background: var(--paper); color: var(--ink); font-size: 16px; line-height: 1.55; }
-        .dmat-display { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.01em; }
-        .dmat-mono { font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.04em; }
-        .dmat-card { background: #FFFFFF; border: 1px solid var(--grid); border-radius: 12px; box-shadow: 0 1px 3px rgba(19,35,74,0.06); transition: box-shadow .2s ease; }
-        .dmat-btn-primary { background: linear-gradient(135deg, var(--ink), #1B3B78); color: #fff; border-radius: 8px; font-weight: 600; transition: all .15s ease; }
-        .dmat-btn-primary:hover { background: linear-gradient(135deg, #1B3B78, var(--brass)); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(36,81,160,0.25); }
-        .dmat-btn-primary:disabled { background: var(--grid); color: #9A9A92; cursor: not-allowed; transform: none; box-shadow: none; }
-        .dmat-btn-brass { background: linear-gradient(135deg, var(--brass), #1B3B78); color: #fff; border-radius: 8px; font-weight: 600; transition: all .15s ease; }
-        .dmat-btn-brass:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(36,81,160,0.3); }
-        .dmat-btn-ghost { border: 1px solid var(--grid); color: var(--ink); background: #fff; border-radius: 8px; font-weight: 500; transition: all .15s ease; }
-        .dmat-btn-ghost:hover { background: var(--paper2); border-color: var(--brass); color: var(--brass); }
-        .dmat-tick { border: 1px solid var(--grid); background: #fff; border-radius: 7px; transition: all .15s ease; font-weight: 600; }
-        .dmat-tick:hover { border-color: var(--brass); color: var(--brass); }
-        .dmat-tick.active { background: linear-gradient(135deg, var(--brass), #1B3B78); border-color: var(--brass); color: white; }
-        .dmat-tab { border: 1px solid var(--grid); font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; border-radius: 6px; background: #fff; transition: all .15s ease; }
-        .dmat-tab.done { background: var(--ink); color: #fff; border-color: var(--ink); }
-        .dmat-tab.current { border-color: var(--brass); border-width: 2px; color: var(--brass); }
-      `}</style>
-
-      <div
-        className="dmat-root w-full min-h-screen"
-        style={{ background: "linear-gradient(180deg, #EEF3FA 0%, var(--paper) 320px)" }}
-      >
-        <div className="max-w-3xl mx-auto px-5 sm:px-6 py-6 sm:py-8">
-
-          {/* HEADER */}
-          <div className="flex items-center justify-between gap-3 mb-6 sm:mb-8 pb-4" style={{ borderBottom: "1px solid var(--grid)" }}>
-            <div className="flex items-center gap-3">
-              <img
-                src="/ctso-logo.jpg"
-                alt="Çorlu Ticaret ve Sanayi Odası"
-                style={{ width: 46, height: 46, flexShrink: 0, objectFit: "contain" }}
-              />
-              <div>
-                <div className="dmat-mono text-[11px]" style={{ color: "var(--steel)" }}>ÇORLU TİCARET VE SANAYİ ODASI</div>
-                <div className="dmat-display text-lg sm:text-xl font-bold leading-tight">Dijital Olgunluk Ölçüm Aracı</div>
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900">
+      {/* KURUMSAL ÜST HEADER BANNER */}
+      <header className="bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-40 shadow-md">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+          <div className="flex items-center gap-3.5">
+            <img
+              src="/ctso-logo.jpg"
+              alt="Çorlu TSO Logo"
+              className="h-10 w-10 object-contain bg-white rounded p-0.5"
+            />
+            <div>
+              <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider leading-none">
+                Çorlu Ticaret ve Sanayi Odası
+              </div>
+              <div className="text-base font-bold text-white tracking-tight mt-1">
+                Dijital Olgunluk Portal Değerlendirmesi
               </div>
             </div>
-            {screen !== "intro" && (
-              <div className="dmat-mono text-xs text-right flex-shrink-0" style={{ color: "var(--steel)" }}>
-                {screen === "quiz" ? `EKSEN ${axisIndex + 1} / ${AXES.length}` : "SONUÇ RAPORU"}
-              </div>
-            )}
           </div>
+          {screen !== "intro" && (
+            <span className="hidden sm:inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">
+              {screen === "quiz" ? `Aşama ${axisIndex + 1} / ${AXES.length}` : "Değerlendirme Raporu"}
+            </span>
+          )}
+        </div>
+      </header>
 
-          {showMethodology && <MethodologyModal onClose={() => setShowMethodology(false)} />}
+      {/* ANA İÇERİK KONTEYNERİ */}
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        {showMethodology && <MethodologyModal onClose={() => setShowMethodology(false)} />}
 
-          {/* INTRO */}
-          {screen === "intro" && (
-            <div>
-              <div className="dmat-mono text-xs mb-2.5" style={{ color: "var(--brass)" }}>ÖN DEĞERLENDİRME · ~12-15 DAKİKA</div>
-              <h1 className="dmat-display text-3xl sm:text-4xl font-bold leading-[1.12] mb-3.5" style={{ letterSpacing: "-0.02em" }}>
-                Firmanızın dijital olgunluk seviyesini ölçün.
+        {/* EKRAN 1: INTRO */}
+        {screen === "intro" && (
+          <div className="space-y-8">
+            {/* HERO BÖLÜMÜ */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm">
+              <div className="flex items-center gap-2 text-xs font-semibold text-blue-900 uppercase tracking-wider mb-2">
+                <ShieldCheck size={16} />
+                <span>Resmi KOBİ Ön-Tarama Aracı</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight mb-3">
+                Firmanızın Dijital Olgunluk Seviyesini Ölçümleyin
               </h1>
-              <p className="text-base leading-relaxed mb-5" style={{ color: "#3A4250", maxWidth: 560 }}>
-                6 eksende, 30 soruluk kısa bir değerlendirme ile firmanızın dijital dönüşümde
-                bulunduğu noktayı görün. Sonuçlar; hangi alanda güçlü, hangi alanda öncelikli
-                gelişim ihtiyacı olduğunuzu gösterir ve size uygun destek programlarına
-                yönlendirir.
+              <p className="text-slate-600 text-base leading-relaxed max-w-2xl mb-6">
+                6 stratejik eksende hazırlanan 30 soruluk bu ön değerlendirme ile kurumunuzun dijital dönüşüm seviyesini tespit edebilir, gelişim alanlarınızı analiz edebilir ve uygun KOSGEB/TÜBİTAK desteklerine yönlendirilebilirsiniz.
               </p>
 
-              {/* METODOLOJİ — en üstte, en görünür */}
-              <button
-                onClick={() => setShowMethodology(true)}
-                className="block w-full text-left mb-4 group"
-                style={{ maxWidth: 560 }}
-              >
-                <div
-                  className="p-4 flex items-center gap-3.5"
-                  style={{
-                    background: "linear-gradient(135deg, rgba(36,81,160,0.10), rgba(36,81,160,0.03))",
-                    border: "1.5px solid var(--brass)",
-                    borderRadius: 12,
-                  }}
-                >
-                  <div
-                    className="flex items-center justify-center flex-shrink-0"
-                    style={{ width: 38, height: 38, background: "var(--brass)", borderRadius: 9 }}
-                  >
-                    <GraduationCap size={19} color="#fff" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="dmat-mono text-[10.5px] font-semibold mb-0.5" style={{ color: "var(--brass)" }}>
-                      BİLİMSEL METODOLOJİ VE KAYNAKÇA
-                    </div>
-                    <p className="text-sm leading-snug" style={{ color: "var(--ink)" }}>
-                      acatech, MIT & Capgemini, AB EDIH, ISO/IEC 33001 ve OECD çerçevelerine dayanır — tam kaynakça için tıklayın →
-                    </p>
-                  </div>
+              {/* BİLGİ ROZETLERİ */}
+              <div className="flex flex-wrap gap-4 pt-4 border-t border-slate-100 text-xs font-medium text-slate-600">
+                <div className="flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-blue-600"></span>
+                  <span>30 Analiz Sorusu</span>
                 </div>
-              </button>
-
-              <div className="dmat-card p-4 mb-5" style={{ maxWidth: 560 }}>
-                <div className="dmat-mono text-[10.5px] mb-2.5" style={{ color: "var(--steel)" }}>DEĞERLENDİRME EKSENLERİ</div>
-                <div className="grid grid-cols-2 gap-2">
-                  {AXES.map((a) => (
-                    <div key={a.id} className="flex items-center gap-1.5 text-sm">
-                      <span className="dmat-mono text-xs" style={{ color: "var(--brass)" }}>{a.no}</span>
-                      <span>{a.title}</span>
-                    </div>
-                  ))}
+                <div className="flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-blue-600"></span>
+                  <span>Yaklaşık 10-12 Dakika</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
+                  <span>Anlık PDF Rapor Çıktısı</span>
                 </div>
               </div>
+            </div>
 
-              <label className="block mb-1.5 text-sm font-medium">Firma adı (opsiyonel)</label>
-              <input
-                value={firmName}
-                onChange={(e) => setFirmName(e.target.value)}
-                placeholder="Örn. ABC Makine Sanayi"
-                className="w-full px-4 py-2.5 mb-4 text-sm outline-none"
-                style={{ maxWidth: 460, background: "#fff", border: "1px solid var(--grid)", borderRadius: 8 }}
-              />
+            {/* BİLİMSEL METODOLOJİ BANNERİ */}
+            <div 
+              onClick={() => setShowMethodology(true)}
+              className="bg-slate-900 text-white rounded-xl p-5 shadow-sm border border-slate-800 flex items-center justify-between gap-4 cursor-pointer hover:bg-slate-800 transition-all group"
+            >
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-blue-900/50 border border-blue-700/50 rounded-lg text-blue-300">
+                  <GraduationCap size={22} />
+                </div>
+                <div>
+                  <h4 className="text-sm font-semibold text-white">Uluslararası Metodoloji Standartları</h4>
+                  <p className="text-xs text-slate-300 mt-0.5">
+                    acatech Industrie 4.0, MIT & Capgemini ve AB EDIH Open DMAT altyapısına dayanır.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center text-xs font-semibold text-blue-300 group-hover:translate-x-0.5 transition-transform">
+                İncele <ChevronRight size={16} className="ml-1" />
+              </div>
+            </div>
 
-              <label className="flex items-start gap-2.5 mb-4 cursor-pointer" style={{ maxWidth: 520 }}>
-                <input
-                  type="checkbox"
-                  checked={consent}
-                  onChange={(e) => setConsent(e.target.checked)}
-                  className="mt-0.5"
-                  style={{ width: 17, height: 17, accentColor: "var(--brass)", flexShrink: 0 }}
-                />
-                <span className="text-sm leading-relaxed">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setShowConsentText(true);
-                    }}
-                    className="underline font-medium"
-                    style={{ color: "var(--steel)" }}
-                  >
-                    KVKK Aydınlatma Metni
-                  </button>
-                  'ni okudum, verilerimin bu amaçla işlenmesini kabul ediyorum.
-                </span>
-              </label>
+            {/* EKSENLER ÖZET KARTI */}
+            <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Değerlendirme Eksenleri</h3>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {AXES.map((a) => (
+                  <div key={a.id} className="flex items-center gap-3 p-2.5 rounded-lg border border-slate-100 bg-slate-50/50">
+                    <span className="text-xs font-bold text-blue-900 bg-blue-50 px-2 py-1 rounded border border-blue-100">{a.no}</span>
+                    <span className="text-sm font-medium text-slate-800">{a.title}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
 
+            {/* FORUM BÖLÜMÜ */}
+            <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
               <div>
+                <label className="block text-sm font-semibold text-slate-800 mb-1">
+                  Firma Unvanı <span className="text-slate-400 font-normal">(Opsiyonel)</span>
+                </label>
+                <input
+                  value={firmName}
+                  onChange={(e) => setFirmName(e.target.value)}
+                  placeholder="Örn: ABC Teknolojik İmalat San. Tic. A.Ş."
+                  className="w-full px-4 py-2.5 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
+                />
+              </div>
+
+              <div className="pt-2">
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={consent}
+                    onChange={(e) => setConsent(e.target.checked)}
+                    className="mt-1 h-4 w-4 text-blue-900 rounded border-slate-300 focus:ring-blue-600"
+                  />
+                  <span className="text-xs text-slate-600 leading-relaxed">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setShowConsentText(true);
+                      }}
+                      className="font-semibold text-blue-900 underline hover:text-blue-900"
+                    >
+                      KVKK Aydınlatma Metni
+                    </button>
+                    'ni okudum. Verilerimin değerlendirme raporu oluşturulması amacıyla işlenmesini onaylıyorum.
+                  </span>
+                </label>
+              </div>
+
+              <div className="pt-2">
                 <button
                   onClick={() => consent && setScreen("quiz")}
                   disabled={!consent}
-                  className="dmat-btn-primary px-6 py-2.5 text-sm inline-flex items-center gap-2"
+                  className="w-full sm:w-auto px-8 py-3 bg-blue-900 hover:bg-blue-900 disabled:bg-slate-300 text-white font-semibold text-sm rounded-lg transition-all shadow-sm flex items-center justify-center gap-2 disabled:cursor-not-allowed"
                 >
-                  Değerlendirmeye Başla <ArrowRight size={16} />
+                  Değerlendirmeyi Başlat <ArrowRight size={16} />
                 </button>
               </div>
-
-              <p className="dmat-mono text-[10.5px] mt-4" style={{ color: "var(--steel)", maxWidth: 480 }}>
-                VERİ KULLANIMI: Cevaplarınız yalnızca firmanız için bu raporu oluşturmak ve
-                size uygun destek programı önerilebilmesi için kullanılır.
-              </p>
             </div>
-          )}
+          </div>
+        )}
 
-          {/* KVKK MODAL */}
-          {showConsentText && (
+        {/* KVKK MODAL */}
+        {showConsentText && (
+          <div
+            className="fixed inset-0 flex items-center justify-center p-4 z-50 bg-slate-900/60 backdrop-blur-sm"
+            onClick={() => setShowConsentText(false)}
+          >
             <div
-              className="fixed inset-0 flex items-center justify-center p-6 z-50"
-              style={{ background: "rgba(27,36,48,0.55)" }}
-              onClick={() => setShowConsentText(false)}
+              className="bg-white border border-slate-200 rounded-xl shadow-2xl p-6 max-w-lg w-full"
+              style={{ maxHeight: "80vh", overflowY: "auto" }}
+              onClick={(e) => e.stopPropagation()}
             >
-              <div
-                className="dmat-card p-6 max-w-lg w-full"
-                style={{ maxHeight: "80vh", overflowY: "auto" }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <div className="dmat-display text-lg font-semibold">KVKK Aydınlatma Metni</div>
-                  <button onClick={() => setShowConsentText(false)}><X size={18} /></button>
-                </div>
-                <div className="text-sm space-y-3 leading-relaxed" style={{ color: "#3A4250" }}>
-                  <p>
-                    <strong>Veri Sorumlusu:</strong> Çorlu Ticaret ve Sanayi Odası (Çorlu TSO), Çorlu / Tekirdağ.
-                  </p>
-                  <p>
-                    <strong>İşlenen Veriler:</strong> Firma adı (opsiyonel) ve bu değerlendirme
-                    formunda verdiğiniz cevaplar.
-                  </p>
-                  <p>
-                    <strong>İşleme Amacı:</strong> Firmanızın dijital olgunluk seviyesini ölçmek,
-                    size özel bir sonuç raporu oluşturmak ve size uygun destek programına (KOSGEB,
-                    EDIH, TÜBİTAK TÜSSİDE vb.) yönlendirme yapabilmesini sağlamaktır.
-                  </p>
-                  <p>
-                    <strong>Saklama Süresi:</strong> Verileriniz saklanmamaktadır.
-                  </p>
-                  <p>
-                    <strong>Paylaşım:</strong> Verileriniz yalnızca Çorlu TSO tarafından
-                    görülebilir; üçüncü kişi/kurumlarla paylaşılmaz.
-                  </p>
-                  <p>
-                    <strong>Haklarınız:</strong> KVKK'nın 11. maddesi kapsamında verilerinize erişme,
-                    düzeltme, silinmesini talep etme haklarına sahipsiniz. Talepleriniz için Çorlu
-                    TSO Proje Servisi ile iletişime geçebilirsiniz.
-                  </p>
-                </div>
-                <button
-                  onClick={() => setShowConsentText(false)}
-                  className="dmat-btn-primary px-5 py-2.5 text-sm font-medium mt-5"
-                >
-                  Anladım, Kapat
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+                <h3 className="text-lg font-bold text-slate-900">KVKK Aydınlatma Metni</h3>
+                <button onClick={() => setShowConsentText(false)} className="text-slate-400 hover:text-slate-600">
+                  <X size={18} />
                 </button>
               </div>
-            </div>
-          )}
-
-          {/* QUIZ */}
-          {screen === "quiz" && (
-            <div>
-              {/* axis tabs */}
-              <div className="flex gap-1.5 mb-8 flex-wrap">
-                {AXES.map((a, i) => {
-                  const done = a.questions.every((_, qi) => answers[`${a.id}-${qi}`]);
-                  return (
-                    <div
-                      key={a.id}
-                      className={`dmat-tab px-2.5 py-1.5 ${done ? "done" : ""} ${i === axisIndex ? "current" : ""}`}
-                    >
-                      {a.no} {a.short}
-                    </div>
-                  );
-                })}
+              <div className="text-xs text-slate-600 space-y-3 leading-relaxed">
+                <p><strong>Veri Sorumlusu:</strong> Çorlu Ticaret ve Sanayi Odası (Çorlu TSO).</p>
+                <p><strong>İşlenen Veriler:</strong> Firma adı (isteğe bağlı) ve değerlendirme sorularına verilen yanıtlar.</p>
+                <p><strong>Amaç:</strong> Dijital olgunluk skorunun hesaplanması, kurumsal raporlama ve uygun destek mekanizmalarının tespiti.</p>
+                <p><strong>Gizlilik:</strong> Yanıtlarınız üçüncü taraf kurumlarla ticari amaçla paylaşılmaz.</p>
               </div>
+              <button
+                onClick={() => setShowConsentText(false)}
+                className="mt-6 w-full py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg"
+              >
+                Kapat
+              </button>
+            </div>
+          </div>
+        )}
 
-              <div className="dmat-mono text-xs mb-2" style={{ color: "var(--brass)" }}>EKSEN {currentAxis.no}</div>
-              <h2 className="dmat-display text-3xl font-bold mb-2.5">{currentAxis.title}</h2>
-              <p className="text-base mb-9" style={{ color: "#3A4250" }}>{currentAxis.intro}</p>
+        {/* EKRAN 2: QUIZ */}
+        {screen === "quiz" && (
+          <div className="space-y-6">
+            {/* ADIM GOSTERGESI */}
+            <div className="bg-white border border-slate-200 rounded-xl p-3 shadow-sm flex gap-1.5 overflow-x-auto">
+              {AXES.map((a, i) => {
+                const done = a.questions.every((_, qi) => answers[`${a.id}-${qi}`]);
+                const isCurrent = i === axisIndex;
+                return (
+                  <div
+                    key={a.id}
+                    className={`flex-1 min-w-[100px] text-center py-2 px-1.5 rounded-lg text-xs font-semibold transition-all ${
+                      isCurrent
+                        ? "bg-blue-900 text-white shadow-sm"
+                        : done
+                        ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                        : "bg-slate-50 text-slate-500 border border-slate-100"
+                    }`}
+                  >
+                    <div className="text-[10px] opacity-75">EKSEN {a.no}</div>
+                    <div className="truncate">{a.short}</div>
+                  </div>
+                );
+              })}
+            </div>
 
-              <div className="space-y-8 mb-9">
+            {/* SORU ALANI */}
+            <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-sm">
+              <div className="text-xs font-bold text-blue-900 uppercase tracking-wider mb-1">
+                Eksen {currentAxis.no} / {AXES.length}
+              </div>
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-2">{currentAxis.title}</h2>
+              <p className="text-slate-600 text-sm mb-8">{currentAxis.intro}</p>
+
+              <div className="space-y-8">
                 {currentAxis.questions.map((q, qi) => {
                   const val = answers[`${currentAxis.id}-${qi}`];
                   return (
-                    <div key={qi}>
-                      <p className="text-base mb-3.5 leading-relaxed font-medium">{q}</p>
-                      <div className="flex gap-2">
+                    <div key={qi} className="p-4 rounded-xl border border-slate-100 bg-slate-50/50 space-y-3">
+                      <p className="text-sm font-semibold text-slate-800 leading-relaxed">
+                        {qi + 1}. {q}
+                      </p>
+                      <div className="grid grid-cols-5 gap-2">
                         {[1, 2, 3, 4, 5].map((v) => (
                           <button
                             key={v}
                             onClick={() => setAnswer(qi, v)}
-                            className={`dmat-tick flex-1 py-3 text-sm ${val === v ? "active" : ""}`}
-                            title={SCALE_LABELS[v - 1]}
+                            className={`py-2.5 rounded-lg font-bold text-sm transition-all border ${
+                              val === v
+                                ? "bg-blue-900 text-white border-blue-900 shadow-sm"
+                                : "bg-white text-slate-700 border-slate-200 hover:border-blue-300 hover:bg-slate-50"
+                            }`}
                           >
                             {v}
                           </button>
                         ))}
                       </div>
-                      <div className="flex justify-between dmat-mono text-[10.5px] mt-2" style={{ color: "var(--steel)" }}>
-                        <span>{SCALE_LABELS[0]}</span>
-                        <span>{SCALE_LABELS[4]}</span>
+                      <div className="flex justify-between text-[11px] font-medium text-slate-400 px-1">
+                        <span>1: {SCALE_LABELS[0]}</span>
+                        <span>5: {SCALE_LABELS[4]}</span>
                       </div>
                     </div>
                   );
                 })}
               </div>
 
-              <div className="flex items-center justify-between">
+              {/* NAVİGASYON */}
+              <div className="flex items-center justify-between pt-8 mt-8 border-t border-slate-100">
                 <button
                   onClick={goPrevAxis}
                   disabled={axisIndex === 0}
-                  className="dmat-btn-ghost px-5 py-2.5 text-sm font-medium inline-flex items-center gap-2 disabled:opacity-30"
+                  className="px-5 py-2.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-semibold text-sm rounded-lg transition-all flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
                 >
-                  <ArrowLeft size={15} /> Önceki Eksen
+                  <ArrowLeft size={16} /> Önceki Eksen
                 </button>
                 <button
                   onClick={goNextAxis}
                   disabled={!axisComplete}
-                  className="dmat-btn-primary px-6 py-2.5 text-sm font-medium inline-flex items-center gap-2"
+                  className="px-6 py-2.5 bg-blue-900 hover:bg-blue-900 text-white font-semibold text-sm rounded-lg transition-all flex items-center gap-2 disabled:bg-slate-300 disabled:cursor-not-allowed"
                 >
-                  {axisIndex === AXES.length - 1 ? "Sonucu Gör" : "Sonraki Eksen"} <ArrowRight size={16} />
+                  {axisIndex === AXES.length - 1 ? "Sonuçları Tamamla" : "Sonraki Eksen"} <ArrowRight size={16} />
                 </button>
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {/* RESULTS */}
-          {screen === "results" && (
-            <div>
-              {firmName && <div className="dmat-mono text-xs mb-1" style={{ color: "var(--steel)" }}>{firmName.toUpperCase()}</div>}
-              <h2 className="dmat-display text-3xl font-bold mb-1.5">Dijital Olgunluk Sonucu</h2>
-              <p className="text-sm mb-5" style={{ color: "#3A4250" }}>{level.desc}</p>
-
-              <div className="flex gap-3 flex-wrap mb-2">
-                <button
-                  onClick={async () => {
-                    setPdfState("generating");
-                    try {
-                      await generatePdfReport({ firmName, scores, overall, answers });
-                      setPdfState("idle");
-                    } catch (e) {
-                      console.error(e);
-                      setPdfState("error");
-                    }
-                  }}
-                  disabled={pdfState === "generating"}
-                  className="dmat-btn-primary px-5 py-2.5 text-sm font-medium inline-flex items-center gap-2"
-                >
-                  <Download size={15} /> {pdfState === "generating" ? "Rapor Hazırlanıyor…" : "Raporu PDF Olarak İndir"}
-                </button>
+        {/* EKRAN 3: RESULTS */}
+        {screen === "results" && (
+          <div className="space-y-8">
+            {/* BAŞLIK & İNDİRME */}
+            <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                {firmName && <div className="text-xs font-bold text-blue-900 uppercase tracking-wider mb-1">{firmName}</div>}
+                <h2 className="text-2xl font-bold text-slate-900">Dijital Olgunluk Değerlendirme Raporu</h2>
+                <p className="text-xs text-slate-500 mt-1">Tamamlanma Tarihi: {new Date().toLocaleDateString('tr-TR')}</p>
               </div>
-              {pdfState === "error" && (
-                <p className="text-xs mb-2" style={{ color: "var(--red)" }}>
-                  PDF oluşturulamadı. Lütfen tekrar deneyin; sorun devam ederse Proje Birimi ile iletişime geçin.
-                </p>
-              )}
-              {saveState === "saved" && (
-                <p className="dmat-mono text-[10px] mb-2" style={{ color: "var(--green)" }}>✓ SONUÇ ÇORLU TİCARET VE SANAYİ ODASI'NA İLETİLDİ</p>
-              )}
-              <div className="mb-6" />
+              <button
+                onClick={async () => {
+                  setPdfState("generating");
+                  try {
+                    await generatePdfReport({ firmName, scores, overall, answers });
+                    setPdfState("idle");
+                  } catch (e) {
+                    console.error(e);
+                    setPdfState("error");
+                  }
+                }}
+                disabled={pdfState === "generating"}
+                className="px-5 py-2.5 bg-blue-900 hover:bg-blue-900 text-white font-semibold text-sm rounded-lg transition-all flex items-center justify-center gap-2 shadow-sm"
+              >
+                <Download size={16} /> {pdfState === "generating" ? "Rapor Üretiliyor..." : "Resmi PDF Raporu İndir"}
+              </button>
+            </div>
 
-              <div className="dmat-card p-6 mb-8 grid md:grid-cols-2 gap-6 items-center">
-                <div className="text-center">
-                  <Gauge value={overall} />
-                  <div className="dmat-display text-xl font-bold mt-1" style={{ color: "var(--brass)" }}>{level.name}</div>
-                  <div className="dmat-mono text-[10px] mb-3" style={{ color: "var(--steel)" }}>GENEL OLGUNLUK PUANI · 5 ÜZERİNDEN</div>
-                  <div className="text-xs text-left px-3 py-2.5" style={{ background: "var(--paper2)", borderRadius: 6, color: "var(--ink)" }}>
-                    <strong>Öncelik:</strong> {level.recommendation}
-                  </div>
+            {/* GENEL SKOR KARTI */}
+            <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-sm grid md:grid-cols-2 gap-8 items-center">
+              <div className="text-center md:border-r md:border-slate-100 md:pr-8">
+                <Gauge value={overall} />
+                <div className="text-xl font-extrabold text-blue-900 mt-2">{level.name}</div>
+                <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mt-0.5 mb-4">Genel Skor (5 Üzerinden)</div>
+                <div className="p-3.5 bg-slate-50 border border-slate-100 rounded-lg text-left text-xs text-slate-700 leading-relaxed">
+                  <strong className="text-slate-900 block mb-1">Stratejik Öncelik:</strong> {level.recommendation}
                 </div>
-                <RadarChart scores={scores} />
               </div>
+              <RadarChart scores={scores} />
+            </div>
 
-              {/* axis breakdown */}
-              <div className="dmat-mono text-xs mb-1" style={{ color: "var(--steel)" }}>EKSEN BAZLI SONUÇLAR VE YÖNLENDİRMELER</div>
-              <p className="text-xs mb-4" style={{ color: "var(--steel)" }}>
-                Her eksendeki puan, CMMI'ın 5 seviyeli olgunluk merdivenine (Başlangıç →
-                Tekrarlanabilir → Tanımlı → Ölçülüyor → Optimize Ediliyor) göre yorumlanır.
-              </p>
-              <div className="space-y-3 mb-9">
+            {/* EKSEN BAZLI DETAYLAR */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Eksen Bazlı Yetkinlik Seviyeleri</h3>
+              <div className="grid gap-3">
                 {AXES.map((a) => {
                   const s = scores[a.id];
                   const st = statusFor(s);
                   const guide = axisLevelGuide(a, s);
-                  const barColor = st.tone === "low" ? "var(--red)" : st.tone === "mid" ? "var(--brass)" : "var(--green)";
                   return (
-                    <div key={a.id} className="dmat-card px-4 py-4">
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-sm font-medium">{a.no} {a.title}</span>
-                        <span className="dmat-mono text-xs font-semibold" style={{ color: barColor }}>{s.toFixed(2)} / 5.00</span>
+                    <div key={a.id} className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-bold text-slate-900">{a.no}. {a.title}</span>
+                        <span className="text-sm font-extrabold text-blue-900 bg-blue-50 px-2.5 py-1 rounded border border-blue-100">
+                          {s.toFixed(2)} / 5.00
+                        </span>
                       </div>
-                      <div style={{ height: 6, background: "var(--grid)", borderRadius: 3, overflow: "hidden" }} className="mb-2">
-                        <div style={{ width: `${(s / 5) * 100}%`, height: "100%", background: barColor }} />
+                      <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-blue-900 rounded-full transition-all duration-500" style={{ width: `${(s / 5) * 100}%` }} />
                       </div>
-                      <div className="dmat-mono text-[10px] mb-2.5" style={{ color: barColor }}>
-                        SEVİYE {guide.level} — {guide.name.toUpperCase()}
+                      <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                        Seviye {guide.level}: {guide.name}
                       </div>
-                      <p className="text-sm mb-2" style={{ color: "#3A4250" }}>{guide.description}</p>
-                      <div className="flex items-start gap-1.5 text-sm" style={{ color: "var(--ink)" }}>
-                        <span className="font-medium flex-shrink-0">Önerilen adım:</span>
-                        <span>{guide.action}</span>
+                      <p className="text-xs text-slate-600 leading-relaxed">{guide.description}</p>
+                      <div className="p-2.5 bg-slate-50 rounded-lg text-xs text-slate-800 font-medium border border-slate-100">
+                        <span className="font-bold text-blue-900">Aksiyon Önerisi: </span>
+                        {guide.action}
                       </div>
                     </div>
                   );
                 })}
               </div>
+            </div>
 
-              {/* recommendations */}
-              {weakAxes.length > 0 && (
-                <div className="mb-9">
-                  <div className="dmat-mono text-xs mb-3" style={{ color: "var(--steel)" }}>ÖNCELİKLİ GELİŞİM ALANLARI İÇİN ÖNERİLEN KAYNAKLAR</div>
-                  <div className="space-y-3">
-                    {weakAxes.map((a) => (
-                      <div key={a.id} className="dmat-card px-4 py-3.5">
-                        <div className="text-sm font-medium mb-2">{a.title}</div>
-                        <div className="space-y-1.5">
-                          {a.resources.map((r) => (
-                            <div key={r.name} className="flex items-center justify-between gap-3">
-                              <div className="text-xs" style={{ color: "#3A4250" }}>{r.name}</div>
-                              {r.url && (
-                                <a
-                                  href={r.url}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="dmat-btn-ghost px-3 py-1.5 text-xs font-medium inline-flex items-center gap-1.5 whitespace-nowrap flex-shrink-0"
-                                >
-                                  Kaynağa Git <ExternalLink size={11} />
-                                </a>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+            {/* EĞİTİM VE DESTEK FORMU */}
+            <div className="bg-slate-900 text-white rounded-xl p-6 sm:p-8 shadow-sm space-y-4">
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="text-emerald-400 flex-shrink-0 mt-1" size={20} />
+                <div>
+                  <h4 className="text-base font-bold">Çorlu TSO Dijital Dönüşüm Eğitimleri</h4>
+                  <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+                    Açılacak ücretsiz danışmanlık ve eğitim programlarından doğrudan haberdar olmak için iletişim bilgilerinizi ekleyebilirsiniz.
+                  </p>
+                </div>
+              </div>
+
+              {trainingState === "saved" ? (
+                <div className="p-3 bg-emerald-950/60 border border-emerald-800 rounded-lg text-xs text-emerald-300 font-medium">
+                  ✓ İletişim bilgileriniz başarıyla kaydedilmiştir.
+                </div>
+              ) : (
+                <div className="grid sm:grid-cols-2 gap-3 pt-2">
+                  <input
+                    value={trainingEmail}
+                    onChange={(e) => setTrainingEmail(e.target.value)}
+                    placeholder="E-posta Adresi *"
+                    type="email"
+                    className="px-3.5 py-2 text-xs bg-slate-800 border border-slate-700 text-white rounded-lg focus:outline-none focus:border-blue-500"
+                  />
+                  <input
+                    value={trainingPhone}
+                    onChange={(e) => setTrainingPhone(e.target.value)}
+                    placeholder="Telefon (Opsiyonel)"
+                    type="tel"
+                    className="px-3.5 py-2 text-xs bg-slate-800 border border-slate-700 text-white rounded-lg focus:outline-none focus:border-blue-500"
+                  />
                 </div>
               )}
 
-              {/* EĞİTİM KAYIT FORMU */}
-              <div className="dmat-card p-6 mb-6">
-                <div className="flex items-start gap-3 mb-4">
-                  <CircleCheck size={20} style={{ color: "var(--green)", marginTop: 2, flexShrink: 0 }} />
-                  <div>
-                    <div className="text-sm font-semibold mb-1">Ücretsiz Eğitimlerden Haberdar Olun</div>
-                    <p className="text-sm leading-relaxed" style={{ color: "#3A4250" }}>
-                      Çorlu TSO'nun Dijital Dönüşüm, Yapay Zeka ve Dijitalleşme konularındaki
-                      ücretsiz eğitimlerinden haberdar olmak isterseniz, iletişim bilgilerinizi
-                      bırakabilirsiniz.
-                    </p>
-                  </div>
-                </div>
+              {trainingState !== "saved" && (
+                <button
+                  onClick={async () => {
+                    if (!trainingEmail) return;
+                    setTrainingState("saving");
+                    const ok = await saveTrainingSignup({ firmName, email: trainingEmail, phone: trainingPhone });
+                    notifyTrainingSignup({ firmName, email: trainingEmail, phone: trainingPhone });
+                    setTrainingState(ok ? "saved" : "error");
+                  }}
+                  disabled={!trainingEmail || trainingState === "saving"}
+                  className="px-5 py-2.5 bg-blue-900 hover:bg-blue-900 text-white text-xs font-semibold rounded-lg transition-all disabled:opacity-50"
+                >
+                  {trainingState === "saving" ? "Kaydediliyor..." : "Eğitim Duyurularına Kaydol"}
+                </button>
+              )}
+            </div>
 
-                {trainingState === "saved" ? (
-                  <div className="text-sm px-4 py-3" style={{ background: "var(--paper2)", borderRadius: 8, color: "var(--green)" }}>
-                    ✓ Kaydınız alındı. Eğitim duyuruları e-posta/telefon ile size iletilecek.
-                  </div>
-                ) : (
-                  <div className="grid sm:grid-cols-2 gap-3 mb-3">
-                    <input
-                      value={trainingEmail}
-                      onChange={(e) => setTrainingEmail(e.target.value)}
-                      placeholder="E-posta adresiniz *"
-                      type="email"
-                      className="w-full px-3.5 py-2.5 text-sm outline-none"
-                      style={{ background: "#fff", border: "1px solid var(--grid)", borderRadius: 8 }}
-                    />
-                    <input
-                      value={trainingPhone}
-                      onChange={(e) => setTrainingPhone(e.target.value)}
-                      placeholder="Telefon (opsiyonel)"
-                      type="tel"
-                      className="w-full px-3.5 py-2.5 text-sm outline-none"
-                      style={{ background: "#fff", border: "1px solid var(--grid)", borderRadius: 8 }}
-                    />
-                  </div>
-                )}
-
-                {trainingState !== "saved" && (
-                  <button
-                    onClick={async () => {
-                      if (!trainingEmail) return;
-                      setTrainingState("saving");
-                      const ok = await saveTrainingSignup({ firmName, email: trainingEmail, phone: trainingPhone });
-                      notifyTrainingSignup({ firmName, email: trainingEmail, phone: trainingPhone });
-                      setTrainingState(ok ? "saved" : "error");
-                    }}
-                    disabled={!trainingEmail || trainingState === "saving"}
-                    className="dmat-btn-primary px-5 py-2.5 text-sm font-medium"
+            {/* DESTEK PROGRAMLARI */}
+            <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-3">
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">İlgili Destek Programları ve Bağlantılar</h4>
+              <div className="grid gap-2">
+                {SUPPORT_PROGRAMS.map((p) => (
+                  <a
+                    key={p.name}
+                    href={p.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center justify-between p-3 rounded-lg border border-slate-100 bg-slate-50 hover:bg-slate-100 text-slate-800 text-xs font-medium transition-colors"
                   >
-                    {trainingState === "saving" ? "Kaydediliyor…" : "Eğitim Bildirimlerine Kaydol"}
-                  </button>
-                )}
-                {trainingState === "error" && (
-                  <p className="text-xs mt-2" style={{ color: "var(--red)" }}>
-                    Kayıt şu an alınamadı — lütfen daha sonra tekrar deneyin.
-                  </p>
-                )}
-              </div>
-
-              {/* DESTEK PROGRAMLARI — sade liste, yorum yok */}
-              <div className="dmat-card p-6 mb-6">
-                <div className="text-sm font-semibold mb-3">Destek Programları</div>
-                <div className="space-y-2">
-                  {SUPPORT_PROGRAMS.map((p) => (
-                    <a
-                      key={p.name}
-                      href={p.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="flex items-center justify-between px-4 py-3 text-sm"
-                      style={{ background: "var(--paper2)", borderRadius: 8, color: "var(--ink)" }}
-                    >
-                      <span>{p.name}</span>
-                      <ExternalLink size={14} style={{ color: "var(--steel)", flexShrink: 0 }} />
-                    </a>
-                  ))}
-                </div>
-              </div>
-
-              {/* METODOLOJİ ÖZETİ */}
-              <div
-                className="p-6 mb-8"
-                style={{
-                  background: "linear-gradient(135deg, rgba(36,81,160,0.09), rgba(36,81,160,0.03))",
-                  border: "1.5px solid var(--brass)",
-                  borderRadius: 12,
-                }}
-              >
-                <div className="dmat-mono text-xs font-semibold mb-2" style={{ color: "var(--brass)" }}>BİLİMSEL METODOLOJİ VE KAYNAKÇA</div>
-                <div className="text-base font-semibold mb-2">Bu değerlendirme neye dayanıyor?</div>
-                <p className="text-sm leading-relaxed mb-4" style={{ color: "#3A4250" }}>
-                  Bu araç; acatech Industrie 4.0 Maturity Index (Almanya Ulusal Bilim ve
-                  Mühendislik Akademisi), MIT & Capgemini Digital Maturity Model (Westerman,
-                  Bonnet & McAfee), Avrupa Komisyonu EDIH Open DMAT, ISO/IEC 33001 süreç
-                  değerlendirme standardı ve OECD Going Digital Toolkit çerçevelerinden
-                  esinlenerek Çorlu Ticaret ve Sanayi Odası tarafından özgün olarak
-                  geliştirilmiştir. Sertifikalı bir değerlendirme değildir; resmi araçlara
-                  ön hazırlık niteliğindedir.
-                </p>
-                <button
-                  onClick={() => setShowMethodology(true)}
-                  className="dmat-btn-brass px-5 py-2.5 text-sm"
-                >
-                  Detaylı Metodolojiyi ve Kaynakçayı Gör
-                </button>
-              </div>
-
-              <div>
-                <button
-                  onClick={restart}
-                  className="dmat-btn-ghost px-5 py-2.5 text-sm font-medium inline-flex items-center gap-2"
-                >
-                  <RotateCcw size={15} /> Yeniden Başlat
-                </button>
+                    <span>{p.name}</span>
+                    <ExternalLink size={14} className="text-slate-400" />
+                  </a>
+                ))}
               </div>
             </div>
-          )}
 
-        </div>
-      </div>
+            {/* BAŞTAN BAŞLA */}
+            <div className="pt-4 flex justify-center">
+              <button
+                onClick={restart}
+                className="px-6 py-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-lg transition-all flex items-center gap-2"
+              >
+                <RotateCcw size={14} /> Yeni Değerlendirme Başlat
+              </button>
+            </div>
+          </div>
+        )}
+      </main>
     </div>
   );
 }
