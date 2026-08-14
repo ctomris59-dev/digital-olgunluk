@@ -563,7 +563,7 @@ export default function App() {
           </div>
         )}
 
-        {/* EKRAN 2: QUIZ (SADELEŞTİRİLMİŞ MONOKROM LİKERT) */}
+        {/* EKRAN 2: QUIZ (VURGULU 1-5 ÖLÇEK REHBERİ) */}
         {screen === "quiz" && (
           <div className="h-full flex flex-col justify-between space-y-2 overflow-hidden">
             
@@ -620,15 +620,33 @@ export default function App() {
                     {answeredCount} / {currentAxis.questions.length} Cevaplandı
                   </span>
                 </div>
-                <p className="text-slate-500 text-xs truncate mb-2.5">{currentAxis.intro}</p>
+                <p className="text-slate-500 text-xs truncate mb-2">{currentAxis.intro}</p>
 
-                {/* SADE VE MONOKROM KURUMSAL LİKERT REHBERİ */}
-                <div className="bg-slate-50 border border-slate-200/80 rounded-lg py-1.5 px-3 flex items-center justify-between text-[11px] font-semibold text-slate-600">
-                  <span><strong className="text-slate-900">1:</strong> {SCALE_LABELS[0]}</span>
-                  <span><strong className="text-slate-900">2:</strong> {SCALE_LABELS[1]}</span>
-                  <span><strong className="text-slate-900">3:</strong> {SCALE_LABELS[2]}</span>
-                  <span><strong className="text-slate-900">4:</strong> {SCALE_LABELS[3]}</span>
-                  <span><strong className="text-slate-900">5:</strong> {SCALE_LABELS[4]}</span>
+                {/* TERS DOLDURMAYI KESİNLİKLE ÖNLEYEN VURGULU ÖLÇEK ALANI */}
+                <div className="space-y-1 my-1">
+                  <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 px-1">
+                    <span className="flex items-center gap-1 text-slate-700">
+                      <span className="h-2 w-2 rounded-full bg-slate-400"></span>
+                      1 = En Düşük Seviye (Hiç Yok)
+                    </span>
+                    <span className="text-[10px] text-slate-400 font-medium">Değerlendirme Ölçeği (1-5)</span>
+                    <span className="flex items-center gap-1 text-blue-900 font-black">
+                      5 = En Yüksek Seviye (Tam Entegre)
+                      <span className="h-2 w-2 rounded-full bg-blue-900"></span>
+                    </span>
+                  </div>
+
+                  <div className="bg-gradient-to-r from-slate-100 via-slate-50 to-blue-50 border border-slate-200/90 rounded-lg py-1.5 px-3 flex items-center justify-between text-[11px] font-bold shadow-inner">
+                    <span className="text-slate-600 bg-white px-2 py-0.5 rounded border border-slate-200 shadow-2xs">
+                      1: {SCALE_LABELS[0]}
+                    </span>
+                    <span className="text-slate-500">2: {SCALE_LABELS[1]}</span>
+                    <span className="text-slate-600">3: {SCALE_LABELS[2]}</span>
+                    <span className="text-slate-700">4: {SCALE_LABELS[3]}</span>
+                    <span className="text-blue-950 bg-blue-100/90 px-2 py-0.5 rounded border border-blue-200 shadow-2xs font-black">
+                      5: {SCALE_LABELS[4]}
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -920,7 +938,7 @@ export default function App() {
         )}
       </main>
 
-      {screen !== "quiz" && (
+      {screen !== "intro" && (
         <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500 flex-shrink-0">
           <div className="max-w-4xl mx-auto px-4">
             <p className="font-semibold text-slate-700">Çorlu Ticaret ve Sanayi Odası © {new Date().getFullYear()}</p>
