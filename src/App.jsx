@@ -6,74 +6,6 @@ import { AXES, SCALE_LABELS, LEVELS, levelFor, axisLevelGuide } from "./lib/data
 import { generatePdfReport } from "./lib/pdfReport";
 
 /* ---------------------------------------------------------------
-   VEKTÖREL LOGO BİLEŞENİ (SIFIR BULANIKLIK, KRİSTAL NETLİK)
---------------------------------------------------------------- */
-function CtsoLogo({ className = "h-11 w-11 sm:h-13 sm:w-13" }) {
-  return (
-    <svg
-      viewBox="0 0 500 500"
-      className={className}
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <circle cx="250" cy="250" r="240" fill="#2A2B85" />
-      <circle cx="250" cy="250" r="185" fill="#FFFFFF" />
-
-      <path
-        id="textPathUpper"
-        d="M 85,250 A 165,165 0 1,1 415,250"
-        fill="none"
-      />
-      <text fill="#FFFFFF" fontSize="28" fontWeight="bold" letterSpacing="2">
-        <textPath href="#textPathUpper" startOffset="50%" textAnchor="middle">
-          ÇORLU TİCARET ve SANAYİ ODASI
-        </textPath>
-      </text>
-
-      <path
-        d="M 140,280 L 290,120 L 200,280 L 140,280 Z"
-        fill="#2A2B85"
-      />
-      
-      <path
-        d="M 360,220 L 210,380 L 300,220 L 360,220 Z"
-        fill="#E30613"
-      />
-
-      <polygon
-        points="250,170 305,250 250,330 195,250"
-        fill="#FFF200"
-        stroke="#2A2B85"
-        strokeWidth="3"
-      />
-
-      <text
-        x="250"
-        y="255"
-        textAnchor="middle"
-        fill="#000000"
-        fontSize="26"
-        fontWeight="900"
-        fontFamily="sans-serif"
-      >
-        CTSO
-      </text>
-      <text
-        x="250"
-        y="280"
-        textAnchor="middle"
-        fill="#000000"
-        fontSize="14"
-        fontWeight="bold"
-        fontFamily="sans-serif"
-      >
-        1958
-      </text>
-    </svg>
-  );
-}
-
-/* ---------------------------------------------------------------
    RENK SKALASI DİNAMİK YARDIMCI FONKSİYONU
 --------------------------------------------------------------- */
 function getScoreColorConfig(score) {
@@ -413,35 +345,46 @@ export default function App() {
       screen === "quiz" ? "h-screen max-h-screen overflow-hidden flex flex-col bg-slate-100" : "min-h-screen bg-slate-50 flex flex-col"
     }`}>
       
-      {/* ==================== KURUMSAL VE NET HEADER ==================== */}
+      {/* ==================== YÖNTEM 2: GELİŞTİRİLMİŞ JPG LOGOLU HEADER ==================== */}
       <header className="bg-[#091538] border-b border-amber-500/30 text-white flex-shrink-0 shadow-xl relative z-40">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between">
           
           <div className="flex items-center gap-3 sm:gap-4">
             <div className="relative flex items-center justify-center flex-shrink-0">
-              <svg className="h-10 sm:h-12 w-3 text-amber-400/80 mr-0.5" viewBox="0 0 12 40" fill="none">
+              
+              {/* Sol Parantez Süsü */}
+              <svg className="h-11 sm:h-13 w-3 text-amber-400 mr-0.5" viewBox="0 0 12 40" fill="none">
                 <path d="M10 2C4 10 4 30 10 38" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
                 <path d="M5 8C2 14 2 26 5 32" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.5" />
               </svg>
 
-              {/* VEKTÖREL SIFIR BULANIKLIK LOGO */}
-              <div className="relative h-11 w-11 sm:h-13 sm:w-13 rounded-full bg-white p-0.5 shadow-md ring-1 ring-amber-400/50 flex items-center justify-center overflow-hidden">
-                <CtsoLogo />
+              {/* LOGO GÖRSELİ (ctso-logo.jpg) - PÜRÜZSÜZ BEYAZ ÇERÇEVE KILIFI */}
+              <div className="relative h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-white p-0.5 shadow-md ring-2 ring-amber-400/80 flex items-center justify-center overflow-hidden flex-shrink-0">
+                <img
+                  src="/ctso-logo.jpg"
+                  alt="Çorlu TSO Logo"
+                  className="h-full w-full object-cover rounded-full"
+                  style={{
+                    imageRendering: "-webkit-optimize-contrast",
+                    transform: "scale(1.02)"
+                  }}
+                />
               </div>
 
-              <svg className="h-10 sm:h-12 w-3 text-amber-400/80 ml-0.5" viewBox="0 0 12 40" fill="none">
+              {/* Sağ Parantez Süsü */}
+              <svg className="h-11 sm:h-13 w-3 text-amber-400 ml-0.5" viewBox="0 0 12 40" fill="none">
                 <path d="M2 2C8 10 8 30 2 38" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
                 <path d="M7 8C10 14 10 26 7 32" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.5" />
               </svg>
             </div>
 
-            <div className="flex flex-col">
+            <div className="flex flex-col justify-center">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] sm:text-[11px] font-black text-amber-400 uppercase tracking-widest leading-none">
+                <span className="text-xs sm:text-sm font-black text-amber-400 uppercase tracking-wider leading-none">
                   ÇORLU TİCARET VE SANAYİ ODASI
                 </span>
-                <span className="hidden md:inline-block h-1 w-1 rounded-full bg-slate-500"></span>
-                <span className="hidden md:inline-block text-[10px] font-medium text-slate-300 uppercase tracking-wider">
+                <span className="hidden md:inline-block h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+                <span className="hidden md:inline-block text-[11px] font-bold text-slate-300 uppercase tracking-widest">
                   DİJİTAL DÖNÜŞÜM PORTALI
                 </span>
               </div>
