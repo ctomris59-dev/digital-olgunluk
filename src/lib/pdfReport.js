@@ -339,31 +339,35 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
     y = paragraph(
       doc,
       "Aşağıdaki eksenlerde puanınız 3.00'ün altında kaldığı için öncelikli gelişim alanı " +
-        "olarak işaretlenmiştir. Her biri için size uygun bir destek/danışmanlık kaynağı önerilmiştir.",
+        "olarak işaretlenmiştir. Her biri için size uygun destek/danışmanlık kaynakları önerilmiştir.",
       y
     );
     y += 8;
 
     weakAxes.forEach((a) => {
-      y = ensureSpace(doc, y, 20);
+      y = ensureSpace(doc, y, 14 + a.resources.length * 9);
       doc.setFont(ACTIVE_FONT, "bold");
       doc.setFontSize(10.5);
       doc.setTextColor(...INK);
       doc.text(`${a.no}  ${a.title}`, MARGIN, y);
-      y += 5;
-      doc.setFont(ACTIVE_FONT, "normal");
-      doc.setFontSize(9);
-      doc.setTextColor(...BRASS);
-      doc.text(`>  ${a.resource.name}`, MARGIN, y);
-      y += 4.5;
-      if (a.resource.url) {
+      y += 5.5;
+      a.resources.forEach((r) => {
         doc.setFont(ACTIVE_FONT, "normal");
-        doc.setFontSize(8);
-        doc.setTextColor(...STEEL);
-        doc.textWithLink(a.resource.url, MARGIN, y, { url: a.resource.url });
-        y += 4.5;
-      }
-      y += 4;
+        doc.setFontSize(9);
+        doc.setTextColor(...BRASS);
+        const rLines = doc.splitTextToSize(`>  ${r.name}`, CONTENT_W);
+        doc.text(rLines, MARGIN, y);
+        y += rLines.length * 4.2;
+        if (r.url) {
+          doc.setFont(ACTIVE_FONT, "normal");
+          doc.setFontSize(8);
+          doc.setTextColor(...STEEL);
+          doc.textWithLink(r.url, MARGIN, y, { url: r.url });
+          y += 4.5;
+        }
+        y += 2;
+      });
+      y += 3;
     });
   } else {
     y = paragraph(

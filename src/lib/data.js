@@ -25,10 +25,9 @@ const AXES = [
       "Yeni bir dijital araç devreye alma kararı, tanımlı bir sorumlu/süreç üzerinden yürütülür.",
       "İş süreçlerimize ait performans göstergeleri (KPI) düzenli olarak tanımlanır, ölçülür ve raporlanır.",
     ],
-    resource: {
-      name: "KOSGEB İşletme Geliştirme Destek Programı",
-      url: "https://www.kosgeb.gov.tr",
-    },
+    resources: [
+      { name: "KOSGEB İşletme Geliştirme Destek Programı", url: "https://www.kosgeb.gov.tr" },
+    ],
     levelGuide: [
       { description: "Süreçler büyük ölçüde kağıt/manuel yürütülüyor, standart bir yöntem yok.", action: "En sık tekrarlanan 2-3 süreci (fatura, stok takibi vb.) basit bir yazılıma taşımakla başlayın." },
       { description: "Bazı süreçler yazılımla yürütülüyor ama kişiye bağlı, standart değil.", action: "Kullanılan araçları tüm ekip için standart hale getirin, temel bir prosedür dokümanı oluşturun." },
@@ -51,10 +50,10 @@ const AXES = [
       "Veri kalitesinden (doğruluk, güncellik, tutarlılık) sorumlu bir kişi veya süreç vardır.",
       "Farklı sistemlerden (satış, üretim, finans) gelen veriler birbiriyle ilişkilendirilerek analiz edilebilir.",
     ],
-    resource: {
-      name: "EDIH West Marmara — Veri Yönetimi Danışmanlığı",
-      url: "https://european-digital-innovation-hubs.ec.europa.eu",
-    },
+    resources: [
+      { name: "EDIH West Marmara — Veri Yönetimi Danışmanlığı", url: "https://european-digital-innovation-hubs.ec.europa.eu" },
+      { name: "TÜBİTAK TEYDEB 1501 — Sanayi Ar-Ge Destek Programı (veri/yazılım projeleri)", url: "https://tubitak.gov.tr" },
+    ],
     levelGuide: [
       { description: "Veri dağınık, çoğunlukla Excel dosyalarında; merkezi bir sistem yok.", action: "Kritik verilerinizi (satış, stok, müşteri) tek bir bulut tabanlı sistemde toplamaya başlayın." },
       { description: "Bazı veriler merkezi ama analiz düzensiz, planlı raporlama yok.", action: "Haftalık/aylık düzenli bir rapor şablonu oluşturup yönetime sunun." },
@@ -77,10 +76,11 @@ const AXES = [
       "Dijital pazarlama faaliyetlerimizin sonuçlarını ölçüp değerlendiririz.",
       "Rakip analizi veya pazar trendlerini takip etmek için dijital araç/veri kaynakları kullanırız.",
     ],
-    resource: {
-      name: "KOSGEB E-Ticaret Destek Programı",
-      url: "https://www.kosgeb.gov.tr",
-    },
+    resources: [
+      { name: "KOSGEB E-Ticaret Destek Programı", url: "https://www.kosgeb.gov.tr" },
+      { name: "Ticaret Bakanlığı — E-İhracat ve Dijital Pazaryerleri Destek Programı", url: "https://www.ticaret.gov.tr" },
+      { name: "TİM — Türkiye İhracatçılar Meclisi Dijital İhracat Destekleri", url: "https://tim.org.tr" },
+    ],
     levelGuide: [
       { description: "Dijital varlık minimal veya yok; müşteri ilişkileri büyük ölçüde yüz yüze/telefonla.", action: "Güncel bir web sitesi ve en az bir sosyal medya kanalı oluşturun." },
       { description: "Temel bir dijital varlık var ama düzensiz güncelleniyor, ölçüm yok.", action: "Web sitesi ve sosyal medya trafiğini basit analitik araçlarla (Google Analytics vb.) takip etmeye başlayın." },
@@ -103,10 +103,11 @@ const AXES = [
       "Makine/ekipman verilerimiz (IoT sensör, performans verisi) dijital olarak izlenip analiz ediliyor.",
       "Operasyonel kararlarımız (bakım zamanlaması, stok, üretim planı vb.) geçmiş verilere dayalı öngörü/tahmin modelleriyle destekleniyor.",
     ],
-    resource: {
-      name: "EDIH — Test-Before-Invest Hizmetleri",
-      url: "https://european-digital-innovation-hubs.ec.europa.eu",
-    },
+    resources: [
+      { name: "EDIH — Test-Before-Invest Hizmetleri", url: "https://european-digital-innovation-hubs.ec.europa.eu" },
+      { name: "TÜBİTAK TEYDEB 1501/1507 — Ar-Ge ve Yenilik Destek Programları", url: "https://tubitak.gov.tr" },
+      { name: "KOSGEB Ar-Ge, İnovasyon ve Endüstriyel Uygulama Destek Programı", url: "https://www.kosgeb.gov.tr" },
+    ],
     levelGuide: [
       { description: "Otomasyon yok veya çok sınırlı; işler büyük ölçüde elle yürütülüyor.", action: "Tekrarlayan, kural bazlı bir idari işi (örn. fatura kesme) basit bir otomasyon aracıyla devreye alın." },
       { description: "Bazı noktasal otomasyonlar var ama birbirinden bağımsız/entegre değil.", action: "Otomasyonu birden fazla sürece yaymak için bir yol haritası oluşturun." },
@@ -129,10 +130,9 @@ const AXES = [
       "Dijitalleşme sürecinde çalışanlarımız için yeni roller/pozisyonlar tanımlanmış veya mevcut iş tanımları güncellenmiştir.",
       "Firmamızda dijital dönüşüm sürecini yürüten veya bu konuda sorumluluk üstlenen tanımlı bir kişi/ekip vardır.",
     ],
-    resource: {
-      name: "Çorlu TSO Eğitim Programları",
-      url: null,
-    },
+    resources: [
+      { name: "Çorlu TSO Eğitim Programları", url: null },
+    ],
     levelGuide: [
       { description: "Dijital yetkinlik düşük; dönüşümden sorumlu bir kişi/ekip yok.", action: "Dijital dönüşümden sorumlu en az bir kişi/temas noktası belirleyin." },
       { description: "Bazı çalışanlar temel dijital araçları kullanabiliyor ama eğitim düzensiz.", action: "Temel dijital araçlar için düzenli, planlı bir eğitim takvimi oluşturun." },
@@ -155,10 +155,11 @@ const AXES = [
       "KVKK ve veri güvenliği yükümlülüklerimiz konusunda farkındalığımız ve uyum sürecimiz vardır.",
       "Sistem arızası veya veri kaybı durumuna karşı bir iş sürekliliği/kurtarma planımız vardır.",
     ],
-    resource: {
-      name: "KOSGEB Bilgi Yönetimi Destek Programı",
-      url: "https://www.kosgeb.gov.tr",
-    },
+    resources: [
+      { name: "KOSGEB Bilgi Yönetimi Destek Programı", url: "https://www.kosgeb.gov.tr" },
+      { name: "KVKK Kurumu — Veri Sorumluları Sicili (VERBİS) Rehberlik Kaynakları", url: "https://verbis.kvkk.gov.tr" },
+      { name: "TSE — Bilgi Güvenliği Yönetim Sistemi (ISO/IEC 27001) Danışmanlığı", url: "https://www.tse.org.tr" },
+    ],
     levelGuide: [
       { description: "Temel güvenlik önlemleri (antivirüs, güvenlik duvarı) bile eksik/düzensiz.", action: "Öncelikle temel siber hijyeni sağlayın: güncel antivirüs, güvenlik duvarı, düzenli yedekleme." },
       { description: "Temel önlemler var ama erişim yönetimi ve yazılı politika eksik.", action: "Kullanıcı bazlı erişim yetkilendirmesi ve şifre politikası oluşturun." },
