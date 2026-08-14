@@ -111,7 +111,7 @@ function footer(doc) {
     doc.setFont("DejaVuSans", "normal");
     doc.setFontSize(7.5);
     doc.setTextColor(...STEEL);
-    doc.text("ÇORLU TİCARET VE SANAYİ ODASI · DİJİTAL DÖNÜŞÜM HİZMETLERİ", MARGIN, PAGE_H - 7);
+    doc.text("ÇORLU TİCARET VE SANAYİ ODASI · PROJE SERVİSİ DİJİTAL DÖNÜŞÜM HİZMETLERİ", MARGIN, PAGE_H - 7);
     doc.text(`Sayfa ${i} / ${pageCount}`, PAGE_W - MARGIN, PAGE_H - 7, { align: "right" });
   }
 }
@@ -129,7 +129,7 @@ function paragraph(doc, text, y, opts = {}) {
 }
 
 /* ---------------------------------------------------------------
-   RADAR GRAFİĞİ (KOMPAKT & HAS)
+   RADAR GRAFİĞİ
 --------------------------------------------------------------- */
 
 function drawRadar(doc, scores, cx, cy, maxR) {
@@ -178,20 +178,44 @@ function drawRadar(doc, scores, cx, cy, maxR) {
 }
 
 /* ---------------------------------------------------------------
-   EKSEN KART ÇİZİM YARDIMCISI (ZENGİN & DOLGUN)
+   EKSEN KART ÇİZİM YARDIMCISI (DİNAMİK YÜKSEKLİK VE %100 SIĞMA)
 --------------------------------------------------------------- */
 
-function drawAxisCard(doc, axis, score, x, y, width, height) {
+function drawAxisCard(doc, axis, score, x, y, width) {
   const guide = axisLevelGuide(axis, score);
+
+  // Metinlerin Satır Sayılarını Önceden Hesaplama
+  doc.setFont("DejaVuSans", "normal");
+  doc.setFontSize(8);
+  const descLines = doc.splitTextToSize(guide.description, width - 12);
+
+  doc.setFontSize(7.8);
+  const actionClean = guide.action ? guide.action.replace(/\s+/g, " ") : "";
+  const actionLines = doc.splitTextToSize(actionClean, width - 12);
+
+  const halfW = (width - 16) / 2;
+  doc.setFontSize(6.8);
+  const kpiText = axis.kpis ? axis.kpis.slice(0, 2).join(" • ") : "";
+  const kpiLines = doc.splitTextToSize(kpiText, halfW - 4);
+
+  const qwText = axis.quickWin || "";
+  const qwLines = doc.splitTextToSize(qwText, halfW - 4);
+
+  // Alt Kutuların İhtiyaç Duyduğu Yükseklik
+  const subBoxContentH = Math.max(kpiLines.length, qwLines.length) * 3.2;
+  const subBoxH = Math.max(13, 6 + subBoxContentH);
+
+  // Toplam Kart Yüksekliği Hesabı
+  const cardHeight = 16 + (descLines.length * 3.8) + 4 + (actionLines.length * 3.6) + 4 + subBoxH + 4;
 
   // Kart Arka Planı
   doc.setFillColor(...LIGHT_BG);
   doc.setDrawColor(...GRID);
-  doc.roundedRect(x, y, width, height, 2, 2, "FD");
+  doc.roundedRect(x, y, width, cardHeight, 2, 2, "FD");
 
   // Sol Mavi Dikey Şerit
   doc.setFillColor(...BLUE);
-  doc.rect(x, y, 2.5, height, "F");
+  doc.rect(x, y, 2.5, cardHeight, "F");
 
   // Başlık Satırı
   doc.setFont("DejaVuSans", "bold");
@@ -215,7 +239,6 @@ function drawAxisCard(doc, axis, score, x, y, width, height) {
   doc.setFont("DejaVuSans", "normal");
   doc.setFontSize(8);
   doc.setTextColor(51, 65, 85);
-  const descLines = doc.splitTextToSize(guide.description, width - 12);
   doc.text(descLines, x + 6, y + 16);
 
   let currentY = y + 16 + descLines.length * 3.8 + 1;
@@ -230,52 +253,45 @@ function drawAxisCard(doc, axis, score, x, y, width, height) {
   doc.setFont("DejaVuSans", "normal");
   doc.setFontSize(7.8);
   doc.setTextColor(30, 41, 59);
-  const actionClean = guide.action ? guide.action.replace(/\s+/g, " ") : "";
-  const actionLines = doc.splitTextToSize(actionClean, width - 12);
   doc.text(actionLines, x + 6, currentY);
 
-  currentY += actionLines.length * 3.6 + 2;
-
-  // Alt Kısım: KPI ve Quick Win İkili Kutusu
-  const halfW = (width - 16) / 2;
+  currentY += actionLines.length * 3.6 + 3;
 
   // KPI Kutusu (Sol)
   doc.setFillColor(241, 245, 249);
   doc.setDrawColor(226, 232, 240);
-  doc.roundedRect(x + 6, currentY, halfW, 13, 1, 1, "FD");
+  doc.roundedRect(x + 6, currentY, halfW, subBoxH, 1, 1, "FD");
 
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(7);
   doc.setTextColor(...NAVY);
-  doc.text("HEDEF KPI'LAR", x + 8, currentY + 3.8);
+  doc.text("HEDEF KPI'LAR", x + 8, currentY + 4);
 
   doc.setFont("DejaVuSans", "normal");
   doc.setFontSize(6.8);
   doc.setTextColor(...STEEL);
-  const kpiText = axis.kpis ? axis.kpis.slice(0, 2).join(" • ") : "";
-  const kpiLines = doc.splitTextToSize(kpiText, halfW - 4);
   doc.text(kpiLines, x + 8, currentY + 7.5);
 
   // Quick Win Kutusu (Sağ)
   doc.setFillColor(254, 243, 199);
   doc.setDrawColor(252, 211, 77);
-  doc.roundedRect(x + 8 + halfW, currentY, halfW, 13, 1, 1, "FD");
+  doc.roundedRect(x + 8 + halfW, currentY, halfW, subBoxH, 1, 1, "FD");
 
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(7);
   doc.setTextColor(180, 83, 9);
-  doc.text("HIZLI KAZANIM (0-3 AY)", x + 10 + halfW, currentY + 3.8);
+  doc.text("HIZLI KAZANIM (0-3 AY)", x + 10 + halfW, currentY + 4);
 
   doc.setFont("DejaVuSans", "normal");
   doc.setFontSize(6.8);
   doc.setTextColor(120, 53, 15);
-  const qwText = axis.quickWin || "";
-  const qwLines = doc.splitTextToSize(qwText, halfW - 4);
   doc.text(qwLines, x + 10 + halfW, currentY + 7.5);
+
+  return cardHeight;
 }
 
 /* ---------------------------------------------------------------
-   ANA RAPOR OLUŞTURUCU (METİN TAŞMALARI DÜZELTİLMİŞ)
+   ANA RAPOR OLUŞTURUCU
 --------------------------------------------------------------- */
 
 export async function generatePdfReport({ firmName, scores, overall, answers }) {
@@ -304,7 +320,7 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   doc.setFont("DejaVuSans", "normal");
   doc.setFontSize(8);
   doc.setTextColor(...STEEL);
-  doc.text(`Rapor Tarihi: ${dateStr}  ·  Çorlu TSO KOBİ Danışmanlık Hizmetleri`, MARGIN + 5, y + 11.5);
+  doc.text(`Rapor Tarihi: ${dateStr}  ·  Çorlu TSO Proje Servisi Danışmanlık Hizmetleri`, MARGIN + 5, y + 11.5);
   y += 19;
 
   // Genel Skor Kartı
@@ -417,7 +433,7 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
     doc.setTextColor(...BLUE);
     doc.text(`${score.toFixed(2)}`, rightX + 34, rowY, { align: "right" });
 
-    // İnce İlerleme Barı
+    // İlerleme Barı
     doc.setFillColor(226, 232, 240);
     doc.rect(rightX + 38, rowY - 2.5, 48, 3.5, "F");
     doc.setFillColor(...BLUE);
@@ -429,8 +445,8 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   // Eksen 1, 2, 3 Kartları
   AXES.slice(0, 3).forEach((a) => {
     const score = scores[a.id];
-    drawAxisCard(doc, a, score, MARGIN, y, CONTENT_W, 58);
-    y += 62;
+    const h = drawAxisCard(doc, a, score, MARGIN, y, CONTENT_W);
+    y += h + 4;
   });
 
   /* ================= SAYFA 3: EKSEN 4, 5, 6 DETAYLARI ================= */
@@ -447,11 +463,11 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   // Eksen 4, 5, 6 Kartları
   AXES.slice(3, 6).forEach((a) => {
     const score = scores[a.id];
-    drawAxisCard(doc, a, score, MARGIN, y, CONTENT_W, 76);
-    y += 81;
+    const h = drawAxisCard(doc, a, score, MARGIN, y, CONTENT_W);
+    y += h + 5;
   });
 
-  /* ================= SAYFA 4: İKİZ DÖNÜŞÜM & TEŞVİK REHBERİ (TAŞMALAR DÜZELTİLDİ) ================= */
+  /* ================= SAYFA 4: İKİZ DÖNÜŞÜM & TEŞVİK REHBERİ ================= */
   doc.addPage();
   drawHeaderBanner(doc, logoBase64);
   y = 26;
@@ -483,7 +499,7 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
 
   y += 41;
 
-  // 2. Öncelikli Gelişim Alanları (DİNAMİK KUTU YÜKSEKLİĞİ VE OTOMATİK METİN KAYDIRMA)
+  // 2. Öncelikli Gelişim Alanları
   if (weakAxes.length > 0) {
     doc.setFont("DejaVuSans", "bold");
     doc.setFontSize(11);
@@ -491,7 +507,6 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
     doc.text("Öncelikli Gelişim Alanları ve Danışmanlık Önerileri", MARGIN, y);
     y += 5;
 
-    // En kritik 3 gelişim alanını al
     const displayWeak = weakAxes.slice(0, 3);
 
     displayWeak.forEach((a) => {
@@ -499,7 +514,6 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
       const resLines = doc.splitTextToSize(`Önerilen Destek Kaynakları: ${resNames}`, CONTENT_W - 10);
       const actLines = doc.splitTextToSize(`Aksiyon Tavsiyesi: ${a.quickWin}`, CONTENT_W - 10);
 
-      // Dinamik Yükseklik Hesabı (Metin satır sayısına göre otomatik uzar)
       const cardH = 8 + resLines.length * 3.6 + actLines.length * 3.6 + 2;
 
       doc.setFillColor(...LIGHT_BG);
@@ -508,21 +522,18 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
 
       let currentInnerY = y + 5;
 
-      // Başlık
       doc.setFont("DejaVuSans", "bold");
       doc.setFontSize(8.5);
       doc.setTextColor(...AMBER);
       doc.text(`• ${a.title} (Puan: ${scores[a.id].toFixed(2)} / 5.00)`, MARGIN + 4, currentInnerY);
       currentInnerY += 4.5;
 
-      // Kaynaklar (Kırılmış satırlar)
       doc.setFont("DejaVuSans", "normal");
       doc.setFontSize(7.5);
       doc.setTextColor(51, 65, 85);
       doc.text(resLines, MARGIN + 4, currentInnerY);
       currentInnerY += resLines.length * 3.6 + 1.5;
 
-      // Aksiyon Tavsiyesi (Kırılmış satırlar)
       doc.setFont("DejaVuSans", "bold");
       doc.setFontSize(7.5);
       doc.setTextColor(...BLUE);
@@ -570,19 +581,26 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
 
   y += 3;
 
-  // 4. Çorlu TSO Danışmanlık Çağrı Kutusu
+  // 4. Çorlu TSO Proje Servisi Çağrı Kutusu (DÜZELTİLDİ VE ÇOK SATIRLI HİZALANDI)
+  doc.setFont("DejaVuSans", "normal");
+  doc.setFontSize(7.5);
+  const calloutText = "Rapor sonuçlarınızı detaylandırmak ve firmanıza özel yol haritası oluşturmak için Odamız uzmanlarıyla birebir danışmanlık randevusu alabilirsiniz.";
+  const calloutLines = doc.splitTextToSize(calloutText, CONTENT_W - 10);
+
+  const calloutH = 10 + (calloutLines.length * 3.8);
+
   doc.setFillColor(...NAVY);
-  doc.roundedRect(MARGIN, y, CONTENT_W, 16, 2, 2, "F");
+  doc.roundedRect(MARGIN, y, CONTENT_W, calloutH, 2, 2, "F");
 
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(9);
   doc.setTextColor(...AMBER);
-  doc.text("ÇORLU TSO DİJİTAL DÖNÜŞÜM OFİSİ İLE İLETİŞİME GEÇİN", MARGIN + 5, y + 5.5);
+  doc.text("ÇORLU TSO PROJE SERVİSİ İLE İLETİŞİME GEÇİN", MARGIN + 5, y + 5.5);
 
   doc.setFont("DejaVuSans", "normal");
   doc.setFontSize(7.5);
   doc.setTextColor(255, 255, 255);
-  doc.text("Rapor sonuçlarınızı detaylandırmak ve firmanıza özel yol haritası oluşturmak için Odamız uzmanlarıyla birebir danışmanlık randevusu alabilirsiniz.", MARGIN + 5, y + 11);
+  doc.text(calloutLines, MARGIN + 5, y + 10.5);
 
   /* ================= SAYFA 5: BİLİMSEL METODOLOJİ VE AKADEMİK KAYNAKÇA ================= */
   doc.addPage();
@@ -641,7 +659,6 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
 
   y += 4;
 
-  // Yasal Uyarı / Telif
   doc.setFont("DejaVuSans", "normal");
   doc.setFontSize(7.5);
   doc.setTextColor(...STEEL);
