@@ -2,7 +2,7 @@ import jsPDF from "jspdf";
 import { AXES, LEVELS, levelFor, statusFor, axisLevelGuide } from "./data";
 
 /* ---------------------------------------------------------------
-   FONT VE GÖRSEL YÜKLEME YARDIMCILARI
+   FONT VE LOGO YÜKLEME YARDIMCILARI
 --------------------------------------------------------------- */
 
 let fontsLoadedPromise = null;
@@ -17,7 +17,6 @@ async function arrayBufferToBase64(buffer) {
   return btoa(binary);
 }
 
-// Logo görselini base64 formatına çevirip PDF'e ekleme
 async function loadLogoBase64() {
   try {
     const response = await fetch("/ctso-logo.jpg");
@@ -52,17 +51,15 @@ async function ensureFontsLoaded(doc) {
 }
 
 /* ---------------------------------------------------------------
-   KURUMSAL RENK PALETİ VE ÖLÇÜLER
+   KURUMSAL RENK PALETİ VE SAYFA BOYUTLARI
 --------------------------------------------------------------- */
 
-const NAVY = [15, 23, 42];       // #0F172A - Slate 900
-const AMBER = [217, 119, 6];     // #D97706 - Amber 600
-const BLUE = [30, 58, 138];      // #1E3A8A - Blue 900
-const STEEL = [100, 116, 139];   // #64748B - Slate 500
-const LIGHT_BG = [248, 250, 252];// #F8FAFC - Slate 50
-const GRID = [226, 232, 240];     // #E2E8F0 - Slate 200
-const GREEN = [16, 185, 129];    // #10B981 - Emerald 500
-const RED = [239, 68, 68];       // #EF4444 - Red 500
+const NAVY = [9, 21, 56];         // #091538 - Çorlu TSO Derin Lacivert
+const AMBER = [217, 119, 6];      // #D97706 - Kurumsal Altın
+const BLUE = [30, 58, 138];       // #1E3A8A - Vurgu Mavi
+const STEEL = [100, 116, 139];    // #64748B - Ikincil Gri
+const LIGHT_BG = [248, 250, 252]; // #F8FAFC - Kart Arka Planı
+const GRID = [226, 232, 240];     // #E2E8F0 - Çizgiler
 
 const PAGE_W = 210;
 const PAGE_H = 297;
@@ -70,38 +67,38 @@ const MARGIN = 18;
 const CONTENT_W = PAGE_W - MARGIN * 2;
 
 /* ---------------------------------------------------------------
-   HEADER BANNER VE FOOTER ÇİZİMİ
+   SAYFA HEADER VE FOOTER ÇİZİMİ (KAYMALARI ÖNLER)
 --------------------------------------------------------------- */
 
 function drawHeaderBanner(doc, logoBase64) {
-  // Koyu Üst Şerit
+  // Üst Koyu Şerit
   doc.setFillColor(...NAVY);
-  doc.rect(0, 0, PAGE_W, 22, "F");
-  
-  // Amber Alt Çizgi
-  doc.setFillColor(...AMBER);
-  doc.rect(0, 22, PAGE_W, 1.2, "F");
+  doc.rect(0, 0, PAGE_W, 20, "F");
 
-  // Logo
+  // İnce Altın Çizgi
+  doc.setFillColor(...AMBER);
+  doc.rect(0, 20, PAGE_W, 1, "F");
+
+  // Logo (Sabit Boyut ve Konum)
   if (logoBase64) {
     try {
-      doc.addImage(logoBase64, "JPEG", MARGIN, 3, 16, 16);
+      doc.addImage(logoBase64, "JPEG", MARGIN, 3, 14, 14);
     } catch (e) {
-      // Logo çizilemezse devam et
+      console.warn("PDF Logo yerleştirme hatası:", e);
     }
   }
 
-  // Başlıklar
-  const titleX = logoBase64 ? MARGIN + 20 : MARGIN;
+  // Header Metinleri
+  const titleX = logoBase64 ? MARGIN + 18 : MARGIN;
   doc.setFont("DejaVuSans", "bold");
-  doc.setFontSize(9.5);
+  doc.setFontSize(8.5);
   doc.setTextColor(...AMBER);
-  doc.text("ÇORLU TİCARET VE SANAYİ ODASI", titleX, 10);
+  doc.text("ÇORLU TİCARET VE SANAYİ ODASI", titleX, 9);
 
   doc.setFont("DejaVuSans", "bold");
-  doc.setFontSize(11);
+  doc.setFontSize(10.5);
   doc.setTextColor(255, 255, 255);
-  doc.text("Dijital Olgunluk Değerlendirme Raporu", titleX, 16);
+  doc.text("Dijital Olgunluk Değerlendirme Raporu", titleX, 15);
 }
 
 function footer(doc) {
@@ -124,7 +121,7 @@ function ensureSpace(doc, y, needed, logoBase64) {
   if (y + needed > PAGE_H - 18) {
     doc.addPage();
     drawHeaderBanner(doc, logoBase64);
-    return 30;
+    return 28;
   }
   return y;
 }
@@ -142,7 +139,7 @@ function paragraph(doc, text, y, opts = {}) {
 }
 
 /* ---------------------------------------------------------------
-   VEKTÖR RADAR GRAFİĞİ
+   RADAR GRAFİĞİ
 --------------------------------------------------------------- */
 
 function drawRadar(doc, scores, cx, cy, maxR) {
@@ -152,7 +149,7 @@ function drawRadar(doc, scores, cx, cy, maxR) {
     return [cx + r * Math.cos(angle), cy + r * Math.sin(angle)];
   };
 
-  // Izgara halkaları
+  // Izgara
   [1, 2, 3, 4, 5].forEach((ring) => {
     doc.setDrawColor(...GRID);
     doc.setLineWidth(ring === 5 ? 0.3 : 0.15);
@@ -164,7 +161,7 @@ function drawRadar(doc, scores, cx, cy, maxR) {
     }
   });
 
-  // Eksen çizgileri
+  // Eksenler
   AXES.forEach((_, i) => {
     const [x, y] = pointAt(i, maxR);
     doc.line(cx, cy, x, y);
@@ -189,7 +186,7 @@ function drawRadar(doc, scores, cx, cy, maxR) {
   doc.setFontSize(7.5);
   doc.setTextColor(...NAVY);
   AXES.forEach((a, i) => {
-    const [x, y] = pointAt(i, maxR + 9);
+    const [x, y] = pointAt(i, maxR + 8);
     doc.text(a.short.toUpperCase(), x, y, { align: "center" });
   });
 }
@@ -209,51 +206,52 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   );
   const dateStr = new Date().toLocaleDateString("tr-TR", { day: "2-digit", month: "long", year: "numeric" });
 
-  /* ---- SAYFA 1: KAPAK VE ÖZET ---- */
+  /* ================= SAYFA 1: EXECUTIVE KAPAK VE ÖZET ================= */
   drawHeaderBanner(doc, logoBase64);
-  let y = 30;
+  let y = 28;
 
-  // Firma ve Tarih Kutusu
+  // Başlık Kutusu
   doc.setFillColor(...LIGHT_BG);
   doc.setDrawColor(...GRID);
   doc.roundedRect(MARGIN, y, CONTENT_W, 14, 2, 2, "FD");
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(9.5);
   doc.setTextColor(...NAVY);
-  doc.text(firmName ? firmName.toUpperCase() : "DİJİTAL OLGUNLUK DEĞERLENDİRMESİ", MARGIN + 4, y + 6);
+  doc.text(firmName ? firmName.toUpperCase() : "DİJİTAL OLGUNLUK DEĞERLENDİRME RAPORU", MARGIN + 4, y + 6);
   doc.setFont("DejaVuSans", "normal");
   doc.setFontSize(8);
   doc.setTextColor(...STEEL);
-  doc.text(`Rapor Tarihi: ${dateStr}`, MARGIN + 4, y + 10.5);
+  doc.text(`Rapor Tarihi: ${dateStr}  ·  Çorlu TSO KOBİ Danışmanlık Hizmetleri`, MARGIN + 4, y + 10.5);
   y += 18;
 
-  // Genel Skor Hero Kartı
+  // Genel Skor Kartı
   doc.setFillColor(239, 246, 255);
   doc.setDrawColor(191, 219, 254);
-  doc.roundedRect(MARGIN, y, CONTENT_W, 26, 3, 3, "FD");
+  doc.roundedRect(MARGIN, y, CONTENT_W, 28, 3, 3, "FD");
 
   doc.setFont("DejaVuSans", "bold");
-  doc.setFontSize(26);
+  doc.setFontSize(28);
   doc.setTextColor(...BLUE);
-  doc.text(overall.toFixed(2), MARGIN + 6, y + 17);
+  doc.text(overall.toFixed(2), MARGIN + 6, y + 18);
 
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(8);
   doc.setTextColor(...STEEL);
-  doc.text("/ 5.00  GENEL OLGUNLUK PUANI", MARGIN + 36, y + 8);
+  doc.text("/ 5.00  GENEL OLGUNLUK PUANI", MARGIN + 38, y + 8);
 
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(12);
   doc.setTextColor(...NAVY);
-  doc.text(`SEVİYE: ${level.name.toUpperCase()}`, MARGIN + 36, y + 14.5);
+  doc.text(`SEVİYE: ${level.name.toUpperCase()}`, MARGIN + 38, y + 15);
 
   doc.setFont("DejaVuSans", "normal");
   doc.setFontSize(8);
   doc.setTextColor(30, 41, 59);
   const recClean = (level.recommendation || "").replace(/^Öncelik:\s*/i, "");
-  doc.text(`Stratejik Öncelik: ${recClean}`, MARGIN + 36, y + 20.5);
+  const recLines = doc.splitTextToSize(`Stratejik Öncelik: ${recClean}`, CONTENT_W - 42);
+  doc.text(recLines, MARGIN + 38, y + 21);
 
-  y += 32;
+  y += 34;
 
   // Rapor Açıklaması
   doc.setFont("DejaVuSans", "bold");
@@ -271,7 +269,7 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   );
   y += 6;
 
-  // Genel Olgunluk Skalası
+  // Seviye Skalası
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(10);
   doc.setTextColor(...NAVY);
@@ -295,10 +293,10 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
     y += 5.5;
   });
 
-  /* ---- SAYFA 2: RADAR GRAFİĞİ VE EKSEN DETAYLARI ---- */
+  /* ================= SAYFA 2: RADAR & İLK 3 EKSEN ANALİZİ ================= */
   doc.addPage();
   drawHeaderBanner(doc, logoBase64);
-  y = 30;
+  y = 28;
 
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(11);
@@ -306,21 +304,21 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   doc.text("Eksen Bazlı Olgunluk Analizi", MARGIN, y);
   y += 4;
 
-  drawRadar(doc, scores, PAGE_W / 2, y + 30, 26);
-  y += 64;
+  drawRadar(doc, scores, PAGE_W / 2, y + 26, 24);
+  y += 56;
 
-  AXES.forEach((a) => {
-    y = ensureSpace(doc, y, 26, logoBase64);
+  // İlk 3 Eksen
+  AXES.slice(0, 3).forEach((a) => {
+    y = ensureSpace(doc, y, 32, logoBase64);
     const s = scores[a.id];
     const guide = axisLevelGuide(a, s);
 
     doc.setFillColor(...LIGHT_BG);
     doc.setDrawColor(...GRID);
-    doc.roundedRect(MARGIN, y, CONTENT_W, 23, 2, 2, "FD");
+    doc.roundedRect(MARGIN, y, CONTENT_W, 28, 2, 2, "FD");
 
-    // Sol Mavi Vurgu Şeridi
     doc.setFillColor(...BLUE);
-    doc.rect(MARGIN, y, 2, 23, "F");
+    doc.rect(MARGIN, y, 2, 28, "F");
 
     doc.setFont("DejaVuSans", "bold");
     doc.setFontSize(9);
@@ -338,25 +336,67 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
     doc.text(`SEVİYE ${guide.level}: ${guide.name.toUpperCase()}`, MARGIN + 5, y + 10);
 
     doc.setFont("DejaVuSans", "normal");
-    doc.setFontSize(8);
+    doc.setFontSize(7.8);
     doc.setTextColor(51, 65, 85);
     const actionClean = guide.action ? guide.action.replace(/\s+/g, " ") : "";
     const actionLines = doc.splitTextToSize(`Aksiyon Yol Haritası: ${actionClean}`, CONTENT_W - 10);
     doc.text(actionLines, MARGIN + 5, y + 15);
 
-    y += 26;
+    y += 31;
   });
 
-  /* ---- SAYFA 3: GELİŞİM ALANLARI, DESTEKLER VE METODOLOJİ ---- */
+  /* ================= SAYFA 3: SON 3 EKSEN ANALİZİ ================= */
   doc.addPage();
   drawHeaderBanner(doc, logoBase64);
-  y = 30;
+  y = 28;
+
+  AXES.slice(3, 6).forEach((a) => {
+    y = ensureSpace(doc, y, 32, logoBase64);
+    const s = scores[a.id];
+    const guide = axisLevelGuide(a, s);
+
+    doc.setFillColor(...LIGHT_BG);
+    doc.setDrawColor(...GRID);
+    doc.roundedRect(MARGIN, y, CONTENT_W, 28, 2, 2, "FD");
+
+    doc.setFillColor(...BLUE);
+    doc.rect(MARGIN, y, 2, 28, "F");
+
+    doc.setFont("DejaVuSans", "bold");
+    doc.setFontSize(9);
+    doc.setTextColor(...NAVY);
+    doc.text(`${a.no}. ${a.title}`, MARGIN + 5, y + 5.5);
+
+    doc.setFont("DejaVuSans", "bold");
+    doc.setFontSize(9);
+    doc.setTextColor(...BLUE);
+    doc.text(`${s.toFixed(2)} / 5.00`, PAGE_W - MARGIN - 4, y + 5.5, { align: "right" });
+
+    doc.setFont("DejaVuSans", "bold");
+    doc.setFontSize(7.5);
+    doc.setTextColor(...AMBER);
+    doc.text(`SEVİYE ${guide.level}: ${guide.name.toUpperCase()}`, MARGIN + 5, y + 10);
+
+    doc.setFont("DejaVuSans", "normal");
+    doc.setFontSize(7.8);
+    doc.setTextColor(51, 65, 85);
+    const actionClean = guide.action ? guide.action.replace(/\s+/g, " ") : "";
+    const actionLines = doc.splitTextToSize(`Aksiyon Yol Haritası: ${actionClean}`, CONTENT_W - 10);
+    doc.text(actionLines, MARGIN + 5, y + 15);
+
+    y += 31;
+  });
+
+  /* ================= SAYFA 4: GELİŞİM ALANLARI, DESTEKLER VE METODOLOJİ ================= */
+  doc.addPage();
+  drawHeaderBanner(doc, logoBase64);
+  y = 28;
 
   if (weakAxes.length > 0) {
     doc.setFont("DejaVuSans", "bold");
     doc.setFontSize(10.5);
     doc.setTextColor(...NAVY);
-    doc.text("Öncelikli Gelişim Alanları ve Destekler", MARGIN, y);
+    doc.text("Öncelikli Gelişim Alanları ve Önerilen Destekler", MARGIN, y);
     y += 5;
 
     weakAxes.forEach((a) => {
@@ -409,7 +449,7 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(10.5);
   doc.setTextColor(...NAVY);
-  doc.text("Metodolojik Çerçeve ve Kaynakça", MARGIN, y);
+  doc.text("Metodolojik Çerçeve ve Akademik Kaynakça", MARGIN, y);
   y += 5;
 
   y = paragraph(
