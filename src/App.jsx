@@ -358,16 +358,12 @@ export default function App() {
                 <path d="M5 8C2 14 2 26 5 32" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.5" />
               </svg>
 
-              {/* LOGO GÖRSELİ (ctso-logo.jpg) - PÜRÜZSÜZ BEYAZ ÇERÇEVE KILIFI */}
+              {/* LOGO GÖRSELİ (ctso-logo.png) - PÜRÜZSÜZ BEYAZ ÇERÇEVE KILIFI */}
               <div className="relative h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-white p-0.5 shadow-md ring-2 ring-amber-400/80 flex items-center justify-center overflow-hidden flex-shrink-0">
                 <img
-                  src="/ctso-logo.jpg"
+                  src="/ctso-logo.png"
                   alt="Çorlu TSO Logo"
                   className="h-full w-full object-cover rounded-full"
-                  style={{
-                    imageRendering: "-webkit-optimize-contrast",
-                    transform: "scale(1.02)"
-                  }}
                 />
               </div>
 
