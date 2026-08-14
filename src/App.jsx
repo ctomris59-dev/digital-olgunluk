@@ -196,66 +196,36 @@ function MethodologyModal({ onClose }) {
         <div className="text-sm space-y-4 leading-relaxed text-slate-700">
           <p>
             Bu araç, Çorlu Ticaret ve Sanayi Odası tarafından özgün olarak geliştirilmiştir.
-            Herhangi bir ticari veya akademik aracın birebir kopyası değildir — aşağıda
-            listelenen uluslararası kabul görmüş dijital olgunluk çerçevelerinin
+            Aşağıda listelenen uluslararası kabul görmüş dijital ve yeşil olgunluk çerçevelerinin
             kavramsal yapısından esinlenerek tasarlanmış, KOBİ'lere yönelik hafif bir
             <strong className="text-slate-900"> ön-tarama (self-assessment) aracıdır.</strong>
           </p>
 
           <div>
-            <div className="text-sm font-semibold mb-2 text-slate-900">Referans Alınan Çerçeveler</div>
+            <div className="text-sm font-semibold mb-2 text-slate-900">Referans Alınan Çerçeve ve Standartlar</div>
             <ul className="space-y-2.5 list-none pl-0">
               <li className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
-                <strong className="text-slate-900">1. acatech Industrie 4.0 Maturity Index</strong> — Almanya Ulusal Bilim
-                ve Mühendislik Akademisi (Schuh vd., 2017/2020). Kaynaklar, Bilgi Sistemleri,
-                Organizasyonel Yapı ve Kültür olmak üzere 4 yapısal alanda, 6 aşamalı bir olgunluk modeli sunar.
+                <strong className="text-slate-900">1. acatech Industrie 4.0 Maturity Index</strong> — Almanya Ulusal Bilim ve Mühendislik Akademisi. Kaynaklar, Bilgi Sistemleri, Org. Yapı ve Kültür boyutlarında 6 aşamalı olgunluk modeli sunar.
               </li>
               <li className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
-                <strong className="text-slate-900">2. MIT Center for Digital Business & Capgemini — Digital Maturity Model</strong> —
-                Westerman, Bonnet & McAfee (2014), <em>"Leading Digital"</em>. Dijital Yoğunluk ile Dönüşüm Yönetimi Yoğunluğu ilkesi Dijital Yetkinlik ve İnsan Kaynağı eksenimize yansıtılmıştır.
+                <strong className="text-slate-900">2. WEF & Singapore EDB — SIRI (Smart Industry Readiness Index)</strong> — Dünya Ekonomik Forumu destekli sanayi dijitalleşme küresel standardı.
               </li>
               <li className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
-                <strong className="text-slate-900">3. Avrupa Komisyonu EDIH Ağı — Open DMAT</strong> (Digital Maturity Assessment Tool for SMEs). Dijital İş Stratejisi, Dijital Hazırlık, Veri Yönetimi, Otomasyon & Yapay Zeka eksenlerini kapsar.
+                <strong className="text-slate-900">3. Fraunhofer IMPULS — Industry 4.0 & Green Transformation</strong> — İmalatçı KOBİ'lerin dijital araçlar, yeşil dönüşüm ve veri yönetimi olgunluğunu ölçen model.
               </li>
               <li className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
-                <strong className="text-slate-900">4. Capability Maturity Model (CMMI Institute)</strong> — Kademeli olgunluk seviyesiyle süreç değerlendirme metodolojisinin genel bilimsel temelini oluşturur.
+                <strong className="text-slate-900">4. MIT Center for Digital Business & Capgemini</strong> — Westerman, Bonnet & McAfee (2014), "Leading Digital" dönüşüm yönetimi esasları.
               </li>
               <li className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
-                <strong className="text-slate-900">5. ISO/IEC 33001 Standart Ailesi</strong> — Süreç değerlendirmesi resmi terminoloji ve metodolojik çerçeve referansıdır.
+                <strong className="text-slate-900">5. Avrupa Komisyonu EDIH Ağı — Open DMAT</strong> — Dijital İş Stratejisi, Veri Yönetimi, Yapay Zeka ve İkiz Dönüşüm boyutları.
               </li>
               <li className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
-                <strong className="text-slate-900">6. OECD Going Digital Toolkit</strong> — Altyapıya Erişim, Etkin Kullanım, İnovasyon ve Dijital Çağda Güven politika boyutları baz alınmıştır.
+                <strong className="text-slate-900">6. CMMI V2.0 & ISO/IEC 33001 Standart Ailesi</strong> — Kademeli olgunluk seviyesiyle süreç değerlendirme resmi altyapısı.
+              </li>
+              <li className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
+                <strong className="text-slate-900">7. NIST Cybersecurity Framework & OECD Going Digital</strong> — Siber dayanıklılık, veri gizliliği (KVKK/GDPR) ve dijital çağda güven esasları.
               </li>
             </ul>
-          </div>
-
-          <div>
-            <div className="text-sm font-semibold mb-2 text-slate-900">Eksen — Çerçeve Eşleştirme Tablosu</div>
-            <div className="overflow-x-auto border border-slate-200 rounded-lg">
-              <table className="w-full text-xs" style={{ borderCollapse: "collapse" }}>
-                <thead>
-                  <tr className="bg-slate-100 border-b border-slate-200">
-                    <th className="text-left py-2 px-3 font-semibold text-slate-900">Eksen</th>
-                    <th className="text-left py-2 px-3 font-semibold text-slate-900">Ana Referans Çerçeve(ler)</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 text-slate-600">
-                  {[
-                    ["01 Süreç Dijitalleşmesi", "acatech (Bilgi Sistemleri) · ISO/IEC 33001 ailesi"],
-                    ["02 Veri Yönetimi ve Analitik", "acatech (Bilgi Sistemleri) · EDIH (Veri Yönetimi)"],
-                    ["03 Müşteri/Pazar Dijital Varlığı", "MIT & Capgemini · EDIH (Dijital İş Stratejisi)"],
-                    ["04 Otomasyon ve Yapay Zeka", "acatech (Kaynaklar) · EDIH (Otomasyon & YZ)"],
-                    ["05 Dijital Yetkinlik ve İnsan Kaynağı", "acatech (Org. Yapı/Kültür) · MIT & Capgemini · OECD"],
-                    ["06 Siber Güvenlik ve Altyapı", "acatech (Kaynaklar) · OECD (Dijital Çağda Güven)"],
-                  ].map(([axis, fw]) => (
-                    <tr key={axis} className="hover:bg-slate-50/50">
-                      <td className="py-2 px-3 font-medium text-slate-800">{axis}</td>
-                      <td className="py-2 px-3">{fw}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
           </div>
         </div>
 
@@ -278,8 +248,9 @@ function MethodologyModal({ onClose }) {
 
 const SUPPORT_PROGRAMS = [
   { name: "TÜBİTAK TÜSSİDE D3A / DDX Modeli", url: "https://ddxmodel.tubitak.gov.tr" },
-  { name: "EDIH Open DMAT (Avrupa Komisyonu)", url: "https://european-digital-innovation-hubs.ec.europa.eu" },
+  { name: "EDIH West Marmara İkiz Dönüşüm Desteği", url: "https://european-digital-innovation-hubs.ec.europa.eu" },
   { name: "KOSGEB Dijital Dönüşüm Danışmanlığı Desteği", url: "https://www.kosgeb.gov.tr" },
+  { name: "Ticaret Bakanlığı E-İhracat Destek Programı", url: "https://www.ticaret.gov.tr" },
 ];
 
 /* ---------------------------------------------------------------
@@ -374,23 +345,17 @@ export default function App() {
       screen === "quiz" ? "h-screen max-h-screen overflow-hidden flex flex-col bg-slate-100" : "min-h-screen bg-slate-50 flex flex-col"
     }`}>
       
-      {/* ==================== PRESTİJLİ VE CUK OTURAN KURUMSAL HEADER ==================== */}
+      {/* ==================== KURUMSAL HEADER ==================== */}
       <header className="bg-[#091538] border-b border-amber-500/30 text-white flex-shrink-0 shadow-xl relative z-40">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between">
           
-          {/* SOL TARAF: CUK OTURAN LOGO VE BAŞLIKLAR */}
           <div className="flex items-center gap-3 sm:gap-4">
-            
-            {/* LOGO KAPSAYICISI (SIKIŞMAYI VE BEYAZLIK ÇAKIŞMASINI ÖNLER) */}
             <div className="relative flex items-center justify-center flex-shrink-0">
-              
-              {/* Sol Estetik Altın Parantez Yayı */}
               <svg className="h-10 sm:h-12 w-3 text-amber-400/80 mr-0.5" viewBox="0 0 12 40" fill="none">
                 <path d="M10 2C4 10 4 30 10 38" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
                 <path d="M5 8C2 14 2 26 5 32" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.5" />
               </svg>
 
-              {/* Dairesel Beyaz Çerçeveli Logo Kılıfı (Kare Beyaz Zemin Kaymasını Sıfırlar) */}
               <div className="relative h-11 w-11 sm:h-13 sm:w-13 rounded-full bg-white p-0.5 shadow-md ring-1 ring-amber-400/50 flex items-center justify-center overflow-hidden">
                 <img
                   src="/ctso-logo.jpg"
@@ -399,15 +364,12 @@ export default function App() {
                 />
               </div>
 
-              {/* Sağ Estetik Altın Parantez Yayı */}
               <svg className="h-10 sm:h-12 w-3 text-amber-400/80 ml-0.5" viewBox="0 0 12 40" fill="none">
                 <path d="M2 2C8 10 8 30 2 38" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
                 <path d="M7 8C10 14 10 26 7 32" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.5" />
               </svg>
-
             </div>
 
-            {/* Metin Yapısı */}
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
                 <span className="text-[10px] sm:text-[11px] font-black text-amber-400 uppercase tracking-widest leading-none">
@@ -424,7 +386,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* SAĞ TARAF: SADELEŞTİRİLMİŞ DANIŞMANLIK METNİ */}
           <div className="hidden md:flex items-center">
             <div className="text-right">
               <div className="text-[11px] font-medium text-slate-300 tracking-wide">
@@ -433,7 +394,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* MOBİL İLERLEME ROZETİ */}
           {screen !== "intro" && (
             <div className="md:hidden inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold bg-slate-900 text-amber-400 border border-slate-800">
               {screen === "quiz" ? `%${progressPercent}` : "RAPOR"}
@@ -441,8 +401,6 @@ export default function App() {
           )}
 
         </div>
-
-        {/* İnce Altın Çizgi */}
         <div className="h-[2px] w-full bg-gradient-to-r from-amber-600/20 via-amber-400/80 to-amber-600/20"></div>
       </header>
 
@@ -455,7 +413,6 @@ export default function App() {
         {/* EKRAN 1: INTRO */}
         {screen === "intro" && (
           <div className="space-y-8 max-w-4xl mx-auto">
-            {/* HERO BÖLÜMÜ */}
             <div className="bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
               <div className="flex items-center gap-2 text-xs font-bold text-blue-900 uppercase tracking-wider mb-2">
                 <ShieldCheck size={18} className="text-amber-600" />
@@ -465,10 +422,9 @@ export default function App() {
                 Firmanızın dijital olgunluk seviyesini ölçün.
               </h1>
               <p className="text-slate-600 text-base leading-relaxed max-w-2xl mb-6">
-                Çorlu Ticaret ve Sanayi Odası tarafından bölgemizdeki işletmelerin dijitalleşme süreçlerini desteklemek amacıyla geliştirilen bu ön değerlendirme aracı ile 6 stratejik eksende yetkinliklerinizi analiz edin.
+                Çorlu Ticaret ve Sanayi Odası tarafından bölgemizdeki işletmelerin dijitalleşme ve yeşil dönüşüm süreçlerini desteklemek amacıyla geliştirilen bu ön değerlendirme aracı ile 6 stratejik eksende yetkinliklerinizi analiz edin.
               </p>
 
-              {/* BİLGİ ROZETLERİ */}
               <div className="flex flex-wrap gap-4 pt-4 border-t border-slate-100 text-xs font-medium text-slate-600">
                 <div className="flex items-center gap-1.5">
                   <span className="h-2 w-2 rounded-full bg-blue-900"></span>
@@ -480,12 +436,11 @@ export default function App() {
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="h-2 w-2 rounded-full bg-emerald-600"></span>
-                  <span>Anlık Sonuç & PDF Raporu</span>
+                  <span>İkiz Dönüşüm & SKDM Hazırlığı</span>
                 </div>
               </div>
             </div>
 
-            {/* BİLİMSEL METODOLOJİ BANNERİ */}
             <div 
               onClick={() => setShowMethodology(true)}
               className="bg-slate-950 text-white rounded-xl p-5 shadow-sm border border-slate-800 flex items-center justify-between gap-4 cursor-pointer hover:bg-slate-900 transition-all group"
@@ -499,7 +454,7 @@ export default function App() {
                     <span>BİLİMSEL METODOLOJİ VE KAYNAKÇA</span>
                   </h4>
                   <p className="text-xs text-slate-300 mt-0.5">
-                    acatech, MIT & Capgemini, AB EDIH, ISO/IEC 33001 ve OECD çerçevelerine dayanır — tam kaynakça için tıklayın →
+                    acatech, WEF SIRI, Fraunhofer, MIT, EDIH, ISO 33001 ve NIST çerçevelerine dayanır — kaynakça için tıklayın →
                   </p>
                 </div>
               </div>
@@ -508,7 +463,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* EKSENLER ÖZET KARTI */}
             <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
               <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">DEĞERLENDİRME EKSENLERİ</h3>
               <div className="grid sm:grid-cols-2 gap-3">
@@ -521,7 +475,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* FORM BÖLÜMÜ */}
             <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-slate-800 mb-1">
@@ -610,11 +563,10 @@ export default function App() {
           </div>
         )}
 
-        {/* EKRAN 2: QUIZ (MATRİS DÜZENİ) */}
+        {/* EKRAN 2: QUIZ (SADELEŞTİRİLMİŞ MONOKROM LİKERT) */}
         {screen === "quiz" && (
           <div className="h-full flex flex-col justify-between space-y-2 overflow-hidden">
             
-            {/* ÜST BİLGİ & İLERLEME BARI */}
             <div className="bg-white border border-slate-200 rounded-xl p-2.5 shadow-sm flex-shrink-0 space-y-2">
               <div className="flex items-center justify-between text-xs font-bold text-slate-700 px-1">
                 <div className="flex items-center gap-2">
@@ -629,7 +581,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* İLERLEME ÇUBUĞU */}
               <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-blue-900 rounded-full transition-all duration-300"
@@ -637,7 +588,6 @@ export default function App() {
                 />
               </div>
 
-              {/* EKSEN TABLARI */}
               <div className="flex gap-1 overflow-x-auto pt-0.5">
                 {AXES.map((a, i) => {
                   const done = a.questions.every((_, qi) => answers[`${a.id}-${qi}`]);
@@ -661,10 +611,8 @@ export default function App() {
               </div>
             </div>
 
-            {/* KART GÖVDESİ & MATRİS TABLOSU */}
             <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-md flex-grow flex flex-col justify-between overflow-hidden">
               
-              {/* EKSEN AÇIKLAMASI & ÖLÇEK REHBERİ */}
               <div className="flex-shrink-0 border-b border-slate-100 pb-2 mb-2">
                 <div className="flex items-center justify-between gap-2 mb-1">
                   <h2 className="text-base font-black text-slate-900">{currentAxis.title}</h2>
@@ -672,19 +620,18 @@ export default function App() {
                     {answeredCount} / {currentAxis.questions.length} Cevaplandı
                   </span>
                 </div>
-                <p className="text-slate-500 text-xs truncate mb-2">{currentAxis.intro}</p>
+                <p className="text-slate-500 text-xs truncate mb-2.5">{currentAxis.intro}</p>
 
-                {/* TEK SATIR LIKERT REHBERİ */}
-                <div className="bg-slate-50 border border-slate-200/80 rounded-lg py-1 px-3 flex items-center justify-between text-[11px] font-bold text-slate-600">
-                  <span className="text-red-600">1: {SCALE_LABELS[0]}</span>
-                  <span className="text-orange-600">2: {SCALE_LABELS[1]}</span>
-                  <span className="text-amber-600">3: {SCALE_LABELS[2]}</span>
-                  <span className="text-emerald-600">4: {SCALE_LABELS[3]}</span>
-                  <span className="text-blue-600">5: {SCALE_LABELS[4]}</span>
+                {/* SADE VE MONOKROM KURUMSAL LİKERT REHBERİ */}
+                <div className="bg-slate-50 border border-slate-200/80 rounded-lg py-1.5 px-3 flex items-center justify-between text-[11px] font-semibold text-slate-600">
+                  <span><strong className="text-slate-900">1:</strong> {SCALE_LABELS[0]}</span>
+                  <span><strong className="text-slate-900">2:</strong> {SCALE_LABELS[1]}</span>
+                  <span><strong className="text-slate-900">3:</strong> {SCALE_LABELS[2]}</span>
+                  <span><strong className="text-slate-900">4:</strong> {SCALE_LABELS[3]}</span>
+                  <span><strong className="text-slate-900">5:</strong> {SCALE_LABELS[4]}</span>
                 </div>
               </div>
 
-              {/* 5 SORULUK KOMPAKT MATRİS LİSTESİ */}
               <div className="flex-grow flex flex-col justify-around py-1 space-y-1">
                 {currentAxis.questions.map((q, qi) => {
                   const val = answers[`${currentAxis.id}-${qi}`];
@@ -699,7 +646,6 @@ export default function App() {
                           : "bg-white border-slate-100 hover:border-slate-200"
                       }`}
                     >
-                      {/* SORU METNİ */}
                       <div className="flex items-start gap-2 max-w-xl">
                         <span className={`flex-shrink-0 h-5 w-5 rounded-full text-[11px] font-bold flex items-center justify-center mt-0.5 ${
                           isAnswered ? "bg-blue-900 text-white" : "bg-slate-200 text-slate-600"
@@ -711,7 +657,6 @@ export default function App() {
                         </p>
                       </div>
 
-                      {/* 1-5 BUTONLARI (MATRİS) */}
                       <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0 self-end sm:self-center">
                         {[1, 2, 3, 4, 5].map((v) => {
                           const active = val === v;
@@ -735,7 +680,6 @@ export default function App() {
                 })}
               </div>
 
-              {/* ALT NAVİGASYON */}
               <div className="flex items-center justify-between pt-2 border-t border-slate-100 flex-shrink-0 mt-1">
                 <button
                   onClick={goPrevAxis}
@@ -760,7 +704,6 @@ export default function App() {
         {/* EKRAN 3: RESULTS */}
         {screen === "results" && (
           <div className="space-y-8 max-w-4xl mx-auto">
-            {/* BAŞLIK & İNDİRME */}
             <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 {firmName && <div className="text-xs font-bold text-blue-900 uppercase tracking-wider mb-1">{firmName}</div>}
@@ -791,7 +734,6 @@ export default function App() {
               </p>
             )}
 
-            {/* GENEL SKOR KARTI */}
             <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-sm grid md:grid-cols-2 gap-8 items-center">
               <div className="text-center md:border-r md:border-slate-100 md:pr-8">
                 <Gauge value={overall} />
@@ -804,7 +746,6 @@ export default function App() {
               <RadarChart scores={scores} />
             </div>
 
-            {/* EKSEN BAZLI DETAYLAR */}
             <div className="space-y-4">
               <div>
                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">EKSEN BAZLI SONUÇLAR VE YÖNLENDİRMELER</h3>
@@ -854,7 +795,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* ÖNCELİKLİ GELİŞİM ALANLARI */}
             {weakAxes.length > 0 && (
               <div className="space-y-3">
                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">ÖNCELİKLİ GELİŞİM ALANLARI İÇİN ÖNERİLEN KAYNAKLAR</h3>
@@ -885,14 +825,13 @@ export default function App() {
               </div>
             )}
 
-            {/* EĞİTİM KAYIT FORMU */}
             <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
               <div className="flex items-start gap-3">
                 <CircleCheck className="text-emerald-600 flex-shrink-0 mt-0.5" size={20} />
                 <div>
                   <h4 className="text-sm font-bold text-slate-900">Ücretsiz Eğitimlerden Haberdar Olun</h4>
                   <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-                    Çorlu TSO'nun Dijital Dönüşüm, Yapay Zeka ve Dijitalleşme konularındaki ücretsiz eğitimlerinden haberdar olmak isterseniz, iletişim bilgilerinizi bırakabilirsiniz.
+                    Çorlu TSO'nun Dijital Dönüşüm, Yapay Zeka ve Yeşil Dönüşüm/SKDM konularındaki ücretsiz eğitimlerinden haberdar olmak isterseniz, iletişim bilgilerinizi bırakabilirsiniz.
                   </p>
                 </div>
               </div>
@@ -932,12 +871,11 @@ export default function App() {
                   disabled={!trainingEmail || trainingState === "saving"}
                   className="px-5 py-2.5 bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold rounded-lg transition-all disabled:opacity-50"
                 >
-                  {trainingState === "saving" ? "Kaydedidediliyor…" : "Eğitim Bildirimlerine Kaydol"}
+                  {trainingState === "saving" ? "Kaydediliyor…" : "Eğitim Bildirimlerine Kaydol"}
                 </button>
               )}
             </div>
 
-            {/* DESTEK PROGRAMLARI */}
             <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-3">
               <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Destek Programları</h4>
               <div className="grid gap-2">
@@ -956,12 +894,11 @@ export default function App() {
               </div>
             </div>
 
-            {/* METODOLOJİ ÖZET BÖLÜMÜ */}
             <div className="bg-blue-50/50 border border-blue-200/80 rounded-xl p-6 space-y-3">
               <div className="text-xs font-bold text-blue-900 uppercase tracking-wider">BİLİMSEL METODOLOJİ VE KAYNAKÇA</div>
               <div className="text-sm font-bold text-slate-900">Bu değerlendirme neye dayanıyor?</div>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Bu araç; acatech Industrie 4.0 Maturity Index, MIT & Capgemini Digital Maturity Model, AB EDIH Open DMAT, ISO/IEC 33001 ve OECD Going Digital Toolkit çerçevelerinden esinlenerek Çorlu Ticaret ve Sanayi Odası tarafından özgün olarak geliştirilmiştir.
+                Bu araç; acatech Industrie 4.0 Maturity Index, WEF SIRI, Fraunhofer IMPULS, MIT & Capgemini, AB EDIH Open DMAT, ISO/IEC 33001 ve NIST çerçevelerinden esinlenerek Çorlu Ticaret ve Sanayi Odası tarafından özgün olarak geliştirilmiştir.
               </p>
               <button
                 onClick={() => setShowMethodology(true)}
@@ -971,7 +908,6 @@ export default function App() {
               </button>
             </div>
 
-            {/* BAŞTAN BAŞLA */}
             <div className="pt-2 flex justify-center">
               <button
                 onClick={restart}
@@ -984,7 +920,6 @@ export default function App() {
         )}
       </main>
 
-      {/* SADELEŞTİRİLMİŞ KURUMSAL FOOTER */}
       {screen !== "quiz" && (
         <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500 flex-shrink-0">
           <div className="max-w-4xl mx-auto px-4">
