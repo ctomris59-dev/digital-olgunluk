@@ -777,23 +777,27 @@ export default function App() {
               {weakAxes.length > 0 && (
                 <div className="mb-9">
                   <div className="dmat-mono text-xs mb-3" style={{ color: "var(--steel)" }}>ÖNCELİKLİ GELİŞİM ALANLARI İÇİN ÖNERİLEN KAYNAKLAR</div>
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     {weakAxes.map((a) => (
-                      <div key={a.id} className="dmat-card px-4 py-3 flex items-center justify-between gap-3">
-                        <div>
-                          <div className="text-sm font-medium">{a.title}</div>
-                          <div className="text-xs" style={{ color: "#3A4250" }}>{a.resource.name}</div>
+                      <div key={a.id} className="dmat-card px-4 py-3.5">
+                        <div className="text-sm font-medium mb-2">{a.title}</div>
+                        <div className="space-y-1.5">
+                          {a.resources.map((r) => (
+                            <div key={r.name} className="flex items-center justify-between gap-3">
+                              <div className="text-xs" style={{ color: "#3A4250" }}>{r.name}</div>
+                              {r.url && (
+                                <a
+                                  href={r.url}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="dmat-btn-ghost px-3 py-1.5 text-xs font-medium inline-flex items-center gap-1.5 whitespace-nowrap flex-shrink-0"
+                                >
+                                  Kaynağa Git <ExternalLink size={11} />
+                                </a>
+                              )}
+                            </div>
+                          ))}
                         </div>
-                        {a.resource.url && (
-                          <a
-                            href={a.resource.url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="dmat-btn-ghost px-3 py-2 text-xs font-medium inline-flex items-center gap-1.5 whitespace-nowrap"
-                          >
-                            Kaynağa Git <ExternalLink size={12} />
-                          </a>
-                        )}
                       </div>
                     ))}
                   </div>
