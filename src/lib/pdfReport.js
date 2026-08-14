@@ -1,5 +1,5 @@
 import jsPDF from "jspdf";
-import { AXES, LEVELS, levelFor, statusFor, axisLevelGuide } from "./data";
+import { AXES, LEVELS, levelFor, axisLevelGuide } from "./data";
 
 /* ---------------------------------------------------------------
    FONT VE LOGO YÜKLEME YARDIMCILARI
@@ -57,9 +57,10 @@ async function ensureFontsLoaded(doc) {
 const NAVY = [9, 21, 56];         // #091538 - Çorlu TSO Derin Lacivert
 const AMBER = [217, 119, 6];      // #D97706 - Kurumsal Altın
 const BLUE = [30, 58, 138];       // #1E3A8A - Vurgu Mavi
-const STEEL = [100, 116, 139];    // #64748B - Ikincil Gri
+const STEEL = [100, 116, 139];    // #64748B - İkincil Gri
 const LIGHT_BG = [248, 250, 252]; // #F8FAFC - Kart Arka Planı
 const GRID = [226, 232, 240];     // #E2E8F0 - Çizgiler
+const GREEN_BG = [236, 253, 245]; // #ECFDF5 - İkincil Yeşil
 
 const PAGE_W = 210;
 const PAGE_H = 297;
@@ -67,19 +68,16 @@ const MARGIN = 18;
 const CONTENT_W = PAGE_W - MARGIN * 2;
 
 /* ---------------------------------------------------------------
-   SAYFA HEADER VE FOOTER ÇİZİMİ (KAYMALARI ÖNLER)
+   SAYFA HEADER VE FOOTER ÇİZİMİ
 --------------------------------------------------------------- */
 
 function drawHeaderBanner(doc, logoBase64) {
-  // Üst Koyu Şerit
   doc.setFillColor(...NAVY);
   doc.rect(0, 0, PAGE_W, 20, "F");
 
-  // İnce Altın Çizgi
   doc.setFillColor(...AMBER);
   doc.rect(0, 20, PAGE_W, 1, "F");
 
-  // Logo (Sabit Boyut ve Konum)
   if (logoBase64) {
     try {
       doc.addImage(logoBase64, "JPEG", MARGIN, 3, 14, 14);
@@ -88,7 +86,6 @@ function drawHeaderBanner(doc, logoBase64) {
     }
   }
 
-  // Header Metinleri
   const titleX = logoBase64 ? MARGIN + 18 : MARGIN;
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(8.5);
@@ -149,7 +146,6 @@ function drawRadar(doc, scores, cx, cy, maxR) {
     return [cx + r * Math.cos(angle), cy + r * Math.sin(angle)];
   };
 
-  // Izgara
   [1, 2, 3, 4, 5].forEach((ring) => {
     doc.setDrawColor(...GRID);
     doc.setLineWidth(ring === 5 ? 0.3 : 0.15);
@@ -161,13 +157,11 @@ function drawRadar(doc, scores, cx, cy, maxR) {
     }
   });
 
-  // Eksenler
   AXES.forEach((_, i) => {
     const [x, y] = pointAt(i, maxR);
     doc.line(cx, cy, x, y);
   });
 
-  // Veri Poligonu
   const dataPts = AXES.map((a, i) => pointAt(i, (scores[a.id] / 5) * maxR));
   doc.setDrawColor(...BLUE);
   doc.setLineWidth(0.8);
@@ -181,7 +175,6 @@ function drawRadar(doc, scores, cx, cy, maxR) {
     doc.circle(x, y, 1.2, "F");
   });
 
-  // Etiketler
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(7.5);
   doc.setTextColor(...NAVY);
@@ -192,7 +185,7 @@ function drawRadar(doc, scores, cx, cy, maxR) {
 }
 
 /* ---------------------------------------------------------------
-   ANA RAPOR OLUŞTURUCU
+   ANA RAPOR OLUŞTURUCU (GENİŞLETİLMİŞ 5 SAYFA)
 --------------------------------------------------------------- */
 
 export async function generatePdfReport({ firmName, scores, overall, answers }) {
@@ -206,11 +199,10 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   );
   const dateStr = new Date().toLocaleDateString("tr-TR", { day: "2-digit", month: "long", year: "numeric" });
 
-  /* ================= SAYFA 1: EXECUTIVE KAPAK VE ÖZET ================= */
+  /* ================= SAYFA 1: KAPAK VE SKOR KARNESİ ================= */
   drawHeaderBanner(doc, logoBase64);
   let y = 28;
 
-  // Başlık Kutusu
   doc.setFillColor(...LIGHT_BG);
   doc.setDrawColor(...GRID);
   doc.roundedRect(MARGIN, y, CONTENT_W, 14, 2, 2, "FD");
@@ -224,7 +216,6 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   doc.text(`Rapor Tarihi: ${dateStr}  ·  Çorlu TSO KOBİ Danışmanlık Hizmetleri`, MARGIN + 4, y + 10.5);
   y += 18;
 
-  // Genel Skor Kartı
   doc.setFillColor(239, 246, 255);
   doc.setDrawColor(191, 219, 254);
   doc.roundedRect(MARGIN, y, CONTENT_W, 28, 3, 3, "FD");
@@ -253,7 +244,6 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
 
   y += 34;
 
-  // Rapor Açıklaması
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(10.5);
   doc.setTextColor(...NAVY);
@@ -263,13 +253,12 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   y = paragraph(
     doc,
     "Bu rapor, firmanızın 6 stratejik eksende verdiği yanıtların acatech Industrie 4.0 Maturity Index, " +
-      "CMMI V2.0 ve ISO/IEC 33001 standartları çerçevesinde analiz edilmesiyle üretilmiştir. " +
-      "Amacı, dijital dönüşüm yolculuğunuzda mevcut durumunuzu tespit etmek ve öncelikli gelişim alanlarınızı belirlemektir.",
+      "CMMI V2.0, ISO/IEC 33001, WEF SIRI ve OECD standartları çerçevesinde analiz edilmesiyle üretilmiştir. " +
+      "Amacı, dijital dönüşüm yolculuğunuzda mevcut durumunuzu tespit etmek, KPI'larınızı belirlemek ve İkiz Dönüşüm (Yeşil & Dijital) hazırlığınızı ölçmektir.",
     y
   );
   y += 6;
 
-  // Seviye Skalası
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(10);
   doc.setTextColor(...NAVY);
@@ -293,7 +282,7 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
     y += 5.5;
   });
 
-  /* ================= SAYFA 2: RADAR & İLK 3 EKSEN ANALİZİ ================= */
+  /* ================= SAYFA 2: RADAR & İLK 3 EKSEN (KPI & QUICK WIN DAHİL) ================= */
   doc.addPage();
   drawHeaderBanner(doc, logoBase64);
   y = 28;
@@ -301,97 +290,164 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(11);
   doc.setTextColor(...NAVY);
-  doc.text("Eksen Bazlı Olgunluk Analizi", MARGIN, y);
+  doc.text("Eksen Bazlı Olgunluk Analizi ve Stratejik Detaylar", MARGIN, y);
   y += 4;
 
-  drawRadar(doc, scores, PAGE_W / 2, y + 26, 24);
-  y += 56;
+  drawRadar(doc, scores, PAGE_W / 2, y + 24, 22);
+  y += 52;
 
-  // İlk 3 Eksen
   AXES.slice(0, 3).forEach((a) => {
-    y = ensureSpace(doc, y, 32, logoBase64);
+    y = ensureSpace(doc, y, 42, logoBase64);
     const s = scores[a.id];
     const guide = axisLevelGuide(a, s);
 
     doc.setFillColor(...LIGHT_BG);
     doc.setDrawColor(...GRID);
-    doc.roundedRect(MARGIN, y, CONTENT_W, 28, 2, 2, "FD");
+    doc.roundedRect(MARGIN, y, CONTENT_W, 38, 2, 2, "FD");
 
     doc.setFillColor(...BLUE);
-    doc.rect(MARGIN, y, 2, 28, "F");
+    doc.rect(MARGIN, y, 2, 38, "F");
 
     doc.setFont("DejaVuSans", "bold");
     doc.setFontSize(9);
     doc.setTextColor(...NAVY);
-    doc.text(`${a.no}. ${a.title}`, MARGIN + 5, y + 5.5);
+    doc.text(`${a.no}. ${a.title}`, MARGIN + 5, y + 5);
 
     doc.setFont("DejaVuSans", "bold");
     doc.setFontSize(9);
     doc.setTextColor(...BLUE);
-    doc.text(`${s.toFixed(2)} / 5.00`, PAGE_W - MARGIN - 4, y + 5.5, { align: "right" });
+    doc.text(`${s.toFixed(2)} / 5.00`, PAGE_W - MARGIN - 4, y + 5, { align: "right" });
 
     doc.setFont("DejaVuSans", "bold");
     doc.setFontSize(7.5);
     doc.setTextColor(...AMBER);
-    doc.text(`SEVİYE ${guide.level}: ${guide.name.toUpperCase()}`, MARGIN + 5, y + 10);
+    doc.text(`SEVİYE ${guide.level}: ${guide.name.toUpperCase()}`, MARGIN + 5, y + 9);
 
     doc.setFont("DejaVuSans", "normal");
-    doc.setFontSize(7.8);
+    doc.setFontSize(7.5);
     doc.setTextColor(51, 65, 85);
     const actionClean = guide.action ? guide.action.replace(/\s+/g, " ") : "";
-    const actionLines = doc.splitTextToSize(`Aksiyon Yol Haritası: ${actionClean}`, CONTENT_W - 10);
-    doc.text(actionLines, MARGIN + 5, y + 15);
+    const actionLines = doc.splitTextToSize(`Yol Haritası: ${actionClean}`, CONTENT_W - 10);
+    doc.text(actionLines, MARGIN + 5, y + 13.5);
 
-    y += 31;
+    const nextY = y + 13.5 + actionLines.length * 3.5;
+
+    // Önerilen KPI'lar
+    doc.setFont("DejaVuSans", "bold");
+    doc.setFontSize(7);
+    doc.setTextColor(...NAVY);
+    doc.text("Takip Edilecek KPI'lar:", MARGIN + 5, nextY + 2);
+
+    doc.setFont("DejaVuSans", "normal");
+    doc.setFontSize(7);
+    doc.setTextColor(...STEEL);
+    doc.text(a.kpis.join("  •  "), MARGIN + 35, nextY + 2);
+
+    // Hızlı Kazanım (Quick Win)
+    doc.setFillColor(254, 243, 199);
+    doc.roundedRect(MARGIN + 4, nextY + 4, CONTENT_W - 8, 6, 1, 1, "F");
+    doc.setFont("DejaVuSans", "bold");
+    doc.setFontSize(7);
+    doc.setTextColor(180, 83, 9);
+    doc.text(`Hızlı Kazanım (0-3 Ay): ${a.quickWin}`, MARGIN + 6, nextY + 8);
+
+    y += 42;
   });
 
-  /* ================= SAYFA 3: SON 3 EKSEN ANALİZİ ================= */
+  /* ================= SAYFA 3: SON 3 EKSEN (KPI & QUICK WIN DAHİL) ================= */
   doc.addPage();
   drawHeaderBanner(doc, logoBase64);
   y = 28;
 
   AXES.slice(3, 6).forEach((a) => {
-    y = ensureSpace(doc, y, 32, logoBase64);
+    y = ensureSpace(doc, y, 42, logoBase64);
     const s = scores[a.id];
     const guide = axisLevelGuide(a, s);
 
     doc.setFillColor(...LIGHT_BG);
     doc.setDrawColor(...GRID);
-    doc.roundedRect(MARGIN, y, CONTENT_W, 28, 2, 2, "FD");
+    doc.roundedRect(MARGIN, y, CONTENT_W, 38, 2, 2, "FD");
 
     doc.setFillColor(...BLUE);
-    doc.rect(MARGIN, y, 2, 28, "F");
+    doc.rect(MARGIN, y, 2, 38, "F");
 
     doc.setFont("DejaVuSans", "bold");
     doc.setFontSize(9);
     doc.setTextColor(...NAVY);
-    doc.text(`${a.no}. ${a.title}`, MARGIN + 5, y + 5.5);
+    doc.text(`${a.no}. ${a.title}`, MARGIN + 5, y + 5);
 
     doc.setFont("DejaVuSans", "bold");
     doc.setFontSize(9);
     doc.setTextColor(...BLUE);
-    doc.text(`${s.toFixed(2)} / 5.00`, PAGE_W - MARGIN - 4, y + 5.5, { align: "right" });
+    doc.text(`${s.toFixed(2)} / 5.00`, PAGE_W - MARGIN - 4, y + 5, { align: "right" });
 
     doc.setFont("DejaVuSans", "bold");
     doc.setFontSize(7.5);
     doc.setTextColor(...AMBER);
-    doc.text(`SEVİYE ${guide.level}: ${guide.name.toUpperCase()}`, MARGIN + 5, y + 10);
+    doc.text(`SEVİYE ${guide.level}: ${guide.name.toUpperCase()}`, MARGIN + 5, y + 9);
 
     doc.setFont("DejaVuSans", "normal");
-    doc.setFontSize(7.8);
+    doc.setFontSize(7.5);
     doc.setTextColor(51, 65, 85);
     const actionClean = guide.action ? guide.action.replace(/\s+/g, " ") : "";
-    const actionLines = doc.splitTextToSize(`Aksiyon Yol Haritası: ${actionClean}`, CONTENT_W - 10);
-    doc.text(actionLines, MARGIN + 5, y + 15);
+    const actionLines = doc.splitTextToSize(`Yol Haritası: ${actionClean}`, CONTENT_W - 10);
+    doc.text(actionLines, MARGIN + 5, y + 13.5);
 
-    y += 31;
+    const nextY = y + 13.5 + actionLines.length * 3.5;
+
+    // Önerilen KPI'lar
+    doc.setFont("DejaVuSans", "bold");
+    doc.setFontSize(7);
+    doc.setTextColor(...NAVY);
+    doc.text("Takip Edilecek KPI'lar:", MARGIN + 5, nextY + 2);
+
+    doc.setFont("DejaVuSans", "normal");
+    doc.setFontSize(7);
+    doc.setTextColor(...STEEL);
+    doc.text(a.kpis.join("  •  "), MARGIN + 35, nextY + 2);
+
+    // Hızlı Kazanım (Quick Win)
+    doc.setFillColor(254, 243, 199);
+    doc.roundedRect(MARGIN + 4, nextY + 4, CONTENT_W - 8, 6, 1, 1, "F");
+    doc.setFont("DejaVuSans", "bold");
+    doc.setFontSize(7);
+    doc.setTextColor(180, 83, 9);
+    doc.text(`Hızlı Kazanım (0-3 Ay): ${a.quickWin}`, MARGIN + 6, nextY + 8);
+
+    y += 42;
   });
 
-  /* ================= SAYFA 4: GELİŞİM ALANLARI, DESTEKLER VE METODOLOJİ ================= */
+  /* ================= SAYFA 4: İKİZ DÖNÜŞÜM & TEŞVİK EŞLEŞTİRME ================= */
   doc.addPage();
   drawHeaderBanner(doc, logoBase64);
   y = 28;
 
+  // İkiz Dönüşüm (Yeşil & Dijital) Bölümü
+  doc.setFont("DejaVuSans", "bold");
+  doc.setFontSize(10.5);
+  doc.setTextColor(...NAVY);
+  doc.text("İkiz Dönüşüm (Yeşil & Dijital) Hazırlık Notu", MARGIN, y);
+  y += 5;
+
+  doc.setFillColor(...GREEN_BG);
+  doc.setDrawColor(167, 243, 208);
+  doc.roundedRect(MARGIN, y, CONTENT_W, 26, 2, 2, "FD");
+
+  doc.setFont("DejaVuSans", "bold");
+  doc.setFontSize(8.5);
+  doc.setTextColor(6, 95, 70);
+  doc.text("Sınırda Karbon Düzenleme Mekanizması (SKDM) & Sürdürülebilirlik Odak Notu", MARGIN + 4, y + 6);
+
+  doc.setFont("DejaVuSans", "normal");
+  doc.setFontSize(7.8);
+  doc.setTextColor(15, 118, 110);
+  const greenText = "AB Yeşil Mutabakatı kapsamında, ihracatçı firmalarımızın dijitalleşme hamlelerini enerji verimliliği ve karbon ayak izi takibiyle birleştirmesi gerekmektedir. Dijital altyapınızdaki veri toplama yetkinliği, ürün bazlı karbon yoğunluğunu doğru hesaplamanız ve SKDM beyan süreçlerine hazırlanmanız için temel şarttır.";
+  const greenLines = doc.splitTextToSize(greenText, CONTENT_W - 8);
+  doc.text(greenLines, MARGIN + 4, y + 11);
+
+  y += 32;
+
+  // Öncelikli Gelişim Alanları ve Destekler
   if (weakAxes.length > 0) {
     doc.setFont("DejaVuSans", "bold");
     doc.setFontSize(10.5);
@@ -400,7 +456,7 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
     y += 5;
 
     weakAxes.forEach((a) => {
-      y = ensureSpace(doc, y, 16, logoBase64);
+      y = ensureSpace(doc, y, 14, logoBase64);
       doc.setFont("DejaVuSans", "bold");
       doc.setFontSize(8.5);
       doc.setTextColor(...AMBER);
@@ -421,18 +477,18 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
     y += 4;
   }
 
-  // Destek Programları
-  y = ensureSpace(doc, y, 35, logoBase64);
+  // Resmi Destek Programları
+  y = ensureSpace(doc, y, 30, logoBase64);
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(10.5);
   doc.setTextColor(...NAVY);
-  doc.text("Resmi Destek Programları", MARGIN, y);
+  doc.text("Eşleştirilmiş Resmi Destek Programları", MARGIN, y);
   y += 5;
 
   [
     ["TÜBİTAK TÜSSİDE D3A / DDX Modeli", "https://ddxmodel.tubitak.gov.tr"],
-    ["EDIH Open DMAT (Avrupa Komisyonu)", "https://european-digital-innovation-hubs.ec.europa.eu"],
-    ["KOSGEB Dijital Dönüşüm Danışmanlığı Desteği", "https://www.kosgeb.gov.tr"],
+    ["EDIH Open DMAT & West Marmara İkiz Dönüşüm", "https://european-digital-innovation-hubs.ec.europa.eu"],
+    ["KOSGEB Dijital Dönüşüm ve İşletme Geliştirme", "https://www.kosgeb.gov.tr"],
   ].forEach(([name, url]) => {
     y = ensureSpace(doc, y, 7, logoBase64);
     doc.setFont("DejaVuSans", "normal");
@@ -442,10 +498,11 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
     y += 4;
   });
 
-  y += 6;
+  /* ================= SAYFA 5: BİLİMSEL METODOLOJİ VE AKADEMİK KAYNAKÇA ================= */
+  doc.addPage();
+  drawHeaderBanner(doc, logoBase64);
+  y = 28;
 
-  // Metodoloji
-  y = ensureSpace(doc, y, 40, logoBase64);
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(10.5);
   doc.setTextColor(...NAVY);
@@ -455,11 +512,34 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   y = paragraph(
     doc,
     "Bu araç, Çorlu Ticaret ve Sanayi Odası tarafından özgün olarak geliştirilmiş olup acatech Industrie 4.0 " +
-      "Maturity Index, MIT & Capgemini Digital Maturity Model, AB EDIH Open DMAT, CMMI V2.0, ISO/IEC 33001 ve " +
-      "OECD Going Digital standartlarına dayanmaktadır. Sertifikalı bir denetim yerine, KOBİ'lerin dijital dönüşüm süreçlerine ön hazırlık niteliğinde hafif bir öz-değerlendirme aracıdır.",
+      "Maturity Index, MIT & Capgemini Digital Maturity Model, AB EDIH Open DMAT, CMMI V2.0, ISO/IEC 33001, " +
+      "WEF SIRI (Smart Industry Readiness Index), Fraunhofer IMPULS, NIST Cybersecurity Framework ve OECD Going Digital " +
+      "standartlarına dayanmaktadır. Sertifikalı bir resmi denetim yerine, KOBİ'lerin dijital ve yeşil dönüşüm süreçlerine ön hazırlık niteliğinde bir öz-değerlendirme aracıdır.",
     y,
     { size: 8 }
   );
+
+  y += 6;
+
+  // Çerçeve Tablosu
+  doc.setFont("DejaVuSans", "bold");
+  doc.setFontSize(8.5);
+  doc.setTextColor(...NAVY);
+  doc.text("Referans Alınan Çerçeve Eşleştirmeleri", MARGIN, y);
+  y += 4;
+
+  AXES.forEach((a) => {
+    doc.setFont("DejaVuSans", "bold");
+    doc.setFontSize(7.5);
+    doc.setTextColor(...AMBER);
+    doc.text(`• ${a.no}. ${a.title}:`, MARGIN + 2, y);
+
+    doc.setFont("DejaVuSans", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(...STEEL);
+    doc.text(a.framework, MARGIN + 50, y);
+    y += 4.5;
+  });
 
   footer(doc);
 
