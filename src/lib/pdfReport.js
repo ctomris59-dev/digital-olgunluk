@@ -1,5 +1,5 @@
 import jsPDF from "jspdf";
-import { AXES, LEVELS, levelFor, statusFor, axisLevelGuide } from "./data";
+import { AXES, LEVELS, levelFor, axisLevelGuide } from "./data";
 
 /* ---------------------------------------------------------------
    FONT VE LOGO YÜKLEME YARDIMCILARI
@@ -275,7 +275,7 @@ function drawAxisCard(doc, axis, score, x, y, width, height) {
 }
 
 /* ---------------------------------------------------------------
-   ANA RAPOR OLUŞTURUCU (DOLGUN & HİÇBOŞLUKSUZ 5 SAYFA)
+   ANA RAPOR OLUŞTURUCU (METİN TAŞMALARI DÜZELTİLMİŞ)
 --------------------------------------------------------------- */
 
 export async function generatePdfReport({ firmName, scores, overall, answers }) {
@@ -444,126 +444,145 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
   doc.text("Eksen Bazlı Detaylı Analiz ve Yol Haritası (Devam)", MARGIN, y);
   y += 6;
 
-  // Eksen 4, 5, 6 Kartları (Daha Yüksek ve Nefes Alan)
+  // Eksen 4, 5, 6 Kartları
   AXES.slice(3, 6).forEach((a) => {
     const score = scores[a.id];
     drawAxisCard(doc, a, score, MARGIN, y, CONTENT_W, 76);
     y += 81;
   });
 
-  /* ================= SAYFA 4: İKİZ DÖNÜŞÜM & TEŞVİK REHBERİ ================= */
+  /* ================= SAYFA 4: İKİZ DÖNÜŞÜM & TEŞVİK REHBERİ (TAŞMALAR DÜZELTİLDİ) ================= */
   doc.addPage();
   drawHeaderBanner(doc, logoBase64);
   y = 26;
 
-  // İkiz Dönüşüm (Yeşil & Dijital) Bölümü
+  // 1. İkiz Dönüşüm (Yeşil & Dijital) Bölümü
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(11);
   doc.setTextColor(...NAVY);
   doc.text("İkiz Dönüşüm (Yeşil & Dijital) Hazırlık Değerlendirmesi", MARGIN, y);
-  y += 5.5;
+  y += 5;
 
   doc.setFillColor(...GREEN_BG);
   doc.setDrawColor(...GREEN_BORDER);
-  doc.roundedRect(MARGIN, y, CONTENT_W, 40, 2, 2, "FD");
+  doc.roundedRect(MARGIN, y, CONTENT_W, 36, 2, 2, "FD");
 
   doc.setFont("DejaVuSans", "bold");
-  doc.setFontSize(9.5);
+  doc.setFontSize(9);
   doc.setTextColor(...GREEN_TEXT);
-  doc.text("Sınırda Karbon Düzenleme Mekanizması (SKDM) & Sürdürülebilirlik Odak Notu", MARGIN + 5, y + 7);
+  doc.text("Sınırda Karbon Düzenleme Mekanizması (SKDM) & Sürdürülebilirlik Odak Notu", MARGIN + 5, y + 6.5);
 
   doc.setFont("DejaVuSans", "normal");
-  doc.setFontSize(8.5);
+  doc.setFontSize(8);
   doc.setTextColor(15, 118, 110);
   const greenText =
     "AB Yeşil Mutabakatı ve Sınırda Karbon Düzenleme Mekanizması (SKDM) kapsamında, Trakya bölgemizdeki ihracatçı imalatçı firmalarımızın dijitalleşme yatırımlarını enerji verimliliği ve karbon ayak izi takibiyle entegre etmesi hayati önem taşımaktadır. " +
     "Dijital altyapınızdaki veri toplama yetkinliği (IoT sensörler, MES ve Enerji İzleme Yazılımları), ürün bazlı karbon yoğunluğunu doğrulukla hesaplamanız ve AB emisyon beyan süreçlerine cezasız uyum sağlamanız için temel ön şarttır.";
   const greenLines = doc.splitTextToSize(greenText, CONTENT_W - 10);
-  doc.text(greenLines, MARGIN + 5, y + 13);
+  doc.text(greenLines, MARGIN + 5, y + 11.5);
 
-  y += 46;
+  y += 41;
 
-  // Öncelikli Gelişim Alanları
+  // 2. Öncelikli Gelişim Alanları (DİNAMİK KUTU YÜKSEKLİĞİ VE OTOMATİK METİN KAYDIRMA)
   if (weakAxes.length > 0) {
     doc.setFont("DejaVuSans", "bold");
     doc.setFontSize(11);
     doc.setTextColor(...NAVY);
     doc.text("Öncelikli Gelişim Alanları ve Danışmanlık Önerileri", MARGIN, y);
-    y += 5.5;
+    y += 5;
 
-    weakAxes.forEach((a) => {
+    // En kritik 3 gelişim alanını al
+    const displayWeak = weakAxes.slice(0, 3);
+
+    displayWeak.forEach((a) => {
+      const resNames = Array.isArray(a.resources) ? a.resources.map((r) => r.name).join("  •  ") : "";
+      const resLines = doc.splitTextToSize(`Önerilen Destek Kaynakları: ${resNames}`, CONTENT_W - 10);
+      const actLines = doc.splitTextToSize(`Aksiyon Tavsiyesi: ${a.quickWin}`, CONTENT_W - 10);
+
+      // Dinamik Yükseklik Hesabı (Metin satır sayısına göre otomatik uzar)
+      const cardH = 8 + resLines.length * 3.6 + actLines.length * 3.6 + 2;
+
       doc.setFillColor(...LIGHT_BG);
       doc.setDrawColor(...GRID);
-      doc.roundedRect(MARGIN, y, CONTENT_W, 22, 2, 2, "FD");
+      doc.roundedRect(MARGIN, y, CONTENT_W, cardH, 2, 2, "FD");
 
+      let currentInnerY = y + 5;
+
+      // Başlık
       doc.setFont("DejaVuSans", "bold");
-      doc.setFontSize(9);
+      doc.setFontSize(8.5);
       doc.setTextColor(...AMBER);
-      doc.text(`• ${a.title} (Puan: ${scores[a.id].toFixed(2)} / 5.00)`, MARGIN + 4, y + 5.5);
+      doc.text(`• ${a.title} (Puan: ${scores[a.id].toFixed(2)} / 5.00)`, MARGIN + 4, currentInnerY);
+      currentInnerY += 4.5;
 
+      // Kaynaklar (Kırılmış satırlar)
       doc.setFont("DejaVuSans", "normal");
-      doc.setFontSize(8);
+      doc.setFontSize(7.5);
       doc.setTextColor(51, 65, 85);
-      const resNames = Array.isArray(a.resources) ? a.resources.map((r) => r.name).join("  •  ") : "";
-      doc.text(`Önerilen Destek Kaynakları: ${resNames}`, MARGIN + 4, y + 11);
+      doc.text(resLines, MARGIN + 4, currentInnerY);
+      currentInnerY += resLines.length * 3.6 + 1.5;
 
+      // Aksiyon Tavsiyesi (Kırılmış satırlar)
       doc.setFont("DejaVuSans", "bold");
       doc.setFontSize(7.5);
       doc.setTextColor(...BLUE);
-      doc.text(`Aksiyon Tavsiyesi: ${a.quickWin}`, MARGIN + 4, y + 17);
+      doc.text(actLines, MARGIN + 4, currentInnerY);
 
-      y += 26;
+      y += cardH + 3;
     });
-    y += 4;
+    y += 2;
   }
 
-  // Eşleştirilmiş Resmi Destek Programları
+  // 3. Eşleştirilmiş Resmi Destek Programları
   doc.setFont("DejaVuSans", "bold");
   doc.setFontSize(11);
   doc.setTextColor(...NAVY);
   doc.text("Eşleştirilmiş Resmi Destek ve Teşvik Programları", MARGIN, y);
-  y += 5.5;
+  y += 5;
 
   const supports = [
-    ["TÜBİTAK TÜSSİDE D3A / DDX Modeli", "Dijital Dönüşüm Danışmanlığı ve Yol Haritası Desteği", "https://ddxmodel.tubitak.gov.tr"],
-    ["EDIH West Marmara İkiz Dönüşüm", "AB Destekli Ücretsiz Test-Before-Invest ve Yeşil Veri Hizmetleri", "https://european-digital-innovation-hubs.ec.europa.eu"],
-    ["KOSGEB Dijital Dönüşüm Desteği", "İşletme Geliştirme, Yazılım, Donanım ve Danışmanlık Hibe/Kredileri", "https://www.kosgeb.gov.tr"],
-    ["Ticaret Bakanlığı E-İhracat Destekleri", "Pazaryeri Entegrasyon, Dijital Pazarlama ve E-İhracat Hibeleri", "https://www.ticaret.gov.tr"],
+    ["TÜBİTAK TÜSSİDE D3A / DDX Modeli", "Dijital Dönüşüm Danışmanlığı ve Yol Haritası Desteği"],
+    ["EDIH West Marmara İkiz Dönüşüm", "AB Destekli Ücretsiz Test-Before-Invest ve Yeşil Veri Hizmetleri"],
+    ["KOSGEB Dijital Dönüşüm Desteği", "İşletme Geliştirme, Yazılım, Donanım ve Danışmanlık Hibeleri"],
+    ["Ticaret Bakanlığı E-İhracat Destekleri", "Pazaryeri Entegrasyon, Dijital Pazarlama ve E-İhracat Hibeleri"],
   ];
 
-  supports.forEach(([name, desc, url]) => {
+  supports.forEach(([name, desc]) => {
+    const descLines = doc.splitTextToSize(desc, CONTENT_W - 10);
+    const cardH = 8 + descLines.length * 3.5;
+
     doc.setFillColor(255, 255, 255);
     doc.setDrawColor(...GRID);
-    doc.roundedRect(MARGIN, y, CONTENT_W, 13, 1.5, 1.5, "FD");
+    doc.roundedRect(MARGIN, y, CONTENT_W, cardH, 1.5, 1.5, "FD");
 
     doc.setFont("DejaVuSans", "bold");
-    doc.setFontSize(8.5);
+    doc.setFontSize(8);
     doc.setTextColor(...NAVY);
-    doc.text(`• ${name}`, MARGIN + 4, y + 5);
+    doc.text(`• ${name}`, MARGIN + 4, y + 4.5);
 
     doc.setFont("DejaVuSans", "normal");
-    doc.setFontSize(7.5);
+    doc.setFontSize(7.2);
     doc.setTextColor(...STEEL);
-    doc.text(desc, MARGIN + 4, y + 9.5);
+    doc.text(descLines, MARGIN + 4, y + 8.5);
 
-    y += 15;
+    y += cardH + 2;
   });
 
-  y += 4;
+  y += 3;
 
-  // Çorlu TSO Danışmanlık Çağrı Kutusu
+  // 4. Çorlu TSO Danışmanlık Çağrı Kutusu
   doc.setFillColor(...NAVY);
-  doc.roundedRect(MARGIN, y, CONTENT_W, 20, 2, 2, "F");
+  doc.roundedRect(MARGIN, y, CONTENT_W, 16, 2, 2, "F");
 
   doc.setFont("DejaVuSans", "bold");
-  doc.setFontSize(9.5);
+  doc.setFontSize(9);
   doc.setTextColor(...AMBER);
-  doc.text("ÇORLU TSO DİJİTAL DÖNÜŞÜM OFİSİ İLE İLETİŞİME GEÇİN", MARGIN + 6, y + 7);
+  doc.text("ÇORLU TSO DİJİTAL DÖNÜŞÜM OFİSİ İLE İLETİŞİME GEÇİN", MARGIN + 5, y + 5.5);
 
   doc.setFont("DejaVuSans", "normal");
-  doc.setFontSize(8);
+  doc.setFontSize(7.5);
   doc.setTextColor(255, 255, 255);
-  doc.text("Rapor sonuçlarınızı detaylandırmak ve firmanıza özel yol haritası oluşturmak için Odamız uzmanlarıyla birebir danışmanlık randevusu alabilirsiniz.", MARGIN + 6, y + 13);
+  doc.text("Rapor sonuçlarınızı detaylandırmak ve firmanıza özel yol haritası oluşturmak için Odamız uzmanlarıyla birebir danışmanlık randevusu alabilirsiniz.", MARGIN + 5, y + 11);
 
   /* ================= SAYFA 5: BİLİMSEL METODOLOJİ VE AKADEMİK KAYNAKÇA ================= */
   doc.addPage();
@@ -593,7 +612,7 @@ export async function generatePdfReport({ firmName, scores, overall, answers }) 
 
   const frameworks = [
     ["1. acatech Industrie 4.0 Maturity Index", "Almanya Ulusal Bilim ve Mühendislik Akademisi (Schuh vd., 2017/2020). Kaynaklar, Bilgi Sistemleri, Organizasyonel Yapı ve Kültür olmak üzere 4 yapısal alanda 6 olgunluk seviyesi tanımlar."],
-    ["2. WEF & Singapore EDB — SIRI (Smart Industry Readiness Index)", "Dünya Ekonomik Formu ve Singapur EDB ortaklığıyla geliştirilen, sanayi işletmelerinin teknoloji, süreç ve organizasyon boyutlarında dijitalleşme seviyesini ölçen küresel standart."],
+    ["2. WEF & Singapore EDB — SIRI (Smart Industry Readiness Index)", "Dünya Ekonomik Forumu ve Singapur EDB ortaklığıyla geliştirilen, sanayi işletmelerinin teknoloji, süreç ve organizasyon boyutlarında dijitalleşme seviyesini ölçen küresel standart."],
     ["3. Fraunhofer IMPULS & VDMA Industry 4.0 Readiness", "Almanya Fraunhofer Enstitüsü tarafından imalatçı KOBİ'lerin dijital araçlar, yeşil dönüşüm ve veri yönetimi olgunluğunu ölçmek üzere geliştirilmiş model."],
     ["4. MIT Center for Digital Business & Capgemini — Digital Maturity Model", "Westerman, Bonnet & McAfee (2014), 'Leading Digital'. Dijital Yoğunluk ile Dönüşüm Yönetimi Yoğunluğu prensipleri esas alınmıştır."],
     ["5. Avrupa Komisyonu EDIH Ağı — Open DMAT", "Digital Maturity Assessment Tool for SMEs. Dijital İş Stratejisi, Veri Yönetimi, Otomasyon & Yapay Zeka ve İkiz Dönüşüm boyutlarını kapsar."],
