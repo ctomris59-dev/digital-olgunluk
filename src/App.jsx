@@ -468,33 +468,37 @@ export default function App() {
       screen === "quiz" ? "h-screen max-h-screen overflow-hidden flex flex-col bg-slate-100" : "min-h-screen bg-slate-50 flex flex-col"
     }`}>
       
-      {/* ==================== YENİLENMİŞ PRESTİJLİ VE MİNİMALİST KURUMSAL HEADER ==================== */}
+{/* ==================== PRESTİJLİ VE MÜKEMMEL OTURAN KURUMSAL HEADER ==================== */}
       <header className="bg-[#091538] border-b border-amber-500/30 text-white flex-shrink-0 shadow-xl relative z-40">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between">
           
-          {/* SOL TARAF: LOGO + ALTIN PARANTEZ VURGUSU VE BAŞLIKLAR */}
+          {/* SOL TARAF: CUK OTURAN LOGO VE BAŞLIKLAR */}
           <div className="flex items-center gap-3 sm:gap-4">
             
-            {/* ŞEFFAF ZEMİN ÜZERİNDE ALTIN PARANTEZLİ (SOUNDWAVE) KURUMSAL LOGO */}
-            <div className="relative flex items-center justify-center flex-shrink-0 px-2 py-1">
-              {/* Sol Altın Vurgu Parantezi */}
-              <div className="absolute -left-1 flex items-center gap-0.5 text-amber-400/90 pointer-events-none select-none">
-                <span className="text-xl font-light leading-none opacity-40">(</span>
-                <span className="text-2xl font-normal leading-none opacity-80">(</span>
+            {/* LOGO KAPSAYICISI (SIKIŞMAYI VE BEYAZLIK ÇAKIŞMASINI ÖNLER) */}
+            <div className="relative flex items-center justify-center flex-shrink-0">
+              
+              {/* Sol Estetik Altın Parantez Yayı */}
+              <svg className="h-10 sm:h-12 w-3 text-amber-400/80 mr-0.5" viewBox="0 0 12 40" fill="none">
+                <path d="M10 2C4 10 4 30 10 38" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                <path d="M5 8C2 14 2 26 5 32" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.5" />
+              </svg>
+
+              {/* Dairesel Beyaz Çerçeveli Logo Kılıfı (Kare Beyaz Zemin Kaymasını Sıfırlar) */}
+              <div className="relative h-11 w-11 sm:h-13 sm:w-13 rounded-full bg-white p-0.5 shadow-md ring-1 ring-amber-400/50 flex items-center justify-center overflow-hidden">
+                <img
+                  src="/ctso-logo.jpg"
+                  alt="Çorlu TSO Logo"
+                  className="h-full w-full object-cover rounded-full"
+                />
               </div>
 
-              {/* Logo Görseli (Kutuzsuz, Doğrudan Kurumsal Şeffaf Görünüm) */}
-              <img
-                src="/ctso-logo.jpg"
-                alt="Çorlu TSO Logo"
-                className="h-11 w-11 sm:h-13 sm:w-13 object-contain rounded-full shadow-md z-10"
-              />
+              {/* Sağ Estetik Altın Parantez Yayı */}
+              <svg className="h-10 sm:h-12 w-3 text-amber-400/80 ml-0.5" viewBox="0 0 12 40" fill="none">
+                <path d="M2 2C8 10 8 30 2 38" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                <path d="M7 8C10 14 10 26 7 32" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.5" />
+              </svg>
 
-              {/* Sağ Altın Vurgu Parantezi */}
-              <div className="absolute -right-1 flex items-center gap-0.5 text-amber-400/90 pointer-events-none select-none">
-                <span className="text-2xl font-normal leading-none opacity-80">)</span>
-                <span className="text-xl font-light leading-none opacity-40">)</span>
-              </div>
             </div>
 
             {/* Metin Yapısı */}
