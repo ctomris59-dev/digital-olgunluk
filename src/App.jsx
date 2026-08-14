@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from "react";
-import { ArrowRight, ArrowLeft, RotateCcw, ExternalLink, CircleCheck, X, Download, GraduationCap, ShieldCheck, CheckCircle2, ChevronRight, Award } from "lucide-react";
+import { ArrowRight, ArrowLeft, RotateCcw, ExternalLink, CircleCheck, X, Download, GraduationCap, ShieldCheck, ChevronRight } from "lucide-react";
 import { saveAssessment, saveTrainingSignup } from "./lib/supabaseClient";
 import { notifyTrainingSignup } from "./lib/emailNotify";
-import { AXES, SCALE_LABELS, LEVELS, levelFor, statusFor, axisLevelGuide } from "./lib/data";
+import { AXES, SCALE_LABELS, LEVELS, levelFor, axisLevelGuide } from "./lib/data";
 import { generatePdfReport } from "./lib/pdfReport";
 
 /* ---------------------------------------------------------------
@@ -169,7 +169,7 @@ function Gauge({ value }) {
 }
 
 /* ---------------------------------------------------------------
-   METODOLOJİ İÇERİĞİ
+   METODOLOJİ MODAL BÖLÜMÜ
 --------------------------------------------------------------- */
 
 function MethodologyModal({ onClose }) {
@@ -208,45 +208,23 @@ function MethodologyModal({ onClose }) {
               <li className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
                 <strong className="text-slate-900">1. acatech Industrie 4.0 Maturity Index</strong> — Almanya Ulusal Bilim
                 ve Mühendislik Akademisi (Schuh vd., 2017/2020). Kaynaklar, Bilgi Sistemleri,
-                Organizasyonel Yapı ve Kültür olmak üzere 4 yapısal alanda, 6 aşamalı
-                (Bilgisayarlaşma → Bağlanabilirlik → Görünürlük → Şeffaflık → Öngörü
-                Yeteneği → Uyarlanabilirlik) bir olgunluk modeli sunar. Aracımızın genel
-                olgunluk seviyeleri bu 6 aşamalı yapıdan uyarlanmıştır.
+                Organizasyonel Yapı ve Kültür olmak üzere 4 yapısal alanda, 6 aşamalı bir olgunluk modeli sunar.
               </li>
               <li className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
                 <strong className="text-slate-900">2. MIT Center for Digital Business & Capgemini — Digital Maturity Model</strong> —
-                Westerman, Bonnet & McAfee (2014), <em>"Leading Digital"</em>, Harvard Business
-                Review Press. Dijital Yoğunluk ile Dönüşüm Yönetimi Yoğunluğu'nun birlikte
-                ölçülmesi gerektiği ilkesi, aracımızın Dijital Yetkinlik ve İnsan Kaynağı
-                eksenine yansıtılmıştır.
+                Westerman, Bonnet & McAfee (2014), <em>"Leading Digital"</em>. Dijital Yoğunluk ile Dönüşüm Yönetimi Yoğunluğu ilkesi Dijital Yetkinlik ve İnsan Kaynağı eksenimize yansıtılmıştır.
               </li>
               <li className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
-                <strong className="text-slate-900">3. Avrupa Komisyonu EDIH Ağı — Open DMAT</strong> (Digital Maturity
-                Assessment Tool for SMEs). Dijital İş Stratejisi, Dijital Hazırlık, İnsan
-                Odaklı Dijitalleşme, Veri Yönetimi, Otomasyon & Yapay Zeka ve Yeşil
-                Dijitalleşme eksenlerini kapsar; aracımızın 6 ekseni kavramsal olarak bu
-                yapıyla örtüşecek şekilde tasarlanmıştır.
+                <strong className="text-slate-900">3. Avrupa Komisyonu EDIH Ağı — Open DMAT</strong> (Digital Maturity Assessment Tool for SMEs). Dijital İş Stratejisi, Dijital Hazırlık, Veri Yönetimi, Otomasyon & Yapay Zeka eksenlerini kapsar.
               </li>
               <li className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
-                <strong className="text-slate-900">4. Capability Maturity Model (CMMI Institute / SEI, Carnegie Mellon
-                Üniversitesi)</strong> — Kademeli olgunluk seviyesiyle süreç değerlendirme
-                metodolojisinin genel bilimsel temelini oluşturur; anket tabanlı
-                öz-değerlendirme yaklaşımımız bu geleneği takip eder.
+                <strong className="text-slate-900">4. Capability Maturity Model (CMMI Institute)</strong> — Kademeli olgunluk seviyesiyle süreç değerlendirme metodolojisinin genel bilimsel temelini oluşturur.
               </li>
               <li className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
-                <strong className="text-slate-900">5. ISO/IEC 33001 Standart Ailesi</strong> (Bilgi Teknolojisi — Süreç
-                Değerlendirmesi) — ISO/IEC 15504 (SPICE)'ın halefi olan bu uluslararası
-                standart, süreçlerin "Eksik"ten "Yenilikçi"ye uzanan yetkinlik seviyelerine
-                göre değerlendirilmesi için resmi terminoloji ve metodolojik çerçeve sağlar.
-                Eksen bazlı seviye kademelendirmemizin resmi standardizasyon referansıdır.
+                <strong className="text-slate-900">5. ISO/IEC 33001 Standart Ailesi</strong> — Süreç değerlendirmesi resmi terminoloji ve metodolojik çerçeve referansıdır.
               </li>
               <li className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
-                <strong className="text-slate-900">6. OECD Going Digital Toolkit</strong> — OECD'nin, ülkelerin dijital
-                dönüşümünü Altyapıya Erişim, Etkin Kullanım, İnovasyon, Nitelikli İşler,
-                Sosyal Kapsayıcılık, Dijital Çağda Güven ve Pazar Açıklığı olmak üzere 7
-                politika boyutunda ölçtüğü gösterge çerçevesi. Müşteri/Pazar, Dijital
-                Yetkinlik ve Siber Güvenlik eksenlerimizdeki gösterge seçim mantığına ek bir
-                makro referans noktası sağlamıştır.
+                <strong className="text-slate-900">6. OECD Going Digital Toolkit</strong> — Altyapıya Erişim, Etkin Kullanım, İnovasyon ve Dijital Çağda Güven politika boyutları baz alınmıştır.
               </li>
             </ul>
           </div>
@@ -267,7 +245,7 @@ function MethodologyModal({ onClose }) {
                     ["02 Veri Yönetimi ve Analitik", "acatech (Bilgi Sistemleri) · EDIH (Veri Yönetimi)"],
                     ["03 Müşteri/Pazar Dijital Varlığı", "MIT & Capgemini · EDIH (Dijital İş Stratejisi)"],
                     ["04 Otomasyon ve Yapay Zeka", "acatech (Kaynaklar) · EDIH (Otomasyon & YZ)"],
-                    ["05 Dijital Yetkinlik ve İnsan Kaynağı", "acatech (Org. Yapı/Kültür) · MIT & Capgemini · OECD (Nitelikli İşler)"],
+                    ["05 Dijital Yetkinlik ve İnsan Kaynağı", "acatech (Org. Yapı/Kültür) · MIT & Capgemini · OECD"],
                     ["06 Siber Güvenlik ve Altyapı", "acatech (Kaynaklar) · OECD (Dijital Çağda Güven)"],
                   ].map(([axis, fw]) => (
                     <tr key={axis} className="hover:bg-slate-50/50">
@@ -278,77 +256,6 @@ function MethodologyModal({ onClose }) {
                 </tbody>
               </table>
             </div>
-          </div>
-
-          <div>
-            <div className="text-sm font-semibold mb-2 text-slate-900">Yöntem</div>
-            <ul className="space-y-1.5 list-none pl-0 text-slate-600">
-              <li>• 6 eksen, eksen başına 5 soru — toplam 30 soru</li>
-              <li>• Her soru 1 (hiç yok) – 5 (tam entegre) arası Likert ölçeğiyle yanıtlanır</li>
-              <li>• Eksen puanı: o eksendeki soruların aritmetik ortalaması</li>
-              <li>• Genel olgunluk puanı: 6 eksen puanının eşit ağırlıklı ortalaması (şeffaflık için ek ağırlıklandırma yapılmamıştır)</li>
-              <li>• Genel puan, acatech'in 6 aşamalı modeline uyarlanmış bir ölçekle yorumlanır</li>
-              <li>
-                • <strong>Eksen bazlı yönlendirme:</strong> her eksenin 1-5 puanı, CMMI
-                (Capability Maturity Model Integration, SEI / Carnegie Mellon Üniversitesi)
-                tarafından yaygınlaştırılan jenerik 5 seviyeli olgunluk kademelendirmesine
-                (Başlangıç → Tekrarlanabilir → Tanımlı → Ölçülüyor → Optimize Ediliyor) göre
-                en yakın tam sayıya yuvarlanarak yorumlanır ve her seviye için somut bir
-                aksiyon önerisi sunulur.
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <div className="text-sm font-semibold mb-2 text-slate-900">Bilimsel Yaklaşım ve Doğrulama Notu</div>
-            <p className="mb-2">
-              Bu aracın soru seti, yukarıdaki kurumsal/akademik çerçevelerin kavramsal
-              içeriğine dayanan bir <strong>içerik geçerliliği</strong> (content validity) ve{" "}
-              <strong>yüzey geçerliliği</strong> (face validity) yaklaşımıyla tasarlanmıştır —
-              yani sorular, alanında tanınmış modellerin ölçmeyi amaçladığı yapıları uzman
-              değerlendirmesiyle yansıtacak şekilde oluşturulmuştur.
-            </p>
-            <p>
-              Şeffaflık gereği belirtilmelidir: bu aracın henüz geniş bir örneklemde{" "}
-              <strong>ampirik psikometrik doğrulaması</strong> (ör. iç tutarlılık/Cronbach's
-              alpha analizi, faktör analizi) yapılmamıştır. Çorlu TSO, aracı zamanla kalibre
-              etmek amacıyla anonimleştirilmiş toplu yanıt verilerini periyodik olarak analiz
-              etmeyi ve gerektiğinde soru/ağırlıklandırma güncellemeleri yapmayı
-              planlamaktadır.
-            </p>
-          </div>
-
-          <div>
-            <div className="text-sm font-semibold mb-2 text-slate-900">Sonuçların Yorumlanması İçin Rehber İlkeler</div>
-            <ul className="space-y-1.5 list-none pl-0 text-slate-600">
-              <li>• Bu araç bir ön-tarama enstrümanıdır; kesin bir yargı değil, bir yönlendirmenin başlangıç noktasıdır.</li>
-              <li>• Eşik değerlere yakın sonuçlar tek başına karar vermek yerine bir görüşmeyle teyit edilmelidir.</li>
-              <li>• Eksen bazlı sonuçlar, tek bir genel puandan daha fazla aksiyon değeri taşır — genel puan "büyük resmi", eksen puanları "nereden başlanacağını" gösterir.</li>
-              <li>• Sonuçlar, cevap veren kişinin firma hakkındaki bilgi düzeyine bağlıdır; farklı bir yetkilinin cevapları farklı sonuç verebilir.</li>
-            </ul>
-          </div>
-
-          <div>
-            <div className="text-sm font-semibold mb-2 text-slate-900">Sınırlamalar</div>
-            <p className="text-slate-600">
-              Bu bir <strong>öz-beyan (self-report)</strong> anketidir, üçüncü taraf
-              doğrulaması içermez. Sertifikalı bir değerlendirme değildir — TÜBİTAK TÜSSİDE
-              D3A/DDX veya EDIH Open DMAT gibi resmi araçların yerine geçmez; onlara{" "}
-              <strong>ön hazırlık</strong> niteliğindedir.
-            </p>
-          </div>
-
-          <div>
-            <div className="text-sm font-semibold mb-2 text-slate-900">Kaynakça</div>
-            <ul className="space-y-1.5 list-none pl-0 text-xs text-slate-500 font-mono">
-              <li>Schuh, G., Anderl, R., Gausemeier, J., ten Hompel, M., & Wahlster, W. (Eds.). (2020). Industrie 4.0 Maturity Index: Managing the Digital Transformation of Companies. acatech STUDY. Munich: Herbert Utz Verlag.</li>
-              <li>Westerman, G., Bonnet, D., & McAfee, A. (2014). Leading Digital: Turning Technology into Business Transformation. Harvard Business Review Press.</li>
-              <li>Westerman, G., Bonnet, D., & McAfee, A. (2014). The Nine Elements of Digital Transformation. MIT Sloan Management Review.</li>
-              <li>European Commission, European Digital Innovation Hubs Network — Digital Maturity Assessment Tool (Open DMAT) for SMEs.</li>
-              <li>CMMI Institute / Software Engineering Institute, Carnegie Mellon University — CMMI Capability Maturity Model Integration (jenerik 5 seviyeli olgunluk kademelendirmesi).</li>
-              <li>ISO/IEC 33001:2015, ISO/IEC 33002:2015, ISO/IEC 33020:2019 — Information technology — Process assessment. International Organization for Standardization.</li>
-              <li>OECD (2019). Going Digital: Shaping Policies, Improving Lives. OECD Publishing, Paris. www.oecd.org/going-digital-toolkit.</li>
-            </ul>
           </div>
         </div>
 
@@ -366,7 +273,7 @@ function MethodologyModal({ onClose }) {
 }
 
 /* ---------------------------------------------------------------
-   DESTEK PROGRAMLARI
+   DESTEK PROGRAMLARI LİSTESİ
 --------------------------------------------------------------- */
 
 const SUPPORT_PROGRAMS = [
@@ -376,7 +283,7 @@ const SUPPORT_PROGRAMS = [
 ];
 
 /* ---------------------------------------------------------------
-   ANA UYGULAMA
+   ANA UYGULAMA (APP)
 --------------------------------------------------------------- */
 
 export default function App() {
@@ -397,7 +304,6 @@ export default function App() {
   const answeredCount = currentAxis.questions.filter((_, qi) => answers[`${currentAxis.id}-${qi}`]).length;
   const axisComplete = answeredCount === currentAxis.questions.length;
 
-  // Toplam İlerleme Hesaplama
   const totalQuestions = AXES.length * 5;
   const totalAnswered = Object.keys(answers).length;
   const progressPercent = Math.round((totalAnswered / totalQuestions) * 100);
@@ -468,7 +374,7 @@ export default function App() {
       screen === "quiz" ? "h-screen max-h-screen overflow-hidden flex flex-col bg-slate-100" : "min-h-screen bg-slate-50 flex flex-col"
     }`}>
       
-{/* ==================== PRESTİJLİ VE MÜKEMMEL OTURAN KURUMSAL HEADER ==================== */}
+      {/* ==================== PRESTİJLİ VE CUK OTURAN KURUMSAL HEADER ==================== */}
       <header className="bg-[#091538] border-b border-amber-500/30 text-white flex-shrink-0 shadow-xl relative z-40">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between">
           
@@ -615,7 +521,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* FORUM BÖLÜMÜ */}
+            {/* FORM BÖLÜMÜ */}
             <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-slate-800 mb-1">
@@ -690,10 +596,9 @@ export default function App() {
               <div className="text-xs text-slate-600 space-y-3 leading-relaxed">
                 <p><strong>Veri Sorumlusu:</strong> Çorlu Ticaret ve Sanayi Odası (Çorlu TSO), Çorlu / Tekirdağ.</p>
                 <p><strong>İşlenen Veriler:</strong> Firma adı (opsiyonel) ve bu değerlendirme formunda verdiğiniz cevaplar.</p>
-                <p><strong>İşleme Amacı:</strong> Firmanızın dijital olgunluk seviyesini ölçmek, size özel bir sonuç raporu oluşturmak ve size uygun destek programına (KOSGEB, EDIH, TÜBİTAK TÜSSİDE vb.) yönlendirme yapabilmesini sağlamaktır.</p>
+                <p><strong>İşleme Amacı:</strong> Firmanızın dijital olgunluk seviyesini ölçmek ve size özel bir sonuç raporu oluşturmaktır.</p>
                 <p><strong>Saklama Süresi:</strong> Verileriniz saklanmamaktadır.</p>
                 <p><strong>Paylaşım:</strong> Verileriniz yalnızca Çorlu TSO tarafından görülebilir; üçüncü kişi/kurumlarla paylaşılmaz.</p>
-                <p><strong>Haklarınız:</strong> KVKK'nın 11. maddesi kapsamında verilerinize erişme, düzeltme, silinmesini talep etme haklarına sahipsiniz. Talepleriniz için Çorlu TSO Proje Servisi ile iletişime geçebilirsiniz.</p>
               </div>
               <button
                 onClick={() => setShowConsentText(false)}
@@ -705,7 +610,7 @@ export default function App() {
           </div>
         )}
 
-        {/* EKRAN 2: QUIZ (100VH NO-SCROLL MATRİS DÜZENİ) */}
+        {/* EKRAN 2: QUIZ (MATRİS DÜZENİ) */}
         {screen === "quiz" && (
           <div className="h-full flex flex-col justify-between space-y-2 overflow-hidden">
             
@@ -756,7 +661,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* KART GÖVDESİ & MATRİS TABLOSU (NO SCROLL) */}
+            {/* KART GÖVDESİ & MATRİS TABLOSU */}
             <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-md flex-grow flex flex-col justify-between overflow-hidden">
               
               {/* EKSEN AÇIKLAMASI & ÖLÇEK REHBERİ */}
@@ -806,7 +711,7 @@ export default function App() {
                         </p>
                       </div>
 
-                      {/* 1-5 BUTONLARI (YAN YANA MATRİS) */}
+                      {/* 1-5 BUTONLARI (MATRİS) */}
                       <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0 self-end sm:self-center">
                         {[1, 2, 3, 4, 5].map((v) => {
                           const active = val === v;
@@ -1027,7 +932,7 @@ export default function App() {
                   disabled={!trainingEmail || trainingState === "saving"}
                   className="px-5 py-2.5 bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold rounded-lg transition-all disabled:opacity-50"
                 >
-                  {trainingState === "saving" ? "Kaydediliyor…" : "Eğitim Bildirimlerine Kaydol"}
+                  {trainingState === "saving" ? "Kaydedidediliyor…" : "Eğitim Bildirimlerine Kaydol"}
                 </button>
               )}
             </div>
@@ -1056,7 +961,7 @@ export default function App() {
               <div className="text-xs font-bold text-blue-900 uppercase tracking-wider">BİLİMSEL METODOLOJİ VE KAYNAKÇA</div>
               <div className="text-sm font-bold text-slate-900">Bu değerlendirme neye dayanıyor?</div>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Bu araç; acatech Industrie 4.0 Maturity Index (Almanya Ulusal Bilim ve Mühendislik Akademisi), MIT & Capgemini Digital Maturity Model (Westerman, Bonnet & McAfee), Avrupa Komisyonu EDIH Open DMAT, ISO/IEC 33001 süreç değerlendirme standardı ve OECD Going Digital Toolkit çerçevelerinden esinlenerek Çorlu Ticaret ve Sanayi Odası tarafından özgün olarak geliştirilmiştir. Sertifikalı bir değerlendirme değildir; resmi araçlara ön hazırlık niteliğindedir.
+                Bu araç; acatech Industrie 4.0 Maturity Index, MIT & Capgemini Digital Maturity Model, AB EDIH Open DMAT, ISO/IEC 33001 ve OECD Going Digital Toolkit çerçevelerinden esinlenerek Çorlu Ticaret ve Sanayi Odası tarafından özgün olarak geliştirilmiştir.
               </p>
               <button
                 onClick={() => setShowMethodology(true)}
