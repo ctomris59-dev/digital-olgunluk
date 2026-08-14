@@ -467,36 +467,71 @@ export default function App() {
     <div className={`font-sans text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900 ${
       screen === "quiz" ? "h-screen max-h-screen overflow-hidden flex flex-col bg-slate-100" : "min-h-screen bg-slate-50 flex flex-col"
     }`}>
-      {/* KUTUSUZ, DOĞRUDAN DAİRESEL/VURGULU LOGOLU HEADER */}
-      <header className="bg-slate-950 border-b-2 border-amber-500/80 text-white flex-shrink-0 shadow-lg z-40">
-        <div className="max-w-5xl mx-auto px-4 py-2.5 sm:py-3 flex items-center justify-between gap-4">
+      
+      {/* ==================== YENİLENMİŞ EXECUTIVE MİMARİ HEADER ==================== */}
+      <header className="bg-slate-950 border-b border-amber-500/40 text-white flex-shrink-0 shadow-xl relative z-40 overflow-hidden">
+        {/* Yumuşak Degrade Zemin İşığı */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-blue-900/20 via-slate-950 to-slate-950 pointer-events-none"></div>
+
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between relative z-10">
           
-          {/* DIKDÖRTGEN KUTUSU KALDIRILMIŞ VURGULU LOGO VE BAŞLIK */}
-          <div className="flex items-center gap-3 sm:gap-4">
+          {/* SOL TARAF: LOGO VE KURUMSAL BAŞLIKLAR */}
+          <div className="flex items-center gap-4 sm:gap-5">
+            {/* Cam Efektli Dairesel Halkaya Sahip Logo */}
             <div className="relative group flex-shrink-0">
-              <div className="absolute -inset-1 bg-amber-500/40 rounded-full blur-md group-hover:bg-amber-500/60 transition-all"></div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/30 to-blue-600/30 rounded-full blur-md opacity-75 group-hover:opacity-100 transition duration-300"></div>
               <img
                 src="/ctso-logo.jpg"
                 alt="Çorlu TSO Logo"
-                className="relative h-12 w-12 sm:h-14 sm:w-14 object-cover rounded-full drop-shadow-[0_4px_12px_rgba(245,158,11,0.4)] border-2 border-amber-400/80"
+                className="relative h-12 w-12 sm:h-14 sm:w-14 object-cover rounded-full border-2 border-amber-400/80 shadow-md ring-2 ring-slate-900"
               />
             </div>
-            <div>
-              <div className="text-[10px] sm:text-[11px] font-black text-amber-400 uppercase tracking-widest leading-none mb-0.5">
-                ÇORLU TİCARET VE SANAYİ ODASI
+
+            {/* Metin İskeleti */}
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] sm:text-[11px] font-black text-amber-400 uppercase tracking-widest leading-none">
+                  ÇORLU TİCARET VE SANAYİ ODASI
+                </span>
+                <span className="hidden md:inline-block h-1 w-1 rounded-full bg-amber-400/60"></span>
+                <span className="hidden md:inline-block text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                  DİJİTAL DÖNÜŞÜM PORTALI
+                </span>
               </div>
-              <div className="text-base sm:text-xl font-black text-white tracking-tight leading-none">
+              <div className="text-base sm:text-xl font-black text-white tracking-tight leading-tight mt-0.5">
                 Dijital Olgunluk Ölçüm Aracı
               </div>
             </div>
           </div>
 
+          {/* SAĞ TARAF: BOŞLUĞU MÜKEMMEL DOLDURAN DANIŞMANLIK & HİZMET BİLGİSİ */}
+          <div className="hidden md:flex items-center gap-4">
+            <div className="text-right border-r border-slate-800 pr-4">
+              <div className="text-[10px] font-extrabold text-amber-400 uppercase tracking-widest">
+                ÇORLU TSO PROJE SERVİSİ
+              </div>
+              <div className="text-[11px] font-medium text-slate-300">
+                KOBİ Ön-Tarama ve Danışmanlık Hizmeti
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 bg-slate-900/80 border border-slate-800 px-3 py-1.5 rounded-lg shadow-inner">
+              <ShieldCheck className="text-amber-400 flex-shrink-0" size={18} />
+              <span className="text-[11px] font-bold text-slate-200">Resmi Ölçüm Hizmeti</span>
+            </div>
+          </div>
+
+          {/* MOBİL HIZLI İLERLEME ROZETİ */}
           {screen !== "intro" && (
-            <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold bg-slate-800 text-amber-400 border border-slate-700">
+            <div className="md:hidden inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold bg-slate-900 text-amber-400 border border-slate-800">
               {screen === "quiz" ? `%${progressPercent}` : "RAPOR"}
-            </span>
+            </div>
           )}
+
         </div>
+
+        {/* Altın Gradient Alt Şerit */}
+        <div className="h-[2px] w-full bg-gradient-to-r from-amber-600 via-amber-400 to-amber-600"></div>
       </header>
 
       {/* ANA İÇERİK KONTEYNERİ */}
