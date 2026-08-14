@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { ArrowRight, ArrowLeft, RotateCcw, ExternalLink, CircleCheck, X, Download, GraduationCap, ShieldCheck, CheckCircle2, ChevronRight, Award, HelpCircle } from "lucide-react";
+import { ArrowRight, ArrowLeft, RotateCcw, ExternalLink, CircleCheck, X, Download, GraduationCap, ShieldCheck, CheckCircle2, ChevronRight, Award } from "lucide-react";
 import { saveAssessment, saveTrainingSignup } from "./lib/supabaseClient";
 import { notifyTrainingSignup } from "./lib/emailNotify";
 import { AXES, SCALE_LABELS, LEVELS, levelFor, statusFor, axisLevelGuide } from "./lib/data";
@@ -425,7 +425,6 @@ export default function App() {
   const goNextAxis = () => {
     if (axisIndex < AXES.length - 1) {
       setAxisIndex(axisIndex + 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       setScreen("results");
       setSaveState("saving");
@@ -445,7 +444,6 @@ export default function App() {
   const goPrevAxis = () => {
     if (axisIndex > 0) {
       setAxisIndex(axisIndex - 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -466,26 +464,28 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900 flex flex-col">
+    <div className={`font-sans text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900 ${
+      screen === "quiz" ? "h-screen max-h-screen overflow-hidden flex flex-col bg-slate-100" : "min-h-screen bg-slate-50 flex flex-col"
+    }`}>
       {/* VURGULU, BÜYÜTÜLMÜŞ LOGOLU VE PRESTİJLİ HEADER */}
-      <header className="bg-slate-950 border-b-2 border-amber-500/80 text-white sticky top-0 z-40 shadow-xl">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
+      <header className="bg-slate-950 border-b-2 border-amber-500/80 text-white flex-shrink-0 shadow-lg z-40">
+        <div className="max-w-5xl mx-auto px-4 py-2.5 sm:py-3 flex items-center justify-between gap-4">
           
-          {/* BÜYÜTÜLMÜŞ LOGO VE DÜZENLENMİŞ BAŞLIK */}
-          <div className="flex items-center gap-4 sm:gap-5">
+          {/* LOGO VE DÜZENLENMİŞ BAŞLIK */}
+          <div className="flex items-center gap-3 sm:gap-4">
             <div className="relative group flex-shrink-0">
-              <div className="absolute -inset-1 bg-amber-500/30 rounded-2xl blur-md group-hover:bg-amber-500/50 transition-all"></div>
+              <div className="absolute -inset-1 bg-amber-500/30 rounded-xl blur-sm group-hover:bg-amber-500/50 transition-all"></div>
               <img
                 src="/ctso-logo.jpg"
                 alt="Çorlu TSO Logo"
-                className="relative h-14 w-14 sm:h-16 sm:w-16 object-contain bg-white rounded-xl p-1.5 shadow-lg border border-slate-200"
+                className="relative h-11 w-11 sm:h-13 sm:w-13 object-contain bg-white rounded-lg p-1 shadow-md border border-slate-200"
               />
             </div>
             <div>
-              <div className="text-[11px] sm:text-xs font-black text-amber-400 uppercase tracking-widest leading-none flex items-center gap-1.5 mb-1">
-                <span>ÇORLU TİCARET VE SANAYİ ODASI</span>
+              <div className="text-[10px] sm:text-[11px] font-black text-amber-400 uppercase tracking-widest leading-none mb-0.5">
+                ÇORLU TİCARET VE SANAYİ ODASI
               </div>
-              <div className="text-lg sm:text-2xl font-black text-white tracking-tight leading-tight">
+              <div className="text-base sm:text-xl font-black text-white tracking-tight leading-none">
                 Dijital Olgunluk Ölçüm Aracı
               </div>
             </div>
@@ -497,7 +497,7 @@ export default function App() {
               <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">RESMİ HİZMET PORTALI</div>
               <div className="text-xs font-semibold text-slate-200">Çorlu TSO Tarafından Geliştirilmiştir</div>
             </div>
-            <Award className="text-amber-400 flex-shrink-0" size={26} />
+            <Award className="text-amber-400 flex-shrink-0" size={24} />
           </div>
 
           {screen !== "intro" && (
@@ -509,14 +509,16 @@ export default function App() {
       </header>
 
       {/* ANA İÇERİK KONTEYNERİ */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex-grow w-full">
+      <main className={`max-w-5xl mx-auto px-4 w-full ${
+        screen === "quiz" ? "flex-grow flex flex-col justify-between py-2 overflow-hidden" : "py-8 sm:py-12 flex-grow"
+      }`}>
         {showMethodology && <MethodologyModal onClose={() => setShowMethodology(false)} />}
 
         {/* EKRAN 1: INTRO */}
         {screen === "intro" && (
-          <div className="space-y-8">
+          <div className="space-y-8 max-w-4xl mx-auto">
             {/* HERO BÖLÜMÜ */}
-            <div className="bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-md relative overflow-hidden">
+            <div className="bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
               <div className="absolute top-0 right-0 bg-amber-500 text-slate-950 text-[10px] font-extrabold uppercase px-3 py-1 rounded-bl-lg tracking-wider">
                 Resmi Üye Hizmeti
               </div>
@@ -552,7 +554,7 @@ export default function App() {
             {/* BİLİMSEL METODOLOJİ BANNERİ */}
             <div 
               onClick={() => setShowMethodology(true)}
-              className="bg-slate-950 text-white rounded-xl p-5 shadow-md border border-slate-800 flex items-center justify-between gap-4 cursor-pointer hover:bg-slate-900 transition-all group"
+              className="bg-slate-950 text-white rounded-xl p-5 shadow-sm border border-slate-800 flex items-center justify-between gap-4 cursor-pointer hover:bg-slate-900 transition-all group"
             >
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-blue-950 border border-blue-800 rounded-lg text-amber-400">
@@ -675,72 +677,82 @@ export default function App() {
           </div>
         )}
 
-        {/* EKRAN 2: QUIZ (YENİLENMİŞ VURGULU VE CANLI ANKET TASARIMI) */}
+        {/* EKRAN 2: QUIZ (100VH NO-SCROLL MATRİS DÜZENİ) */}
         {screen === "quiz" && (
-          <div className="space-y-6">
+          <div className="h-full flex flex-col justify-between space-y-2 overflow-hidden">
             
-            {/* GENEL İLERLEME VE BİLGİ BARI */}
-            <div className="bg-white border border-slate-200/80 rounded-xl p-4 shadow-md space-y-3">
-              <div className="flex items-center justify-between text-xs font-bold text-slate-700">
-                <span className="flex items-center gap-1.5">
-                  <span className="h-2.5 w-2.5 rounded-full bg-blue-900 animate-pulse"></span>
-                  Genel İlerleme
-                </span>
-                <span className="text-blue-900 font-extrabold">{totalAnswered} / {totalQuestions} Soru (%{progressPercent})</span>
+            {/* ÜST BİLGİ & İLERLEME BARI */}
+            <div className="bg-white border border-slate-200 rounded-xl p-2.5 shadow-sm flex-shrink-0 space-y-2">
+              <div className="flex items-center justify-between text-xs font-bold text-slate-700 px-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-black text-amber-600 uppercase tracking-widest bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                    EKSEN {currentAxis.no} / {AXES.length}
+                  </span>
+                  <span className="hidden sm:inline text-slate-800 font-extrabold">{currentAxis.title}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-slate-500 text-[11px] font-semibold">Toplam İlerleme:</span>
+                  <span className="text-blue-900 font-black">% {progressPercent}</span>
+                </div>
               </div>
-              <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200/50">
+
+              {/* İLERLEME ÇUBUĞU */}
+              <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-gradient-to-r from-blue-900 to-indigo-600 rounded-full transition-all duration-300"
+                  className="h-full bg-blue-900 rounded-full transition-all duration-300"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
 
-              {/* TAB SEÇENEKLERİ */}
-              <div className="flex gap-1.5 pt-2 overflow-x-auto">
+              {/* EKSEN TABLARI */}
+              <div className="flex gap-1 overflow-x-auto pt-0.5">
                 {AXES.map((a, i) => {
                   const done = a.questions.every((_, qi) => answers[`${a.id}-${qi}`]);
                   const isCurrent = i === axisIndex;
                   return (
-                    <div
+                    <button
                       key={a.id}
                       onClick={() => setAxisIndex(i)}
-                      className={`flex-1 min-w-[110px] cursor-pointer text-center py-2 px-2 rounded-lg text-xs font-bold transition-all border ${
+                      className={`flex-1 min-w-[90px] py-1 px-1.5 rounded text-[11px] font-bold transition-all border text-center truncate ${
                         isCurrent
-                          ? "bg-blue-900 text-white border-blue-900 shadow-md ring-2 ring-blue-900/20"
+                          ? "bg-blue-900 text-white border-blue-900 shadow-sm"
                           : done
-                          ? "bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100"
+                          ? "bg-emerald-50 text-emerald-800 border-emerald-200"
                           : "bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100"
                       }`}
                     >
-                      <div className="text-[10px] opacity-75">{a.no}</div>
-                      <div className="truncate">{a.short}</div>
-                    </div>
+                      {a.no}. {a.short}
+                    </button>
                   );
                 })}
               </div>
             </div>
 
-            {/* ANA SORU KARTI - CANLI VE KATMANLI GÖLGELİ */}
-            <div className="bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-xl relative">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
-                <div>
-                  <span className="text-xs font-black text-amber-600 uppercase tracking-widest bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200">
-                    EKSEN {currentAxis.no} / {AXES.length}
+            {/* KART GÖVDESİ & MATRİS TABLOSU (NO SCROLL) */}
+            <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-md flex-grow flex flex-col justify-between overflow-hidden">
+              
+              {/* EKSEN AÇIKLAMASI & ÖLÇEK REHBERİ */}
+              <div className="flex-shrink-0 border-b border-slate-100 pb-2 mb-2">
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <h2 className="text-base font-black text-slate-900">{currentAxis.title}</h2>
+                  <span className="text-xs font-semibold text-slate-400">
+                    {answeredCount} / {currentAxis.questions.length} Cevaplandı
                   </span>
-                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-2">{currentAxis.title}</h2>
                 </div>
-                <div className="text-right hidden sm:block">
-                  <span className="text-xs font-semibold text-slate-400">Eksen İlerlemesi</span>
-                  <div className="text-sm font-extrabold text-blue-900">{answeredCount} / {currentAxis.questions.length} Cevaplandı</div>
+                <p className="text-slate-500 text-xs truncate mb-2">{currentAxis.intro}</p>
+
+                {/* TEK SATIR LIKERT REHBERİ */}
+                <div className="bg-slate-50 border border-slate-200/80 rounded-lg py-1 px-3 flex items-center justify-between text-[11px] font-bold text-slate-600">
+                  <span className="text-red-600">1: {SCALE_LABELS[0]}</span>
+                  <span className="text-orange-600">2: {SCALE_LABELS[1]}</span>
+                  <span className="text-amber-600">3: {SCALE_LABELS[2]}</span>
+                  <span className="text-emerald-600">4: {SCALE_LABELS[3]}</span>
+                  <span className="text-blue-600">5: {SCALE_LABELS[4]}</span>
                 </div>
               </div>
 
-              <p className="text-slate-600 text-sm leading-relaxed mb-8 bg-slate-50/80 p-4 rounded-xl border border-slate-100">
-                {currentAxis.intro}
-              </p>
-
-              {/* SORU LİSTESİ */}
-              <div className="space-y-6">
+              {/* 5 SORULUK KOMPAKT MATRİS LİSTESİ */}
+              <div className="flex-grow flex flex-col justify-around py-1 space-y-1">
                 {currentAxis.questions.map((q, qi) => {
                   const val = answers[`${currentAxis.id}-${qi}`];
                   const isAnswered = val !== undefined;
@@ -748,77 +760,73 @@ export default function App() {
                   return (
                     <div 
                       key={qi} 
-                      className={`p-5 rounded-2xl transition-all border ${
+                      className={`flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2 sm:p-2.5 rounded-lg border transition-all ${
                         isAnswered 
-                          ? "bg-blue-50/30 border-blue-200 shadow-sm" 
-                          : "bg-white border-slate-200/80 hover:border-slate-300 shadow-sm"
+                          ? "bg-blue-50/40 border-blue-200" 
+                          : "bg-white border-slate-100 hover:border-slate-200"
                       }`}
                     >
-                      <div className="flex items-start gap-3 mb-4">
-                        <span className={`flex-shrink-0 h-6 w-6 rounded-full text-xs font-bold flex items-center justify-center ${
-                          isAnswered ? "bg-blue-900 text-white" : "bg-slate-100 text-slate-600"
+                      {/* SORU METNİ */}
+                      <div className="flex items-start gap-2 max-w-xl">
+                        <span className={`flex-shrink-0 h-5 w-5 rounded-full text-[11px] font-bold flex items-center justify-center mt-0.5 ${
+                          isAnswered ? "bg-blue-900 text-white" : "bg-slate-200 text-slate-600"
                         }`}>
                           {qi + 1}
                         </span>
-                        <p className="text-sm font-bold text-slate-800 leading-snug pt-0.5">
+                        <p className="text-xs font-bold text-slate-800 leading-snug">
                           {q}
                         </p>
                       </div>
 
-                      {/* 1-5 CANLI LIKERT BUTONLARI */}
-                      <div className="grid grid-cols-5 gap-2 sm:gap-3">
+                      {/* 1-5 BUTONLARI (YAN YANA MATRİS) */}
+                      <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0 self-end sm:self-center">
                         {[1, 2, 3, 4, 5].map((v) => {
                           const active = val === v;
                           return (
                             <button
                               key={v}
                               onClick={() => setAnswer(qi, v)}
-                              className={`py-3 sm:py-3.5 rounded-xl font-black text-sm transition-all border flex flex-col items-center justify-center gap-0.5 ${
+                              className={`h-8 w-10 sm:h-8 sm:w-11 rounded-md font-black text-xs transition-all border flex items-center justify-center ${
                                 active
-                                  ? "bg-gradient-to-b from-blue-900 to-indigo-900 text-white border-blue-900 shadow-md scale-[1.02] ring-2 ring-blue-900/20"
-                                  : "bg-slate-50/80 text-slate-700 border-slate-200 hover:bg-slate-100 hover:border-slate-300 active:scale-95"
+                                  ? "bg-blue-900 text-white border-blue-900 shadow-sm scale-105"
+                                  : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100 hover:border-slate-300"
                               }`}
                             >
-                              <span className="text-base">{v}</span>
+                              {v}
                             </button>
                           );
                         })}
-                      </div>
-
-                      {/* ÖLÇEK REHBERİ */}
-                      <div className="flex justify-between text-[11px] font-semibold text-slate-500 mt-2.5 px-1">
-                        <span className="text-red-700/80">1: {SCALE_LABELS[0]}</span>
-                        <span className="text-emerald-700/80">5: {SCALE_LABELS[4]}</span>
                       </div>
                     </div>
                   );
                 })}
               </div>
 
-              {/* ALT NAVİGASYON BUTONLARI */}
-              <div className="flex items-center justify-between pt-8 mt-8 border-t border-slate-100">
+              {/* ALT NAVİGASYON */}
+              <div className="flex items-center justify-between pt-2 border-t border-slate-100 flex-shrink-0 mt-1">
                 <button
                   onClick={goPrevAxis}
                   disabled={axisIndex === 0}
-                  className="px-5 py-2.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-sm rounded-xl transition-all flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
+                  className="px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs rounded-lg transition-all flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
                 >
-                  <ArrowLeft size={16} /> Önceki Eksen
+                  <ArrowLeft size={14} /> Önceki Eksen
                 </button>
                 <button
                   onClick={goNextAxis}
                   disabled={!axisComplete}
-                  className="px-7 py-3 bg-blue-900 hover:bg-blue-800 text-white font-bold text-sm rounded-xl transition-all shadow-md flex items-center gap-2 disabled:bg-slate-300 disabled:cursor-not-allowed active:scale-98"
+                  className="px-6 py-2 bg-blue-900 hover:bg-blue-800 text-white font-bold text-xs rounded-lg transition-all shadow-md flex items-center gap-1.5 disabled:bg-slate-300 disabled:cursor-not-allowed"
                 >
-                  {axisIndex === AXES.length - 1 ? "Sonuçları Tamamla" : "Sonraki Eksen"} <ArrowRight size={16} />
+                  {axisIndex === AXES.length - 1 ? "Sonucu Gör" : "Sonraki Eksen"} <ArrowRight size={14} />
                 </button>
               </div>
+
             </div>
           </div>
         )}
 
         {/* EKRAN 3: RESULTS */}
         {screen === "results" && (
-          <div className="space-y-8">
+          <div className="space-y-8 max-w-4xl mx-auto">
             {/* BAŞLIK & İNDİRME */}
             <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
@@ -896,10 +904,16 @@ export default function App() {
                           {colorCfg.label}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-600 leading-relaxed">{guide.description}</p>
-                      <div className="p-2.5 bg-slate-50 rounded-lg text-xs text-slate-800 font-medium border border-slate-100">
-                        <span className="font-bold text-slate-900">Önerilen adım: </span>
-                        {guide.action}
+                      <p className="text-xs text-slate-600 leading-relaxed bg-slate-50/60 p-3 rounded-lg border border-slate-100">{guide.description}</p>
+                      
+                      <div className="p-3 bg-blue-50/50 border border-blue-100 rounded-xl space-y-1">
+                        <div className="text-[11px] font-extrabold text-blue-950 uppercase tracking-wider flex items-center gap-1.5">
+                          <span className="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                          Stratejik Aksiyon Yol Haritası
+                        </div>
+                        <p className="text-xs text-slate-700 leading-relaxed font-medium">
+                          {guide.action}
+                        </p>
                       </div>
                     </div>
                   );
@@ -985,7 +999,7 @@ export default function App() {
                   disabled={!trainingEmail || trainingState === "saving"}
                   className="px-5 py-2.5 bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold rounded-lg transition-all disabled:opacity-50"
                 >
-                  {trainingState === "saving" ? "Kaydediliyor…" : "Eğitim Bildirimlerine Kaydol"}
+                  {trainingState === "saving" ? "Kaydedidediliyor…" : "Eğitim Bildirimlerine Kaydol"}
                 </button>
               )}
             </div>
@@ -1037,13 +1051,15 @@ export default function App() {
         )}
       </main>
 
-      {/* FOOTER KURUMSAL İMZA */}
-      <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500 mt-auto">
-        <div className="max-w-4xl mx-auto px-4">
-          <p className="font-semibold text-slate-700">Çorlu Ticaret ve Sanayi Odası © {new Date().getFullYear()}</p>
-          <p className="mt-1 text-[11px] text-slate-400">Proje Servisi — Dijital Dönüşüm Hizmetleri Portal Girişimi</p>
-        </div>
-      </footer>
+      {/* FOOTER KURUMSAL İMZA (Sadece Intro ve Results Ekranlarında Görünür) */}
+      {screen !== "quiz" && (
+        <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500 flex-shrink-0">
+          <div className="max-w-4xl mx-auto px-4">
+            <p className="font-semibold text-slate-700">Çorlu Ticaret ve Sanayi Odası © {new Date().getFullYear()}</p>
+            <p className="mt-1 text-[11px] text-slate-400">Proje Servisi — Dijital Dönüşüm Hizmetleri Portal Girişimi</p>
+          </div>
+        </footer>
+      )}
     </div>
   );
 }
