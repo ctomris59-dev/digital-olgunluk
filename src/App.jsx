@@ -179,21 +179,21 @@ function MethodologyModal({ onClose }) {
       onClick={onClose}
     >
       <div
-        className="bg-white border border-slate-200 rounded-xl shadow-2xl p-5 sm:p-8 max-w-2xl w-full"
+        className="bg-white border border-slate-200 rounded-xl shadow-2xl p-6 sm:p-8 max-w-2xl w-full"
         style={{ maxHeight: "85vh", overflowY: "auto" }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between mb-4 pb-3 border-b border-slate-100">
+        <div className="flex items-start justify-between mb-5 pb-4 border-b border-slate-100">
           <div>
             <span className="text-xs font-semibold text-blue-900 uppercase tracking-wider">METODOLOJİ</span>
-            <h3 className="text-base sm:text-lg font-bold text-slate-900 mt-0.5">Bu Değerlendirmenin Bilimsel Dayanağı</h3>
+            <h3 className="text-lg font-bold text-slate-900 mt-0.5">Bu Değerlendirmenin Bilimsel Dayanağı</h3>
           </div>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition-colors">
             <X size={20} />
           </button>
         </div>
 
-        <div className="text-xs sm:text-sm space-y-3 leading-relaxed text-slate-700">
+        <div className="text-sm space-y-4 leading-relaxed text-slate-700">
           <p>
             Bu araç, Çorlu Ticaret ve Sanayi Odası tarafından özgün olarak geliştirilmiştir.
             Aşağıda listelenen uluslararası kabul görmüş dijital ve yeşil olgunluk çerçevelerinin
@@ -202,37 +202,37 @@ function MethodologyModal({ onClose }) {
           </p>
 
           <div>
-            <div className="text-xs sm:text-sm font-semibold mb-2 text-slate-900">Referans Alınan Çerçeve ve Standartlar</div>
-            <ul className="space-y-2 list-none pl-0">
-              <li className="p-2.5 sm:p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
-                <strong className="text-slate-900">1. acatech Industrie 4.0 Maturity Index</strong> — Almanya Ulusal Bilim ve Mühendislik Akademisi.
+            <div className="text-sm font-semibold mb-2 text-slate-900">Referans Alınan Çerçeve ve Standartlar</div>
+            <ul className="space-y-2.5 list-none pl-0">
+              <li className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
+                <strong className="text-slate-900">1. acatech Industrie 4.0 Maturity Index</strong> — Almanya Ulusal Bilim ve Mühendislik Akademisi. Kaynaklar, Bilgi Sistemleri, Org. Yapı ve Kültür boyutlarında 6 aşamalı olgunluk modeli sunar.
               </li>
-              <li className="p-2.5 sm:p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
-                <strong className="text-slate-900">2. WEF & Singapore EDB — SIRI</strong> — Dünya Ekonomik Forumu destekli sanayi dijitalleşme küresel standardı.
+              <li className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
+                <strong className="text-slate-900">2. WEF & Singapore EDB — SIRI (Smart Industry Readiness Index)</strong> — Dünya Ekonomik Forumu destekli sanayi dijitalleşme küresel standardı.
               </li>
-              <li className="p-2.5 sm:p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
-                <strong className="text-slate-900">3. Fraunhofer IMPULS</strong> — İmalatçı KOBİ'lerin dijital araçlar ve yeşil dönüşüm olgunluğunu ölçen model.
+              <li className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
+                <strong className="text-slate-900">3. Fraunhofer IMPULS — Industry 4.0 & Green Transformation</strong> — İmalatçı KOBİ'lerin dijital araçlar, yeşil dönüşüm ve veri yönetimi olgunluğunu ölçen model.
               </li>
-              <li className="p-2.5 sm:p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
-                <strong className="text-slate-900">4. MIT Center for Digital Business & Capgemini</strong> — "Leading Digital" dönüşüm yönetimi esasları.
+              <li className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
+                <strong className="text-slate-900">4. MIT Center for Digital Business & Capgemini</strong> — Westerman, Bonnet & McAfee (2014), "Leading Digital" dönüşüm yönetimi esasları.
               </li>
-              <li className="p-2.5 sm:p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
-                <strong className="text-slate-900">5. Avrupa Komisyonu EDIH Ağı — Open DMAT</strong> — Dijital İş Stratejisi ve İkiz Dönüşüm boyutları.
+              <li className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
+                <strong className="text-slate-900">5. Avrupa Komisyonu EDIH Ağı — Open DMAT</strong> — Dijital İş Stratejisi, Veri Yönetimi, Yapay Zeka ve İkiz Dönüşüm boyutları.
               </li>
-              <li className="p-2.5 sm:p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
-                <strong className="text-slate-900">6. CMMI V2.0 & ISO/IEC 33001</strong> — Kademeli olgunluk seviyesiyle süreç değerlendirme altyapısı.
+              <li className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
+                <strong className="text-slate-900">6. CMMI V2.0 & ISO/IEC 33001 Standart Ailesi</strong> — Kademeli olgunluk seviyesiyle süreç değerlendirme resmi altyapısı.
               </li>
-              <li className="p-2.5 sm:p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
-                <strong className="text-slate-900">7. NIST Cybersecurity Framework & OECD</strong> — Siber dayanıklılık ve veri gizliliği esasları.
+              <li className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg">
+                <strong className="text-slate-900">7. NIST Cybersecurity Framework & OECD Going Digital</strong> — Siber dayanıklılık, veri gizliliği (KVKK/GDPR) ve dijital çağda güven esasları.
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-5 pt-3 border-t border-slate-100 flex justify-end">
+        <div className="mt-6 pt-4 border-t border-slate-100 flex justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg transition-colors"
+            className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg transition-colors"
           >
             Kapat
           </button>
@@ -341,22 +341,25 @@ export default function App() {
   );
 
   return (
-    <div className={`font-sans text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900 ${
-      screen === "quiz" ? "min-h-[100dvh] md:h-screen md:max-h-screen md:overflow-hidden flex flex-col bg-slate-100" : "min-h-screen bg-slate-50 flex flex-col"
-    }`}>
+    <div className={`font-sans text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900 h-screen max-h-screen overflow-hidden flex flex-col ${
+      screen === "quiz" ? "bg-slate-100" : "bg-slate-50"
+    } ${screen === "results" ? "!h-auto !max-h-none !overflow-visible min-h-screen" : ""}`}>
       
-      {/* HEADER */}
+      {/* ==================== YÖNTEM 2: GELİŞTİRİLMİŞ JPG LOGOLU HEADER ==================== */}
       <header className="bg-[#091538] border-b border-amber-500/30 text-white flex-shrink-0 shadow-xl relative z-40">
-        <div className="max-w-6xl mx-auto px-3 sm:px-6 py-2.5 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between">
           
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             <div className="relative flex items-center justify-center flex-shrink-0">
-              <svg className="h-9 sm:h-13 w-2.5 sm:w-3 text-amber-400 mr-0.5" viewBox="0 0 12 40" fill="none">
+              
+              {/* Sol Parantez Süsü */}
+              <svg className="h-11 sm:h-13 w-3 text-amber-400 mr-0.5" viewBox="0 0 12 40" fill="none">
                 <path d="M10 2C4 10 4 30 10 38" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
                 <path d="M5 8C2 14 2 26 5 32" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.5" />
               </svg>
 
-              <div className="relative h-10 w-10 sm:h-14 sm:w-14 rounded-full bg-white p-0.5 shadow-md ring-2 ring-amber-400/80 flex items-center justify-center overflow-hidden flex-shrink-0">
+              {/* LOGO GÖRSELİ (ctso-logo.png) - PÜRÜZSÜZ BEYAZ ÇERÇEVE KILIFI */}
+              <div className="relative h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-white p-0.5 shadow-md ring-2 ring-amber-400/80 flex items-center justify-center overflow-hidden flex-shrink-0">
                 <img
                   src="/ctso-logo.png"
                   alt="Çorlu TSO Logo"
@@ -364,7 +367,8 @@ export default function App() {
                 />
               </div>
 
-              <svg className="h-9 sm:h-13 w-2.5 sm:w-3 text-amber-400 ml-0.5" viewBox="0 0 12 40" fill="none">
+              {/* Sağ Parantez Süsü */}
+              <svg className="h-11 sm:h-13 w-3 text-amber-400 ml-0.5" viewBox="0 0 12 40" fill="none">
                 <path d="M2 2C8 10 8 30 2 38" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
                 <path d="M7 8C10 14 10 26 7 32" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.5" />
               </svg>
@@ -372,7 +376,7 @@ export default function App() {
 
             <div className="flex flex-col justify-center">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] sm:text-sm font-black text-amber-400 uppercase tracking-wider leading-none">
+                <span className="text-xs sm:text-sm font-black text-amber-400 uppercase tracking-wider leading-none">
                   ÇORLU TİCARET VE SANAYİ ODASI
                 </span>
                 <span className="hidden md:inline-block h-1.5 w-1.5 rounded-full bg-slate-400"></span>
@@ -380,7 +384,7 @@ export default function App() {
                   DİJİTAL DÖNÜŞÜM PORTALI
                 </span>
               </div>
-              <div className="text-sm sm:text-xl font-extrabold text-white tracking-tight leading-tight mt-0.5">
+              <div className="text-base sm:text-xl font-extrabold text-white tracking-tight leading-tight mt-0.5">
                 Dijital Olgunluk Ölçüm Aracı
               </div>
             </div>
@@ -395,7 +399,7 @@ export default function App() {
           </div>
 
           {screen !== "intro" && (
-            <div className="md:hidden inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-slate-900 text-amber-400 border border-slate-800">
+            <div className="md:hidden inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold bg-slate-900 text-amber-400 border border-slate-800">
               {screen === "quiz" ? `%${progressPercent}` : "RAPOR"}
             </div>
           )}
@@ -404,38 +408,40 @@ export default function App() {
         <div className="h-[2px] w-full bg-gradient-to-r from-amber-600/20 via-amber-400/80 to-amber-600/20"></div>
       </header>
 
-      {/* MAIN CONTAINER */}
-      <main className={`max-w-5xl mx-auto px-3 sm:px-4 w-full ${
-        screen === "quiz" ? "flex-grow flex flex-col justify-between py-2 overflow-y-auto md:overflow-hidden" : "py-6 sm:py-12 flex-grow"
+      {/* ANA İÇERİK KONTEYNERİ */}
+      <main className={`max-w-5xl mx-auto px-4 w-full ${
+        screen === "quiz" ? "flex-grow flex flex-col justify-between py-2 overflow-hidden"
+        : screen === "intro" ? "flex-grow flex flex-col justify-center py-2 overflow-hidden"
+        : "py-8 sm:py-12 flex-grow"
       }`}>
         {showMethodology && <MethodologyModal onClose={() => setShowMethodology(false)} />}
 
         {/* EKRAN 1: INTRO */}
         {screen === "intro" && (
-          <div className="space-y-6 sm:space-y-8 max-w-4xl mx-auto">
-            <div className="bg-white border border-slate-200/80 rounded-2xl p-5 sm:p-8 shadow-sm relative overflow-hidden">
-              <div className="flex items-center gap-2 text-xs font-bold text-blue-900 uppercase tracking-wider mb-2">
-                <ShieldCheck size={18} className="text-amber-600" />
+          <div className="space-y-3 max-w-4xl mx-auto w-full overflow-y-auto" style={{ maxHeight: "calc(100vh - 90px)" }}>
+            <div className="bg-white border border-slate-200/80 rounded-xl p-4 sm:p-5 shadow-sm relative overflow-hidden">
+              <div className="flex items-center gap-2 text-[11px] font-bold text-blue-900 uppercase tracking-wider mb-1.5">
+                <ShieldCheck size={16} className="text-amber-600" />
                 <span>ÇORLU TİCARET VE SANAYİ ODASI DİJİTAL DÖNÜŞÜM HİZMETİ</span>
               </div>
-              <h1 className="text-xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight mb-3">
+              <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight leading-tight mb-2">
                 Firmanızın dijital olgunluk seviyesini ölçün.
               </h1>
-              <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-2xl mb-6">
+              <p className="text-slate-600 text-sm leading-relaxed max-w-2xl mb-3">
                 Çorlu Ticaret ve Sanayi Odası tarafından bölgemizdeki işletmelerin dijitalleşme ve yeşil dönüşüm süreçlerini desteklemek amacıyla geliştirilen bu ön değerlendirme aracı ile 6 stratejik eksende yetkinliklerinizi analiz edin.
               </p>
 
-              <div className="flex flex-wrap gap-3 sm:gap-4 pt-4 border-t border-slate-100 text-xs font-medium text-slate-600">
+              <div className="flex flex-wrap gap-3 pt-3 border-t border-slate-100 text-[11px] font-medium text-slate-600">
                 <div className="flex items-center gap-1.5">
-                  <span className="h-2 w-2 rounded-full bg-blue-900"></span>
+                  <span className="h-1.5 w-1.5 rounded-full bg-blue-900"></span>
                   <span>30 Soru</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="h-2 w-2 rounded-full bg-blue-900"></span>
+                  <span className="h-1.5 w-1.5 rounded-full bg-blue-900"></span>
                   <span>6 Stratejik Eksen</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="h-2 w-2 rounded-full bg-emerald-600"></span>
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-600"></span>
                   <span>İkiz Dönüşüm & SKDM Hazırlığı</span>
                 </div>
               </div>
@@ -443,60 +449,60 @@ export default function App() {
 
             <div 
               onClick={() => setShowMethodology(true)}
-              className="bg-slate-950 text-white rounded-xl p-4 sm:p-5 shadow-sm border border-slate-800 flex items-center justify-between gap-3 cursor-pointer hover:bg-slate-900 transition-all group"
+              className="bg-slate-950 text-white rounded-xl p-3.5 shadow-sm border border-slate-800 flex items-center justify-between gap-4 cursor-pointer hover:bg-slate-900 transition-all group"
             >
-              <div className="flex items-center gap-3 sm:gap-4">
-                <div className="p-2.5 sm:p-3 bg-blue-950 border border-blue-800 rounded-lg text-amber-400 flex-shrink-0">
-                  <GraduationCap size={20} />
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-950 border border-blue-800 rounded-lg text-amber-400 flex-shrink-0">
+                  <GraduationCap size={18} />
                 </div>
                 <div>
-                  <h4 className="text-xs sm:text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2">
+                  <h4 className="text-xs font-semibold text-white uppercase tracking-wider flex items-center gap-2">
                     <span>BİLİMSEL METODOLOJİ VE KAYNAKÇA</span>
                   </h4>
-                  <p className="text-[11px] sm:text-xs text-slate-300 mt-0.5">
-                    acatech, WEF SIRI, Fraunhofer, MIT, EDIH ve NIST standartlarına dayanır — inceleyin →
+                  <p className="text-[11px] text-slate-300 mt-0.5">
+                    acatech, WEF SIRI, Fraunhofer, MIT, EDIH, ISO 33001 ve NIST çerçevelerine dayanır — kaynakça için tıklayın →
                   </p>
                 </div>
               </div>
-              <div className="flex items-center text-xs font-semibold text-amber-400 group-hover:translate-x-0.5 transition-transform flex-shrink-0">
+              <div className="hidden sm:flex items-center text-xs font-semibold text-amber-400 group-hover:translate-x-0.5 transition-transform flex-shrink-0">
                 Detaylar <ChevronRight size={16} className="ml-1" />
               </div>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-xl p-5 sm:p-6 shadow-sm">
-              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">DEĞERLENDİRME EKSENLERİ</h3>
-              <div className="grid sm:grid-cols-2 gap-2.5 sm:gap-3">
+            <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+              <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2.5">DEĞERLENDİRME EKSENLERİ</h3>
+              <div className="grid sm:grid-cols-2 gap-2">
                 {AXES.map((a) => (
-                  <div key={a.id} className="flex items-center gap-3 p-2.5 rounded-lg border border-slate-100 bg-slate-50/50">
-                    <span className="text-xs font-bold text-blue-900 bg-blue-50 px-2 py-1 rounded border border-blue-100">{a.no}</span>
-                    <span className="text-xs sm:text-sm font-medium text-slate-800">{a.title}</span>
+                  <div key={a.id} className="flex items-center gap-2.5 p-2 rounded-lg border border-slate-100 bg-slate-50/50">
+                    <span className="text-[11px] font-bold text-blue-900 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100">{a.no}</span>
+                    <span className="text-xs font-medium text-slate-800">{a.title}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-xl p-5 sm:p-6 shadow-sm space-y-4">
+            <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm space-y-2.5">
               <div>
-                <label className="block text-xs sm:text-sm font-semibold text-slate-800 mb-1">
+                <label className="block text-xs font-semibold text-slate-800 mb-1">
                   Firma adı <span className="text-slate-400 font-normal">(opsiyonel)</span>
                 </label>
                 <input
                   value={firmName}
                   onChange={(e) => setFirmName(e.target.value)}
                   placeholder="Örn. ABC Makine Sanayi"
-                  className="w-full sm:max-w-md px-3.5 py-2.5 text-xs sm:text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent transition-all"
+                  className="w-full sm:max-w-md px-3.5 py-2 text-xs bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent transition-all"
                 />
               </div>
 
-              <div className="pt-1">
+              <div>
                 <label className="flex items-start gap-2.5 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={consent}
                     onChange={(e) => setConsent(e.target.checked)}
-                    className="mt-0.5 h-4 w-4 text-blue-900 rounded border-slate-300 focus:ring-blue-900 flex-shrink-0"
+                    className="mt-0.5 h-3.5 w-3.5 text-blue-900 rounded border-slate-300 focus:ring-blue-900"
                   />
-                  <span className="text-xs text-slate-600 leading-relaxed">
+                  <span className="text-[11px] text-slate-600 leading-relaxed">
                     <button
                       type="button"
                       onClick={(e) => {
@@ -512,17 +518,17 @@ export default function App() {
                 </label>
               </div>
 
-              <div className="pt-2">
+              <div>
                 <button
                   onClick={() => consent && setScreen("quiz")}
                   disabled={!consent}
-                  className="w-full sm:w-auto px-8 py-3 bg-blue-900 hover:bg-blue-800 disabled:bg-slate-300 text-white font-semibold text-xs sm:text-sm rounded-lg transition-all shadow-md flex items-center justify-center gap-2 disabled:cursor-not-allowed"
+                  className="w-full sm:w-auto px-7 py-2.5 bg-blue-900 hover:bg-blue-800 disabled:bg-slate-300 text-white font-semibold text-xs rounded-lg transition-all shadow-md flex items-center justify-center gap-2 disabled:cursor-not-allowed"
                 >
-                  Değerlendirmeye Başla <ArrowRight size={16} />
+                  Değerlendirmeye Başla <ArrowRight size={15} />
                 </button>
               </div>
 
-              <p className="text-[10px] sm:text-[11px] text-slate-400 pt-2 border-t border-slate-100">
+              <p className="text-[10px] text-slate-400 pt-2 border-t border-slate-100">
                 VERİ KULLANIMI: Cevaplarınız yalnızca firmanız için bu raporu oluşturmak ve size uygun destek programı önerilebilmesi için kullanılır.
               </p>
             </div>
@@ -536,17 +542,17 @@ export default function App() {
             onClick={() => setShowConsentText(false)}
           >
             <div
-              className="bg-white border border-slate-200 rounded-xl shadow-2xl p-5 sm:p-6 max-w-lg w-full"
+              className="bg-white border border-slate-200 rounded-xl shadow-2xl p-6 max-w-lg w-full"
               style={{ maxHeight: "80vh", overflowY: "auto" }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-center justify-between mb-3 pb-3 border-b border-slate-100">
-                <h3 className="text-base sm:text-lg font-bold text-slate-900">KVKK Aydınlatma Metni</h3>
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+                <h3 className="text-lg font-bold text-slate-900">KVKK Aydınlatma Metni</h3>
                 <button onClick={() => setShowConsentText(false)} className="text-slate-400 hover:text-slate-600">
                   <X size={18} />
                 </button>
               </div>
-              <div className="text-xs text-slate-600 space-y-2.5 leading-relaxed">
+              <div className="text-xs text-slate-600 space-y-3 leading-relaxed">
                 <p><strong>Veri Sorumlusu:</strong> Çorlu Ticaret ve Sanayi Odası (Çorlu TSO), Çorlu / Tekirdağ.</p>
                 <p><strong>İşlenen Veriler:</strong> Firma adı (opsiyonel) ve bu değerlendirme formunda verdiğiniz cevaplar.</p>
                 <p><strong>İşleme Amacı:</strong> Firmanızın dijital olgunluk seviyesini ölçmek ve size özel bir sonuç raporu oluşturmaktır.</p>
@@ -555,7 +561,7 @@ export default function App() {
               </div>
               <button
                 onClick={() => setShowConsentText(false)}
-                className="mt-5 w-full py-2.5 bg-slate-900 text-white text-xs font-semibold rounded-lg"
+                className="mt-6 w-full py-2.5 bg-slate-900 text-white text-xs font-semibold rounded-lg"
               >
                 Anladım, Kapat
               </button>
@@ -563,22 +569,21 @@ export default function App() {
           </div>
         )}
 
-        {/* EKRAN 2: QUIZ */}
+        {/* EKRAN 2: QUIZ (VURGULU 1-5 ÖLÇEK REHBERİ) */}
         {screen === "quiz" && (
-          <div className="h-full flex flex-col justify-between space-y-2">
+          <div className="h-full flex flex-col justify-between space-y-2 overflow-hidden">
             
-            {/* Eksen ve İlerleme Barı */}
             <div className="bg-white border border-slate-200 rounded-xl p-2.5 shadow-sm flex-shrink-0 space-y-2">
               <div className="flex items-center justify-between text-xs font-bold text-slate-700 px-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] sm:text-xs font-black text-amber-600 uppercase tracking-widest bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                  <span className="text-xs font-black text-amber-600 uppercase tracking-widest bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
                     EKSEN {currentAxis.no} / {AXES.length}
                   </span>
                   <span className="hidden sm:inline text-slate-800 font-extrabold">{currentAxis.title}</span>
                 </div>
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <span className="text-slate-500 text-[10px] sm:text-[11px] font-semibold">İlerleme:</span>
-                  <span className="text-blue-900 font-black text-xs sm:text-sm">% {progressPercent}</span>
+                <div className="flex items-center gap-3">
+                  <span className="text-slate-500 text-[11px] font-semibold">Toplam İlerleme:</span>
+                  <span className="text-blue-900 font-black">% {progressPercent}</span>
                 </div>
               </div>
 
@@ -589,8 +594,7 @@ export default function App() {
                 />
               </div>
 
-              {/* Yatay Eksen Tabları */}
-              <div className="flex gap-1 overflow-x-auto pt-0.5 scrollbar-none">
+              <div className="flex gap-1 overflow-x-auto pt-0.5">
                 {AXES.map((a, i) => {
                   const done = a.questions.every((_, qi) => answers[`${a.id}-${qi}`]);
                   const isCurrent = i === axisIndex;
@@ -598,7 +602,7 @@ export default function App() {
                     <button
                       key={a.id}
                       onClick={() => setAxisIndex(i)}
-                      className={`flex-1 min-w-[75px] sm:min-w-[90px] py-1 px-1 rounded text-[10px] sm:text-[11px] font-bold transition-all border text-center truncate flex-shrink-0 ${
+                      className={`flex-1 min-w-[90px] py-1 px-1.5 rounded text-[11px] font-bold transition-all border text-center truncate ${
                         isCurrent
                           ? "bg-blue-900 text-white border-blue-900 shadow-sm"
                           : done
@@ -613,48 +617,46 @@ export default function App() {
               </div>
             </div>
 
-            {/* Soru İçerik Kartı */}
-            <div className="bg-white border border-slate-200 rounded-xl p-3 sm:p-4 shadow-md flex-grow flex flex-col justify-between overflow-y-auto md:overflow-hidden">
+            <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-md flex-grow flex flex-col justify-between overflow-hidden">
               
               <div className="flex-shrink-0 border-b border-slate-100 pb-2 mb-2">
                 <div className="flex items-center justify-between gap-2 mb-1">
-                  <h2 className="text-sm sm:text-base font-black text-slate-900 truncate">{currentAxis.title}</h2>
-                  <span className="text-[11px] font-semibold text-slate-400 flex-shrink-0">
-                    {answeredCount} / {currentAxis.questions.length}
+                  <h2 className="text-base font-black text-slate-900">{currentAxis.title}</h2>
+                  <span className="text-xs font-semibold text-slate-400">
+                    {answeredCount} / {currentAxis.questions.length} Cevaplandı
                   </span>
                 </div>
-                <p className="text-slate-500 text-xs hidden sm:block truncate mb-2">{currentAxis.intro}</p>
+                <p className="text-slate-500 text-xs truncate mb-2">{currentAxis.intro}</p>
 
-                {/* VURGULU ÖLÇEK ALANI */}
+                {/* TERS DOLDURMAYI KESİNLİKLE ÖNLEYEN VURGULU ÖLÇEK ALANI */}
                 <div className="space-y-1 my-1">
-                  <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-bold text-slate-500 px-0.5">
+                  <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 px-1">
                     <span className="flex items-center gap-1 text-slate-700">
-                      <span className="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
-                      1 = En Düşük
+                      <span className="h-2 w-2 rounded-full bg-slate-400"></span>
+                      1 = En Düşük Seviye (Hiç Yok)
                     </span>
-                    <span className="text-[9px] sm:text-[10px] text-slate-400 font-medium">Ölçek (1-5)</span>
+                    <span className="text-[10px] text-slate-400 font-medium">Değerlendirme Ölçeği (1-5)</span>
                     <span className="flex items-center gap-1 text-blue-900 font-black">
-                      5 = En Yüksek
-                      <span className="h-1.5 w-1.5 rounded-full bg-blue-900"></span>
+                      5 = En Yüksek Seviye (Tam Entegre)
+                      <span className="h-2 w-2 rounded-full bg-blue-900"></span>
                     </span>
                   </div>
 
-                  <div className="bg-gradient-to-r from-slate-100 via-slate-50 to-blue-50 border border-slate-200/90 rounded-lg py-1 px-2 flex items-center justify-between text-[10px] font-bold shadow-inner overflow-x-auto whitespace-nowrap gap-1">
-                    <span className="text-slate-600 bg-white px-1.5 py-0.5 rounded border border-slate-200">
+                  <div className="bg-gradient-to-r from-slate-100 via-slate-50 to-blue-50 border border-slate-200/90 rounded-lg py-1.5 px-3 flex items-center justify-between text-[11px] font-bold shadow-inner">
+                    <span className="text-slate-600 bg-white px-2 py-0.5 rounded border border-slate-200 shadow-2xs">
                       1: {SCALE_LABELS[0]}
                     </span>
                     <span className="text-slate-500">2: {SCALE_LABELS[1]}</span>
                     <span className="text-slate-600">3: {SCALE_LABELS[2]}</span>
                     <span className="text-slate-700">4: {SCALE_LABELS[3]}</span>
-                    <span className="text-blue-950 bg-blue-100/90 px-1.5 py-0.5 rounded border border-blue-200 font-black">
+                    <span className="text-blue-950 bg-blue-100/90 px-2 py-0.5 rounded border border-blue-200 shadow-2xs font-black">
                       5: {SCALE_LABELS[4]}
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* Sorular */}
-              <div className="flex-grow flex flex-col justify-around py-1 space-y-2 sm:space-y-1">
+              <div className="flex-grow flex flex-col justify-around py-1 space-y-1">
                 {currentAxis.questions.map((q, qi) => {
                   const val = answers[`${currentAxis.id}-${qi}`];
                   const isAnswered = val !== undefined;
@@ -669,7 +671,7 @@ export default function App() {
                       }`}
                     >
                       <div className="flex items-start gap-2 max-w-xl">
-                        <span className={`flex-shrink-0 h-4 w-4 sm:h-5 sm:w-5 rounded-full text-[10px] sm:text-[11px] font-bold flex items-center justify-center mt-0.5 ${
+                        <span className={`flex-shrink-0 h-5 w-5 rounded-full text-[11px] font-bold flex items-center justify-center mt-0.5 ${
                           isAnswered ? "bg-blue-900 text-white" : "bg-slate-200 text-slate-600"
                         }`}>
                           {qi + 1}
@@ -679,15 +681,14 @@ export default function App() {
                         </p>
                       </div>
 
-                      {/* 1-5 Butonları */}
-                      <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0 justify-between sm:justify-end w-full sm:w-auto pt-1 sm:pt-0 border-t sm:border-0 border-slate-100">
+                      <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0 self-end sm:self-center">
                         {[1, 2, 3, 4, 5].map((v) => {
                           const active = val === v;
                           return (
                             <button
                               key={v}
                               onClick={() => setAnswer(qi, v)}
-                              className={`h-9 w-9 sm:h-8 sm:w-11 rounded-md font-black text-xs transition-all border flex items-center justify-center flex-1 sm:flex-initial ${
+                              className={`h-8 w-10 sm:h-8 sm:w-11 rounded-md font-black text-xs transition-all border flex items-center justify-center ${
                                 active
                                   ? "bg-blue-900 text-white border-blue-900 shadow-sm scale-105"
                                   : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100 hover:border-slate-300"
@@ -703,21 +704,20 @@ export default function App() {
                 })}
               </div>
 
-              {/* Navigasyon Alt Barı */}
-              <div className="flex items-center justify-between pt-2 border-t border-slate-100 flex-shrink-0 mt-2">
+              <div className="flex items-center justify-between pt-2 border-t border-slate-100 flex-shrink-0 mt-1">
                 <button
                   onClick={goPrevAxis}
                   disabled={axisIndex === 0}
-                  className="px-3.5 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs rounded-lg transition-all flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
+                  className="px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs rounded-lg transition-all flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
                 >
-                  <ArrowLeft size={14} /> <span className="hidden sm:inline">Önceki Eksen</span>
+                  <ArrowLeft size={14} /> Önceki Eksen
                 </button>
                 <button
                   onClick={goNextAxis}
                   disabled={!axisComplete}
-                  className="px-5 py-2 bg-blue-900 hover:bg-blue-800 text-white font-bold text-xs rounded-lg transition-all shadow-md flex items-center gap-1 disabled:bg-slate-300 disabled:cursor-not-allowed"
+                  className="px-6 py-2 bg-blue-900 hover:bg-blue-800 text-white font-bold text-xs rounded-lg transition-all shadow-md flex items-center gap-1.5 disabled:bg-slate-300 disabled:cursor-not-allowed"
                 >
-                  <span>{axisIndex === AXES.length - 1 ? "Sonucu Gör" : "Sonraki Eksen"}</span> <ArrowRight size={14} />
+                  {axisIndex === AXES.length - 1 ? "Sonucu Gör" : "Sonraki Eksen"} <ArrowRight size={14} />
                 </button>
               </div>
 
@@ -727,11 +727,11 @@ export default function App() {
 
         {/* EKRAN 3: RESULTS */}
         {screen === "results" && (
-          <div className="space-y-6 sm:space-y-8 max-w-4xl mx-auto">
-            <div className="bg-white border border-slate-200 rounded-xl p-5 sm:p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-8 max-w-4xl mx-auto">
+            <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 {firmName && <div className="text-xs font-bold text-blue-900 uppercase tracking-wider mb-1">{firmName}</div>}
-                <h2 className="text-xl sm:text-2xl font-bold text-slate-900">Dijital Olgunluk Sonucu</h2>
+                <h2 className="text-2xl font-bold text-slate-900">Dijital Olgunluk Sonucu</h2>
                 <p className="text-xs text-slate-500 mt-1">{level.desc}</p>
               </div>
               <button
@@ -746,9 +746,9 @@ export default function App() {
                   }
                 }}
                 disabled={pdfState === "generating"}
-                className="w-full sm:w-auto px-5 py-2.5 bg-blue-900 hover:bg-blue-800 text-white font-semibold text-xs sm:text-sm rounded-lg transition-all flex items-center justify-center gap-2 shadow-sm"
+                className="px-5 py-2.5 bg-blue-900 hover:bg-blue-800 text-white font-semibold text-sm rounded-lg transition-all flex items-center justify-center gap-2 shadow-sm"
               >
-                <Download size={16} /> {pdfState === "generating" ? "Hazırlanıyor…" : "Raporu PDF İndir"}
+                <Download size={16} /> {pdfState === "generating" ? "Rapor Hazırlanıyor…" : "Raporu PDF Olarak İndir"}
               </button>
             </div>
 
@@ -758,12 +758,12 @@ export default function App() {
               </p>
             )}
 
-            <div className="bg-white border border-slate-200 rounded-xl p-5 sm:p-8 shadow-sm grid md:grid-cols-2 gap-6 sm:gap-8 items-center">
+            <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-sm grid md:grid-cols-2 gap-8 items-center">
               <div className="text-center md:border-r md:border-slate-100 md:pr-8">
                 <Gauge value={overall} />
-                <div className="text-lg sm:text-xl font-extrabold text-blue-900 mt-2">{level.name}</div>
-                <div className="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider mt-0.5 mb-4">GENEL OLGUNLUK PUANI · 5 ÜZERİNDEN</div>
-                <div className="p-3 bg-slate-50 border border-slate-100 rounded-lg text-left text-xs text-slate-700 leading-relaxed">
+                <div className="text-xl font-extrabold text-blue-900 mt-2">{level.name}</div>
+                <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mt-0.5 mb-4">GENEL OLGUNLUK PUANI · 5 ÜZERİNDEN</div>
+                <div className="p-3.5 bg-slate-50 border border-slate-100 rounded-lg text-left text-xs text-slate-700 leading-relaxed">
                   <strong className="text-slate-900 block mb-1">Öncelik:</strong> {level.recommendation}
                 </div>
               </div>
@@ -784,28 +784,28 @@ export default function App() {
                   const colorCfg = getScoreColorConfig(s);
                   const guide = axisLevelGuide(a, s);
                   return (
-                    <div key={a.id} className="bg-white border border-slate-200 rounded-xl p-4 sm:p-5 shadow-sm space-y-3">
+                    <div key={a.id} className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
                       <div className="flex items-center justify-between gap-2">
-                        <span className="text-xs sm:text-sm font-bold text-slate-900">{a.no} {a.title}</span>
-                        <span className={`text-xs font-extrabold px-2.5 py-0.5 rounded-full border ${colorCfg.badgeBg}`}>
+                        <span className="text-sm font-bold text-slate-900">{a.no} {a.title}</span>
+                        <span className={`text-xs font-extrabold px-3 py-1 rounded-full border ${colorCfg.badgeBg}`}>
                           {s.toFixed(2)} / 5.00
                         </span>
                       </div>
-                      <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                      <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
                         <div className={`h-full ${colorCfg.barBg} rounded-full transition-all duration-500`} style={{ width: `${(s / 5) * 100}%` }} />
                       </div>
                       <div className="flex items-center justify-between text-xs">
-                        <span className={`font-bold uppercase tracking-wider text-[11px] ${colorCfg.text}`}>
+                        <span className={`font-bold uppercase tracking-wider ${colorCfg.text}`}>
                           SEVİYE {guide.level} — {guide.name.toUpperCase()}
                         </span>
-                        <span className="text-[10px] sm:text-[11px] font-medium text-slate-400">
+                        <span className="text-[11px] font-medium text-slate-400">
                           {colorCfg.label}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-600 leading-relaxed bg-slate-50/60 p-2.5 sm:p-3 rounded-lg border border-slate-100">{guide.description}</p>
+                      <p className="text-xs text-slate-600 leading-relaxed bg-slate-50/60 p-3 rounded-lg border border-slate-100">{guide.description}</p>
                       
                       <div className="p-3 bg-blue-50/50 border border-blue-100 rounded-xl space-y-1">
-                        <div className="text-[10px] sm:text-[11px] font-extrabold text-blue-950 uppercase tracking-wider flex items-center gap-1.5">
+                        <div className="text-[11px] font-extrabold text-blue-950 uppercase tracking-wider flex items-center gap-1.5">
                           <span className="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
                           Stratejik Aksiyon Yol Haritası
                         </div>
@@ -825,7 +825,7 @@ export default function App() {
                 <div className="grid gap-3">
                   {weakAxes.map((a) => (
                     <div key={a.id} className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm space-y-2">
-                      <div className="text-xs sm:text-sm font-bold text-slate-900">{a.title}</div>
+                      <div className="text-sm font-bold text-slate-900">{a.title}</div>
                       <div className="space-y-2">
                         {a.resources.map((r) => (
                           <div key={r.name} className="flex items-center justify-between gap-3 p-2 bg-slate-50 rounded-lg">
@@ -835,9 +835,9 @@ export default function App() {
                                 href={r.url}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="px-2.5 py-1 bg-white border border-slate-200 hover:border-blue-900 text-slate-800 text-xs font-semibold rounded transition-colors inline-flex items-center gap-1 flex-shrink-0"
+                                className="px-3 py-1 bg-white border border-slate-200 hover:border-blue-900 text-slate-800 text-xs font-semibold rounded transition-colors inline-flex items-center gap-1.5 flex-shrink-0"
                               >
-                                Git <ExternalLink size={12} />
+                                Kaynağa Git <ExternalLink size={12} />
                               </a>
                             )}
                           </div>
@@ -849,20 +849,20 @@ export default function App() {
               </div>
             )}
 
-            <div className="bg-white border border-slate-200 rounded-xl p-5 sm:p-6 shadow-sm space-y-4">
+            <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
               <div className="flex items-start gap-3">
                 <CircleCheck className="text-emerald-600 flex-shrink-0 mt-0.5" size={20} />
                 <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">Ücretsiz Eğitimlerden Haberdar Olun</h4>
+                  <h4 className="text-sm font-bold text-slate-900">Ücretsiz Eğitimlerden Haberdar Olun</h4>
                   <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-                    Çorlu TSO'nun Dijital Dönüşüm, Yapay Zeka ve Yeşil Dönüşüm/SKDM eğitimlerinden haberdar olmak için bilgilerinizi bırakabilirsiniz.
+                    Çorlu TSO'nun Dijital Dönüşüm, Yapay Zeka ve Yeşil Dönüşüm/SKDM konularındaki ücretsiz eğitimlerinden haberdar olmak isterseniz, iletişim bilgilerinizi bırakabilirsiniz.
                   </p>
                 </div>
               </div>
 
               {trainingState === "saved" ? (
                 <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-800 font-semibold">
-                  ✓ Kaydınız alındı. Eğitim duyuruları tarafınıza iletilecektir.
+                  ✓ Kaydınız alındı. Eğitim duyuruları e-posta/telefon ile size iletilecek.
                 </div>
               ) : (
                 <div className="grid sm:grid-cols-2 gap-3 pt-1">
@@ -893,14 +893,14 @@ export default function App() {
                     setTrainingState(ok ? "saved" : "error");
                   }}
                   disabled={!trainingEmail || trainingState === "saving"}
-                  className="w-full sm:w-auto px-5 py-2.5 bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold rounded-lg transition-all disabled:opacity-50"
+                  className="px-5 py-2.5 bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold rounded-lg transition-all disabled:opacity-50"
                 >
                   {trainingState === "saving" ? "Kaydediliyor…" : "Eğitim Bildirimlerine Kaydol"}
                 </button>
               )}
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-xl p-5 sm:p-6 shadow-sm space-y-3">
+            <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-3">
               <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Destek Programları</h4>
               <div className="grid gap-2">
                 {SUPPORT_PROGRAMS.map((p) => (
@@ -918,17 +918,17 @@ export default function App() {
               </div>
             </div>
 
-            <div className="bg-blue-50/50 border border-blue-200/80 rounded-xl p-5 sm:p-6 space-y-3">
+            <div className="bg-blue-50/50 border border-blue-200/80 rounded-xl p-6 space-y-3">
               <div className="text-xs font-bold text-blue-900 uppercase tracking-wider">BİLİMSEL METODOLOJİ VE KAYNAKÇA</div>
-              <div className="text-xs sm:text-sm font-bold text-slate-900">Bu değerlendirme neye dayanıyor?</div>
+              <div className="text-sm font-bold text-slate-900">Bu değerlendirme neye dayanıyor?</div>
               <p className="text-xs text-slate-600 leading-relaxed">
                 Bu araç; acatech Industrie 4.0 Maturity Index, WEF SIRI, Fraunhofer IMPULS, MIT & Capgemini, AB EDIH Open DMAT, ISO/IEC 33001 ve NIST çerçevelerinden esinlenerek Çorlu Ticaret ve Sanayi Odası tarafından özgün olarak geliştirilmiştir.
               </p>
               <button
                 onClick={() => setShowMethodology(true)}
-                className="w-full sm:w-auto px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold rounded-lg transition-colors"
+                className="px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold rounded-lg transition-colors"
               >
-                Metodolojiyi İncele
+                Detaylı Metodolojiyi ve Kaynakçayı Gör
               </button>
             </div>
 
@@ -945,10 +945,10 @@ export default function App() {
       </main>
 
       {screen !== "intro" && (
-        <footer className="border-t border-slate-200 bg-white py-4 sm:py-6 text-center text-xs text-slate-500 flex-shrink-0">
+        <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500 flex-shrink-0">
           <div className="max-w-4xl mx-auto px-4">
             <p className="font-semibold text-slate-700">Çorlu Ticaret ve Sanayi Odası © {new Date().getFullYear()}</p>
-            <p className="mt-0.5 text-[11px] text-slate-400">Dijital Dönüşüm Hizmetleri</p>
+            <p className="mt-1 text-[11px] text-slate-400">Dijital Dönüşüm Hizmetleri</p>
           </div>
         </footer>
       )}
