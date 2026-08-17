@@ -393,7 +393,7 @@ export default function App() {
           <div className="hidden md:flex items-center">
             <div className="text-right">
               <div className="text-[11px] font-medium text-slate-300 tracking-wide">
-                KOBİ Ön-Tarama ve Danışmanlık Hizmeti
+                Ön-Tarama ve Danışmanlık Hizmeti
               </div>
             </div>
           </div>
