@@ -342,17 +342,14 @@ export default function App() {
 
   return (
     <div className={`font-sans text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900 h-screen max-h-screen overflow-hidden flex flex-col relative ${
-      screen === "quiz" ? "bg-slate-900/5" : "bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40"
+      screen === "quiz" ? "bg-slate-900/5" : "bg-gradient-to-tr from-slate-100 via-sky-50/70 to-blue-100/60"
     } ${screen === "results" ? "!h-auto !max-h-none !overflow-visible min-h-screen" : ""}`}>
       
-      {/* ŞIK ARKA PLAN DESENLERİ VE IŞIK EFEKTLERİ */}
+      {/* ÇOK DAHA DİNAMİK VE RENKLİ ARKA PLAN IŞIK EFEKTLERİ / ORB'LER */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        {/* Çok hafif modern grid deseni */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-40"></div>
-        
-        {/* Üst köşe yumuşak mavi/amber parıltı */}
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/3 -left-20 w-80 h-80 bg-amber-400/10 rounded-full blur-3xl"></div>
+        <div className="absolute -top-32 -left-32 w-96 h-96 bg-blue-500/20 rounded-full blur-[100px] animate-pulse"></div>
+        <div className="absolute top-1/4 -right-32 w-[30rem] h-[30rem] bg-indigo-500/15 rounded-full blur-[120px]"></div>
+        <div className="absolute -bottom-32 left-1/3 w-96 h-96 bg-amber-400/15 rounded-full blur-[100px]"></div>
       </div>
       
       {/* ==================== HEADER ==================== */}
@@ -418,7 +415,7 @@ export default function App() {
         <div className="h-[2px] w-full bg-gradient-to-r from-amber-600/20 via-amber-400/80 to-amber-600/20"></div>
       </header>
 
-      {/* ANA İÇERİK KONTEYNERİ (relative z-10 eklenerek arka plan deseninin üstüne alındı) */}
+      {/* ANA İÇERİK KONTEYNERİ */}
       <main className={`max-w-5xl mx-auto px-4 w-full relative z-10 ${
         screen === "quiz" ? "flex-grow flex flex-col justify-between py-2 overflow-hidden"
         : screen === "intro" ? "flex-grow flex flex-col justify-center py-2 overflow-hidden"
@@ -429,7 +426,7 @@ export default function App() {
         {/* EKRAN 1: INTRO */}
         {screen === "intro" && (
           <div className="space-y-3 max-w-4xl mx-auto w-full overflow-y-auto" style={{ maxHeight: "calc(100vh - 90px)" }}>
-            <div className="bg-white border border-slate-200/80 rounded-xl p-4 sm:p-5 shadow-sm relative overflow-hidden">
+            <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-xl p-4 sm:p-5 shadow-lg relative overflow-hidden">
               <div className="flex items-center gap-2 text-[11px] font-bold text-blue-900 uppercase tracking-wider mb-1.5">
                 <ShieldCheck size={16} className="text-amber-600" />
                 <span>ÇORLU TİCARET VE SANAYİ ODASI DİJİTAL DÖNÜŞÜM HİZMETİ</span>
@@ -459,7 +456,7 @@ export default function App() {
 
             <div 
               onClick={() => setShowMethodology(true)}
-              className="bg-slate-950 text-white rounded-xl p-3.5 shadow-sm border border-slate-800 flex items-center justify-between gap-4 cursor-pointer hover:bg-slate-900 transition-all group"
+              className="bg-slate-950 text-white rounded-xl p-3.5 shadow-lg border border-slate-800 flex items-center justify-between gap-4 cursor-pointer hover:bg-slate-900 transition-all group"
             >
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-blue-950 border border-blue-800 rounded-lg text-amber-400 flex-shrink-0">
@@ -479,11 +476,11 @@ export default function App() {
               </div>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+            <div className="bg-white/90 backdrop-blur-md border border-slate-200 rounded-xl p-4 shadow-md">
               <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2.5">DEĞERLENDİRME EKSENLERİ</h3>
               <div className="grid sm:grid-cols-2 gap-2">
                 {AXES.map((a) => (
-                  <div key={a.id} className="flex items-center gap-2.5 p-2 rounded-lg border border-slate-100 bg-slate-50/50">
+                  <div key={a.id} className="flex items-center gap-2.5 p-2 rounded-lg border border-slate-100 bg-slate-50/80">
                     <span className="text-[11px] font-bold text-blue-900 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100">{a.no}</span>
                     <span className="text-xs font-medium text-slate-800">{a.title}</span>
                   </div>
@@ -491,7 +488,7 @@ export default function App() {
               </div>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm space-y-2.5">
+            <div className="bg-white/90 backdrop-blur-md border border-slate-200 rounded-xl p-4 shadow-md space-y-2.5">
               <div>
                 <label className="block text-xs font-semibold text-slate-800 mb-1">
                   Firma adı <span className="text-slate-400 font-normal">(opsiyonel)</span>
@@ -583,7 +580,7 @@ export default function App() {
         {screen === "quiz" && (
           <div className="h-full flex flex-col justify-between space-y-2 overflow-hidden">
             
-            <div className="bg-white border border-slate-200 rounded-xl p-2.5 shadow-sm flex-shrink-0 space-y-2">
+            <div className="bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-2.5 shadow-md flex-shrink-0 space-y-2">
               <div className="flex items-center justify-between text-xs font-bold text-slate-700 px-1">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-black text-amber-600 uppercase tracking-widest bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
@@ -627,7 +624,7 @@ export default function App() {
               </div>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-md flex-grow flex flex-col justify-between overflow-hidden">
+            <div className="bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-4 shadow-lg flex-grow flex flex-col justify-between overflow-hidden">
               
               <div className="flex-shrink-0 border-b border-slate-100 pb-2 mb-2">
                 <div className="flex items-center justify-between gap-2 mb-1">
@@ -676,7 +673,7 @@ export default function App() {
                       key={qi} 
                       className={`flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2 sm:p-2.5 rounded-lg border transition-all ${
                         isAnswered 
-                          ? "bg-blue-50/40 border-blue-200" 
+                          ? "bg-blue-50/60 border-blue-200" 
                           : "bg-white border-slate-100 hover:border-slate-200"
                       }`}
                     >
@@ -738,7 +735,7 @@ export default function App() {
         {/* EKRAN 3: RESULTS */}
         {screen === "results" && (
           <div className="space-y-8 max-w-4xl mx-auto">
-            <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-6 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 {firmName && <div className="text-xs font-bold text-blue-900 uppercase tracking-wider mb-1">{firmName}</div>}
                 <h2 className="text-2xl font-bold text-slate-900">Dijital Olgunluk Sonucu</h2>
@@ -768,7 +765,7 @@ export default function App() {
               </p>
             )}
 
-            <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-sm grid md:grid-cols-2 gap-8 items-center">
+            <div className="bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-6 sm:p-8 shadow-lg grid md:grid-cols-2 gap-8 items-center">
               <div className="text-center md:border-r md:border-slate-100 md:pr-8">
                 <Gauge value={overall} />
                 <div className="text-xl font-extrabold text-blue-900 mt-2">{level.name}</div>
@@ -794,7 +791,7 @@ export default function App() {
                   const colorCfg = getScoreColorConfig(s);
                   const guide = axisLevelGuide(a, s);
                   return (
-                    <div key={a.id} className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
+                    <div key={a.id} className="bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-5 shadow-md space-y-3">
                       <div className="flex items-center justify-between gap-2">
                         <span className="text-sm font-bold text-slate-900">{a.no} {a.title}</span>
                         <span className={`text-xs font-extrabold px-3 py-1 rounded-full border ${colorCfg.badgeBg}`}>
@@ -834,7 +831,7 @@ export default function App() {
                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">ÖNCELİKLİ GELİŞİM ALANLARI İÇİN ÖNERİLEN KAYNAKLAR</h3>
                 <div className="grid gap-3">
                   {weakAxes.map((a) => (
-                    <div key={a.id} className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm space-y-2">
+                    <div key={a.id} className="bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-4 shadow-md space-y-2">
                       <div className="text-sm font-bold text-slate-900">{a.title}</div>
                       <div className="space-y-2">
                         {a.resources.map((r) => (
@@ -859,7 +856,7 @@ export default function App() {
               </div>
             )}
 
-            <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
+            <div className="bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-6 shadow-lg space-y-4">
               <div className="flex items-start gap-3">
                 <CircleCheck className="text-emerald-600 flex-shrink-0 mt-0.5" size={20} />
                 <div>
@@ -910,7 +907,7 @@ export default function App() {
               )}
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-3">
+            <div className="bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-6 shadow-lg space-y-3">
               <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Destek Programları</h4>
               <div className="grid gap-2">
                 {SUPPORT_PROGRAMS.map((p) => (
@@ -928,7 +925,7 @@ export default function App() {
               </div>
             </div>
 
-            <div className="bg-blue-50/50 border border-blue-200/80 rounded-xl p-6 space-y-3">
+            <div className="bg-blue-50/70 backdrop-blur-md border border-blue-200/80 rounded-xl p-6 space-y-3 shadow-md">
               <div className="text-xs font-bold text-blue-900 uppercase tracking-wider">BİLİMSEL METODOLOJİ VE KAYNAKÇA</div>
               <div className="text-sm font-bold text-slate-900">Bu değerlendirme neye dayanıyor?</div>
               <p className="text-xs text-slate-600 leading-relaxed">
@@ -945,7 +942,7 @@ export default function App() {
             <div className="pt-2 flex justify-center">
               <button
                 onClick={restart}
-                className="px-6 py-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-lg transition-all flex items-center gap-2"
+                className="px-6 py-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-lg transition-all flex items-center gap-2 shadow-sm"
               >
                 <RotateCcw size={14} /> Yeniden Başlat
               </button>
