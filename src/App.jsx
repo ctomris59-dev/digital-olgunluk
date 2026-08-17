@@ -341,19 +341,20 @@ export default function App() {
   );
 
   return (
-    <div className={`font-sans text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900 h-screen max-h-screen overflow-hidden flex flex-col relative ${
-      screen === "quiz" ? "bg-slate-900/5" : "bg-gradient-to-tr from-slate-100 via-sky-50/70 to-blue-100/60"
-    } ${screen === "results" ? "!h-auto !max-h-none !overflow-visible min-h-screen" : ""}`}>
+    <div className={`font-sans text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900 h-screen max-h-screen overflow-hidden flex flex-col relative bg-slate-950 ${
+      screen === "results" ? "!h-auto !max-h-none !overflow-visible min-h-screen" : ""
+    }`}>
       
-      {/* ÇOK DAHA DİNAMİK VE RENKLİ ARKA PLAN IŞIK EFEKTLERİ / ORB'LER */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute -top-32 -left-32 w-96 h-96 bg-blue-500/20 rounded-full blur-[100px] animate-pulse"></div>
-        <div className="absolute top-1/4 -right-32 w-[30rem] h-[30rem] bg-indigo-500/15 rounded-full blur-[120px]"></div>
-        <div className="absolute -bottom-32 left-1/3 w-96 h-96 bg-amber-400/15 rounded-full blur-[100px]"></div>
+      {/* ÇOK RENKLİ, CANLI VE HAREKETLİ MESH GRADIENT & ORB EFEKTLERİ */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 opacity-80">
+        <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-blue-600/30 blur-[120px] animate-pulse"></div>
+        <div className="absolute top-[30%] right-[-10%] w-[45vw] h-[45vw] rounded-full bg-indigo-600/25 blur-[140px]"></div>
+        <div className="absolute bottom-[-10%] left-[20%] w-[50vw] h-[50vw] rounded-full bg-amber-500/20 blur-[130px] animate-pulse"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:24px_24px] opacity-15"></div>
       </div>
       
       {/* ==================== HEADER ==================== */}
-      <header className="bg-[#091538] border-b border-amber-500/30 text-white flex-shrink-0 shadow-xl relative z-40">
+      <header className="bg-[#091538]/90 backdrop-blur-md border-b border-amber-500/30 text-white flex-shrink-0 shadow-2xl relative z-40">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between">
           
           <div className="flex items-center gap-3 sm:gap-4">
@@ -426,7 +427,7 @@ export default function App() {
         {/* EKRAN 1: INTRO */}
         {screen === "intro" && (
           <div className="space-y-3 max-w-4xl mx-auto w-full overflow-y-auto" style={{ maxHeight: "calc(100vh - 90px)" }}>
-            <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-xl p-4 sm:p-5 shadow-lg relative overflow-hidden">
+            <div className="bg-white/95 backdrop-blur-xl border border-white/20 rounded-xl p-4 sm:p-5 shadow-2xl relative overflow-hidden">
               <div className="flex items-center gap-2 text-[11px] font-bold text-blue-900 uppercase tracking-wider mb-1.5">
                 <ShieldCheck size={16} className="text-amber-600" />
                 <span>ÇORLU TİCARET VE SANAYİ ODASI DİJİTAL DÖNÜŞÜM HİZMETİ</span>
@@ -456,7 +457,7 @@ export default function App() {
 
             <div 
               onClick={() => setShowMethodology(true)}
-              className="bg-slate-950 text-white rounded-xl p-3.5 shadow-lg border border-slate-800 flex items-center justify-between gap-4 cursor-pointer hover:bg-slate-900 transition-all group"
+              className="bg-slate-900/90 backdrop-blur-xl text-white rounded-xl p-3.5 shadow-2xl border border-slate-700 flex items-center justify-between gap-4 cursor-pointer hover:bg-slate-800 transition-all group"
             >
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-blue-950 border border-blue-800 rounded-lg text-amber-400 flex-shrink-0">
@@ -476,11 +477,11 @@ export default function App() {
               </div>
             </div>
 
-            <div className="bg-white/90 backdrop-blur-md border border-slate-200 rounded-xl p-4 shadow-md">
+            <div className="bg-white/95 backdrop-blur-xl border border-white/20 rounded-xl p-4 shadow-2xl">
               <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2.5">DEĞERLENDİRME EKSENLERİ</h3>
               <div className="grid sm:grid-cols-2 gap-2">
                 {AXES.map((a) => (
-                  <div key={a.id} className="flex items-center gap-2.5 p-2 rounded-lg border border-slate-100 bg-slate-50/80">
+                  <div key={a.id} className="flex items-center gap-2.5 p-2 rounded-lg border border-slate-100 bg-slate-50/90">
                     <span className="text-[11px] font-bold text-blue-900 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100">{a.no}</span>
                     <span className="text-xs font-medium text-slate-800">{a.title}</span>
                   </div>
@@ -488,7 +489,7 @@ export default function App() {
               </div>
             </div>
 
-            <div className="bg-white/90 backdrop-blur-md border border-slate-200 rounded-xl p-4 shadow-md space-y-2.5">
+            <div className="bg-white/95 backdrop-blur-xl border border-white/20 rounded-xl p-4 shadow-2xl space-y-2.5">
               <div>
                 <label className="block text-xs font-semibold text-slate-800 mb-1">
                   Firma adı <span className="text-slate-400 font-normal">(opsiyonel)</span>
@@ -580,7 +581,7 @@ export default function App() {
         {screen === "quiz" && (
           <div className="h-full flex flex-col justify-between space-y-2 overflow-hidden">
             
-            <div className="bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-2.5 shadow-md flex-shrink-0 space-y-2">
+            <div className="bg-white/95 backdrop-blur-xl border border-white/20 rounded-xl p-2.5 shadow-2xl flex-shrink-0 space-y-2">
               <div className="flex items-center justify-between text-xs font-bold text-slate-700 px-1">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-black text-amber-600 uppercase tracking-widest bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
@@ -624,7 +625,7 @@ export default function App() {
               </div>
             </div>
 
-            <div className="bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-4 shadow-lg flex-grow flex flex-col justify-between overflow-hidden">
+            <div className="bg-white/95 backdrop-blur-xl border border-white/20 rounded-xl p-4 shadow-2xl flex-grow flex flex-col justify-between overflow-hidden">
               
               <div className="flex-shrink-0 border-b border-slate-100 pb-2 mb-2">
                 <div className="flex items-center justify-between gap-2 mb-1">
@@ -735,7 +736,7 @@ export default function App() {
         {/* EKRAN 3: RESULTS */}
         {screen === "results" && (
           <div className="space-y-8 max-w-4xl mx-auto">
-            <div className="bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-6 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="bg-white/95 backdrop-blur-xl border border-white/20 rounded-xl p-6 shadow-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 {firmName && <div className="text-xs font-bold text-blue-900 uppercase tracking-wider mb-1">{firmName}</div>}
                 <h2 className="text-2xl font-bold text-slate-900">Dijital Olgunluk Sonucu</h2>
@@ -765,7 +766,7 @@ export default function App() {
               </p>
             )}
 
-            <div className="bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-6 sm:p-8 shadow-lg grid md:grid-cols-2 gap-8 items-center">
+            <div className="bg-white/95 backdrop-blur-xl border border-white/20 rounded-xl p-6 sm:p-8 shadow-2xl grid md:grid-cols-2 gap-8 items-center">
               <div className="text-center md:border-r md:border-slate-100 md:pr-8">
                 <Gauge value={overall} />
                 <div className="text-xl font-extrabold text-blue-900 mt-2">{level.name}</div>
@@ -791,7 +792,7 @@ export default function App() {
                   const colorCfg = getScoreColorConfig(s);
                   const guide = axisLevelGuide(a, s);
                   return (
-                    <div key={a.id} className="bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-5 shadow-md space-y-3">
+                    <div key={a.id} className="bg-white/95 backdrop-blur-xl border border-white/20 rounded-xl p-5 shadow-2xl space-y-3">
                       <div className="flex items-center justify-between gap-2">
                         <span className="text-sm font-bold text-slate-900">{a.no} {a.title}</span>
                         <span className={`text-xs font-extrabold px-3 py-1 rounded-full border ${colorCfg.badgeBg}`}>
@@ -831,7 +832,7 @@ export default function App() {
                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">ÖNCELİKLİ GELİŞİM ALANLARI İÇİN ÖNERİLEN KAYNAKLAR</h3>
                 <div className="grid gap-3">
                   {weakAxes.map((a) => (
-                    <div key={a.id} className="bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-4 shadow-md space-y-2">
+                    <div key={a.id} className="bg-white/95 backdrop-blur-xl border border-white/20 rounded-xl p-4 shadow-2xl space-y-2">
                       <div className="text-sm font-bold text-slate-900">{a.title}</div>
                       <div className="space-y-2">
                         {a.resources.map((r) => (
@@ -856,7 +857,7 @@ export default function App() {
               </div>
             )}
 
-            <div className="bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-6 shadow-lg space-y-4">
+            <div className="bg-white/95 backdrop-blur-xl border border-white/20 rounded-xl p-6 shadow-2xl space-y-4">
               <div className="flex items-start gap-3">
                 <CircleCheck className="text-emerald-600 flex-shrink-0 mt-0.5" size={20} />
                 <div>
@@ -907,7 +908,7 @@ export default function App() {
               )}
             </div>
 
-            <div className="bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-6 shadow-lg space-y-3">
+            <div className="bg-white/95 backdrop-blur-xl border border-white/20 rounded-xl p-6 shadow-2xl space-y-3">
               <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Destek Programları</h4>
               <div className="grid gap-2">
                 {SUPPORT_PROGRAMS.map((p) => (
@@ -925,7 +926,7 @@ export default function App() {
               </div>
             </div>
 
-            <div className="bg-blue-50/70 backdrop-blur-md border border-blue-200/80 rounded-xl p-6 space-y-3 shadow-md">
+            <div className="bg-blue-50/90 backdrop-blur-xl border border-blue-200/80 rounded-xl p-6 space-y-3 shadow-2xl">
               <div className="text-xs font-bold text-blue-900 uppercase tracking-wider">BİLİMSEL METODOLOJİ VE KAYNAKÇA</div>
               <div className="text-sm font-bold text-slate-900">Bu değerlendirme neye dayanıyor?</div>
               <p className="text-xs text-slate-600 leading-relaxed">
@@ -952,10 +953,10 @@ export default function App() {
       </main>
 
       {screen !== "intro" && (
-        <footer className="border-t border-slate-200/80 bg-white/80 backdrop-blur-md py-6 text-center text-xs text-slate-500 flex-shrink-0 relative z-10">
+        <footer className="border-t border-slate-800/80 bg-slate-900/80 backdrop-blur-md py-6 text-center text-xs text-slate-400 flex-shrink-0 relative z-10">
           <div className="max-w-4xl mx-auto px-4">
-            <p className="font-semibold text-slate-700">Çorlu Ticaret ve Sanayi Odası © {new Date().getFullYear()}</p>
-            <p className="mt-1 text-[11px] text-slate-400">Dijital Dönüşüm Hizmetleri</p>
+            <p className="font-semibold text-slate-300">Çorlu Ticaret ve Sanayi Odası © {new Date().getFullYear()}</p>
+            <p className="mt-1 text-[11px] text-slate-500">Dijital Dönüşüm Hizmetleri</p>
           </div>
         </footer>
       )}
