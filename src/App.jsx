@@ -341,11 +341,21 @@ export default function App() {
   );
 
   return (
-    <div className={`font-sans text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900 h-screen max-h-screen overflow-hidden flex flex-col ${
-      screen === "quiz" ? "bg-slate-100" : "bg-slate-50"
+    <div className={`font-sans text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900 h-screen max-h-screen overflow-hidden flex flex-col relative ${
+      screen === "quiz" ? "bg-slate-900/5" : "bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40"
     } ${screen === "results" ? "!h-auto !max-h-none !overflow-visible min-h-screen" : ""}`}>
       
-      {/* ==================== YÖNTEM 2: GELİŞTİRİLMİŞ JPG LOGOLU HEADER ==================== */}
+      {/* ŞIK ARKA PLAN DESENLERİ VE IŞIK EFEKTLERİ */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        {/* Çok hafif modern grid deseni */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-40"></div>
+        
+        {/* Üst köşe yumuşak mavi/amber parıltı */}
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/3 -left-20 w-80 h-80 bg-amber-400/10 rounded-full blur-3xl"></div>
+      </div>
+      
+      {/* ==================== HEADER ==================== */}
       <header className="bg-[#091538] border-b border-amber-500/30 text-white flex-shrink-0 shadow-xl relative z-40">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between">
           
@@ -408,8 +418,8 @@ export default function App() {
         <div className="h-[2px] w-full bg-gradient-to-r from-amber-600/20 via-amber-400/80 to-amber-600/20"></div>
       </header>
 
-      {/* ANA İÇERİK KONTEYNERİ */}
-      <main className={`max-w-5xl mx-auto px-4 w-full ${
+      {/* ANA İÇERİK KONTEYNERİ (relative z-10 eklenerek arka plan deseninin üstüne alındı) */}
+      <main className={`max-w-5xl mx-auto px-4 w-full relative z-10 ${
         screen === "quiz" ? "flex-grow flex flex-col justify-between py-2 overflow-hidden"
         : screen === "intro" ? "flex-grow flex flex-col justify-center py-2 overflow-hidden"
         : "py-8 sm:py-12 flex-grow"
@@ -945,7 +955,7 @@ export default function App() {
       </main>
 
       {screen !== "intro" && (
-        <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500 flex-shrink-0">
+        <footer className="border-t border-slate-200/80 bg-white/80 backdrop-blur-md py-6 text-center text-xs text-slate-500 flex-shrink-0 relative z-10">
           <div className="max-w-4xl mx-auto px-4">
             <p className="font-semibold text-slate-700">Çorlu Ticaret ve Sanayi Odası © {new Date().getFullYear()}</p>
             <p className="mt-1 text-[11px] text-slate-400">Dijital Dönüşüm Hizmetleri</p>
