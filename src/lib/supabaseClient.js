@@ -7,7 +7,7 @@ const key = import.meta.env.VITE_SUPABASE_ANON_KEY;
 // vermeden çalışmaya devam eder — sonuçlar sadece ekranda gösterilir, kaydedilmez.
 const supabase = url && key ? createClient(url, key) : null;
 
-export async function saveAssessment({ firmName, answers, scores, overall, levelName, consent }) {
+export async function saveAssessment({ firmName, contactName, email, phone, answers, scores, overall, levelName, consent }) {
   if (!supabase) {
     console.info(
       "[dijital-olgunluk] Supabase yapılandırılmamış — sonuç kaydedilmedi. " +
@@ -18,6 +18,9 @@ export async function saveAssessment({ firmName, answers, scores, overall, level
 
   const { error } = await supabase.from("assessments").insert({
     firm_name: firmName,
+    contact_name: contactName,
+    email,
+    phone,
     answers,
     scores,
     overall_score: overall,

@@ -260,6 +260,10 @@ const SUPPORT_PROGRAMS = [
 export default function App() {
   const [screen, setScreen] = useState("intro");
   const [firmName, setFirmName] = useState("");
+  const [contactName, setContactName] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
+  const [contactErrors, setContactErrors] = useState({});
   const [axisIndex, setAxisIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [consent, setConsent] = useState(false);
@@ -303,18 +307,7 @@ export default function App() {
     if (axisIndex < AXES.length - 1) {
       setAxisIndex(axisIndex + 1);
     } else {
-      setScreen("results");
-      setSaveState("saving");
-      saveAssessment({
-        firmName: firmName || null,
-        answers,
-        scores,
-        overall,
-        levelName: level.name,
-        consent: true,
-      })
-        .then((ok) => setSaveState(ok ? "saved" : "error"))
-        .catch(() => setSaveState("error"));
+      setScreen("contact");
     }
   };
 
@@ -324,10 +317,49 @@ export default function App() {
     }
   };
 
+  const validateContact = () => {
+    const errs = {};
+    if (!firmName.trim()) errs.firmName = "Firma adı zorunludur";
+    if (!contactName.trim()) errs.contactName = "Ad soyad zorunludur";
+    if (!contactEmail.trim()) errs.contactEmail = "E-posta zorunludur";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail.trim())) errs.contactEmail = "Geçerli bir e-posta girin";
+    if (!contactPhone.trim()) errs.contactPhone = "Telefon zorunludur";
+    else if (contactPhone.replace(/\D/g, "").length < 10) errs.contactPhone = "Geçerli bir telefon girin";
+    setContactErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const submitContactAndShowResults = async (e) => {
+    e.preventDefault();
+    if (!validateContact()) return;
+
+    setSaveState("saving");
+    const ok = await saveAssessment({
+      firmName: firmName.trim(),
+      contactName: contactName.trim(),
+      email: contactEmail.trim(),
+      phone: contactPhone.trim(),
+      answers,
+      scores,
+      overall,
+      levelName: level.name,
+      consent: true,
+    });
+    setSaveState(ok ? "saved" : "error");
+
+    if (!ok) return; // Kayıt başarısızsa sonuç ekranına geçilmez, kullanıcı tekrar deneyebilir.
+
+    setScreen("results");
+  };
+
   const restart = () => {
     setAnswers({});
     setAxisIndex(0);
     setFirmName("");
+    setContactName("");
+    setContactEmail("");
+    setContactPhone("");
+    setContactErrors({});
     setConsent(false);
     setSaveState("idle");
     setTrainingEmail("");
@@ -342,7 +374,7 @@ export default function App() {
 
   return (
     <div className={`font-sans text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900 h-screen max-h-screen overflow-hidden flex flex-col relative bg-gradient-to-br from-slate-100 via-blue-50/60 to-indigo-100/50 ${
-      screen === "results" ? "!h-auto !max-h-none !overflow-visible min-h-screen" : ""
+      screen === "results" || screen === "contact" ? "!h-auto !max-h-none !overflow-visible min-h-screen" : ""
     }`}>
       
       {/* ŞIK, CANLI VE DİNAMİK RENKLİ ARKA PLAN EFEKTLERİ */}
@@ -491,18 +523,6 @@ export default function App() {
 
             <div className="bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-4 shadow-xl space-y-2.5">
               <div>
-                <label className="block text-xs font-semibold text-slate-800 mb-1">
-                  Firma adı <span className="text-slate-400 font-normal">(opsiyonel)</span>
-                </label>
-                <input
-                  value={firmName}
-                  onChange={(e) => setFirmName(e.target.value)}
-                  placeholder="Örn. ABC Makine Sanayi"
-                  className="w-full sm:max-w-md px-3.5 py-2 text-xs bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent transition-all"
-                />
-              </div>
-
-              <div>
                 <label className="flex items-start gap-2.5 cursor-pointer">
                   <input
                     type="checkbox"
@@ -537,7 +557,7 @@ export default function App() {
               </div>
 
               <p className="text-[10px] text-slate-400 pt-2 border-t border-slate-100">
-                VERİ KULLANIMI: Cevaplarınız yalnızca firmanız için bu raporu oluşturmak ve size uygun destek programı önerilebilmesi için kullanılır.
+                VERİ KULLANIMI: Sonuç raporunuzu görüntüleyebilmeniz için değerlendirme bittiğinde firma adı, yetkili adı-soyadı, e-posta ve telefon bilgilerinizi isteyeceğiz.
               </p>
             </div>
           </div>
@@ -562,10 +582,11 @@ export default function App() {
               </div>
               <div className="text-xs text-slate-600 space-y-3 leading-relaxed">
                 <p><strong>Veri Sorumlusu:</strong> Çorlu Ticaret ve Sanayi Odası (Çorlu TSO), Çorlu / Tekirdağ.</p>
-                <p><strong>İşlenen Veriler:</strong> Firma adı (opsiyonel) ve bu değerlendirme formunda verdiğiniz cevaplar.</p>
-                <p><strong>İşleme Amacı:</strong> Firmanızın dijital olgunluk seviyesini ölçmek ve size özel bir sonuç raporu oluşturmaktır.</p>
-                <p><strong>Saklama Süresi:</strong> Verileriniz saklanmamaktadır.</p>
-                <p><strong>Paylaşım:</strong> Verileriniz yalnızca Çorlu TSO tarafından görülebilir; üçüncü kişi/kurumlarla paylaşılmaz.</p>
+                <p><strong>İşlenen Veriler:</strong> Firma unvanı, yetkili adı-soyadı, e-posta adresi, telefon numarası ile bu değerlendirme formunda verdiğiniz cevaplar ve hesaplanan olgunluk skorlarınız.</p>
+                <p><strong>İşleme Amacı:</strong> Firmanızın dijital olgunluk seviyesini ölçmek, size özel bir sonuç raporu sunmak ve Oda tarafından ilerleyen dönemde (öngörülen süre yaklaşık 6 ay) tarafınızla iletişime geçilerek gelişim sürecinizin takip edilmesidir.</p>
+                <p><strong>Hukuki Sebep:</strong> KVKK md. 5/1 uyarınca açık rızanıza dayanılarak işlenir.</p>
+                <p><strong>Saklama ve Güvenlik:</strong> Verileriniz, yalnızca Oda yetkilileri tarafından erişilebilen güvenli bir veritabanında saklanır; üçüncü kişi/kurumlarla paylaşılmaz veya ticari amaçla kullanılmaz.</p>
+                <p><strong>Haklarınız:</strong> KVKK md. 11 uyarınca verilerinize erişme, düzeltilmesini/silinmesini talep etme ve rızanızı geri alma dahil haklarınızı kullanmak için Oda'ya yazılı olarak başvurabilirsiniz.</p>
               </div>
               <button
                 onClick={() => setShowConsentText(false)}
@@ -734,6 +755,104 @@ export default function App() {
         )}
 
         {/* EKRAN 3: RESULTS */}
+        {screen === "contact" && (
+          <div className="space-y-4 max-w-lg mx-auto w-full">
+            <div className="bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-5 sm:p-6 shadow-xl space-y-4">
+              <div className="text-center space-y-1">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 border border-blue-200 rounded-full text-[11px] font-bold text-blue-900 uppercase tracking-wider">
+                  <ShieldCheck size={12} /> Son Adım
+                </div>
+                <h2 className="text-lg font-extrabold text-slate-900">Sonucunuzu görmek için bilgilerinizi girin</h2>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Dijital olgunluk karneniz ve PDF raporunuz, aşağıdaki bilgiler kaydedildikten sonra
+                  görüntülenecektir. Bu bilgiler yalnızca Çorlu TSO tarafından ilerleyen süreçte
+                  gelişiminizi takip etmek amacıyla kullanılacaktır.
+                </p>
+              </div>
+
+              <form onSubmit={submitContactAndShowResults} className="space-y-3.5">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-800 mb-1">Firma Adı *</label>
+                  <input
+                    value={firmName}
+                    onChange={(e) => setFirmName(e.target.value)}
+                    placeholder="Örn. ABC Makine Sanayi"
+                    className={`w-full px-3.5 py-2.5 text-xs bg-white border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 ${
+                      contactErrors.firmName ? "border-red-400" : "border-slate-300"
+                    }`}
+                  />
+                  {contactErrors.firmName && <p className="text-red-600 text-[11px] mt-1">{contactErrors.firmName}</p>}
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-800 mb-1">Ad Soyad *</label>
+                  <input
+                    value={contactName}
+                    onChange={(e) => setContactName(e.target.value)}
+                    placeholder="Yetkili adı soyadı"
+                    className={`w-full px-3.5 py-2.5 text-xs bg-white border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 ${
+                      contactErrors.contactName ? "border-red-400" : "border-slate-300"
+                    }`}
+                  />
+                  {contactErrors.contactName && <p className="text-red-600 text-[11px] mt-1">{contactErrors.contactName}</p>}
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-3.5">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-800 mb-1">E-posta *</label>
+                    <input
+                      type="email"
+                      value={contactEmail}
+                      onChange={(e) => setContactEmail(e.target.value)}
+                      placeholder="ornek@firma.com"
+                      className={`w-full px-3.5 py-2.5 text-xs bg-white border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 ${
+                        contactErrors.contactEmail ? "border-red-400" : "border-slate-300"
+                      }`}
+                    />
+                    {contactErrors.contactEmail && <p className="text-red-600 text-[11px] mt-1">{contactErrors.contactEmail}</p>}
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-800 mb-1">Telefon *</label>
+                    <input
+                      type="tel"
+                      value={contactPhone}
+                      onChange={(e) => setContactPhone(e.target.value)}
+                      placeholder="05XX XXX XX XX"
+                      className={`w-full px-3.5 py-2.5 text-xs bg-white border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 ${
+                        contactErrors.contactPhone ? "border-red-400" : "border-slate-300"
+                      }`}
+                    />
+                    {contactErrors.contactPhone && <p className="text-red-600 text-[11px] mt-1">{contactErrors.contactPhone}</p>}
+                  </div>
+                </div>
+
+                {saveState === "error" && (
+                  <p className="text-xs text-red-700 bg-red-50 border border-red-200 rounded-lg p-3">
+                    Kaydınız gönderilirken bir sorun oluştu. Lütfen tekrar deneyin.
+                  </p>
+                )}
+
+                <div className="flex items-center justify-between pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setScreen("quiz")}
+                    className="px-4 py-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-lg transition-all"
+                  >
+                    Geri
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={saveState === "saving"}
+                    className="px-6 py-2.5 bg-blue-900 hover:bg-blue-800 disabled:opacity-50 text-white font-semibold text-xs rounded-lg transition-all inline-flex items-center gap-1.5"
+                  >
+                    {saveState === "saving" ? "Kaydediliyor…" : "Sonucumu Görüntüle"} {saveState !== "saving" && <ArrowRight size={14} />}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
         {screen === "results" && (
           <div className="space-y-8 max-w-4xl mx-auto">
             <div className="bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl p-6 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
