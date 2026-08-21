@@ -1,0 +1,17 @@
+DİJİTAL OLGUNLUK ANALİZİ — ÜYE DÖNÜŞÜM PORTALI FULLSCREEN V1
+
+Tasarım güncellemeleri:
+- Üye Dönüşüm Portalı ile uyumlu kurumsal header
+- Dijital olgunluk için lacivert + bronz + mavi renk sistemi
+- Manrope başlık / DM Sans gövde tipografisi
+- Tüm ana ekranlar 100dvh içinde; sayfa scroll'u yok
+- Giriş ekranı, 6 eksenli değerlendirme, iletişim ekranı ve sonuçlar tam ekrana göre yeniden tasarlandı
+- Sonuçlar: Genel Bakış / 6 Eksen / Yol Haritası / Rapor & Eğitim sekmeleri
+- Metodoloji ve KVKK modalları da scrollsuz sekmeli yapıda
+- Mevcut Supabase kayıt, e-posta bildirimi ve PDF işlevleri korundu
+
+Kontrol marker:
+UI-FIX-DMAT-2026-08-21-FULLSCREEN-PORTAL-V1
+
+GitHub/Vercel için mevcut projede bu paketteki dosyalar ile değiştirin.
+.env dosyası güvenlik nedeniyle pakete dahil edilmemiştir. Mevcut Vercel environment variables ayarlarınızı koruyun.
