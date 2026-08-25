@@ -320,7 +320,7 @@ export default function App() {
   };
 
   return (
-    <div className="portal-app relative h-[100dvh] w-full overflow-hidden bg-[#EDF2F6] text-[#15263A]">
+    <div className="suite-app suite-digital portal-app relative h-[100dvh] w-full overflow-hidden bg-[#EDF2F6] text-[#15263A]">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(83,108,132,.065)_1px,transparent_1px),linear-gradient(90deg,rgba(83,108,132,.065)_1px,transparent_1px)] [background-size:42px_42px]" />
         <div className="absolute -left-28 -top-36 h-[420px] w-[420px] rounded-full bg-[#D4E1F4]/65 blur-[90px]" />

@@ -12,6 +12,21 @@
   text-rendering: optimizeLegibility;
 }
 
+/* Çorlu TSO Transformation Suite — Digital Maturity */
+.suite-digital { --suite-accent:#B9782D; --suite-ink:#10243D; --suite-soft:#F4E9DB; --suite-glow:rgba(185,120,45,.16); }
+.suite-app { font-family:'DM Sans',system-ui,sans-serif; letter-spacing:-.005em; }
+.suite-app h1,.suite-app h2,.suite-app h3 { font-family:'Manrope','DM Sans',sans-serif; text-wrap:balance; }
+.suite-app button,.suite-app input,.suite-app select { font-family:inherit; }
+.suite-app button { min-height:40px; }
+.suite-app [class*="text-[8px]"],.suite-app [class*="text-[8.5px]"],.suite-app [class*="text-[9px]"],.suite-app [class*="text-[9.5px]"],.suite-app [class*="text-[10px]"] { font-size:11.5px !important; line-height:1.45 !important; }
+.suite-app [class*="text-[10.5px]"],.suite-app [class*="text-[11px]"],.suite-app [class*="text-[11.5px]"] { font-size:13px !important; line-height:1.5 !important; }
+.suite-app [class*="text-[12px]"],.suite-app [class*="text-[12.5px]"],.suite-app [class*="text-[13px]"] { font-size:14px !important; line-height:1.55 !important; }
+.suite-app :focus-visible { outline:3px solid color-mix(in srgb,var(--suite-accent) 65%,white); outline-offset:3px; }
+.suite-digital .quiz-card { border-color:rgba(16,36,61,.12); box-shadow:0 12px 32px rgba(16,36,61,.065); }
+.suite-digital .quiz-question { font-size:16px !important; line-height:1.5 !important; }
+.suite-digital .scale-btn { min-width:44px; min-height:44px; font-size:14px !important; }
+::selection { background:var(--suite-soft); color:var(--suite-ink); }
+
 html,
 body,
 #root {
