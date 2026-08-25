@@ -62,14 +62,14 @@ select:focus-visible {
 @media (max-height: 700px) {
   .vh-title { font-size: clamp(1.85rem, 3.5vw, 3rem) !important; }
   .quiz-card { padding-top: .42rem !important; padding-bottom: .42rem !important; }
-  .quiz-question { font-size: 10px !important; line-height: 1.25 !important; }
-  .scale-btn { height: 1.8rem !important; width: 1.8rem !important; }
+  .quiz-question { font-size: 13px !important; line-height: 1.35 !important; }
+  .scale-btn { height: 2.25rem !important; width: 2.25rem !important; }
   .vh-axis-result { display: none !important; }
   .vh-axis-action { margin-top: auto !important; }
 }
 
 @media (max-width: 520px) {
   .quiz-card { gap: .45rem !important; padding-left: .55rem !important; padding-right: .55rem !important; }
-  .quiz-question { font-size: 9.5px !important; }
-  .scale-btn { height: 1.72rem !important; width: 1.72rem !important; border-radius: .55rem !important; }
+  .quiz-question { font-size: 13px !important; line-height: 1.35 !important; }
+  .scale-btn { height: 2.1rem !important; width: 2.1rem !important; border-radius: .65rem !important; }
 }

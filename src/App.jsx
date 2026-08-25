@@ -400,9 +400,9 @@ export default function App() {
         {screen === "quiz" && (
           <section className="mx-auto flex h-full max-w-[1500px] flex-col px-3 py-3 sm:px-6 lg:px-8 lg:py-4">
             <div className="flex flex-shrink-0 items-center justify-between gap-3 rounded-[20px] border border-white/80 bg-white/90 px-4 py-2.5 shadow-[0_10px_30px_rgba(19,47,75,.06)] backdrop-blur-xl">
-              <div className="flex min-w-0 items-center gap-3"><AxisIcon no={currentAxis.no} /><div className="min-w-0"><div className="text-[8px] font-extrabold uppercase tracking-[.16em] text-[#A76827]">Eksen {axisIndex + 1} / {AXES.length}</div><div className="truncate text-sm font-extrabold text-[#152B42] sm:text-base">{currentAxis.title}</div></div></div>
-              <div className="hidden max-w-[360px] flex-1 sm:block"><div className="mb-1 flex justify-between text-[8px] font-bold uppercase tracking-[.12em] text-[#8A96A2]"><span>Toplam ilerleme</span><span>%{progressPercent}</span></div><div className="h-1.5 overflow-hidden rounded-full bg-[#E8EDF1]"><div className="h-full rounded-full bg-[#B9782D] transition-all" style={{ width: `${progressPercent}%` }} /></div></div>
-              <div className="rounded-xl border border-[#E1E6EB] bg-[#F7F9FA] px-3 py-1.5 text-[9px] font-extrabold text-[#536373]">{answeredCount}/5 yanıt</div>
+              <div className="flex min-w-0 items-center gap-3"><AxisIcon no={currentAxis.no} /><div className="min-w-0"><div className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#A76827] sm:text-[11px]">Eksen {axisIndex + 1} / {AXES.length}</div><div className="truncate text-base font-extrabold text-[#152B42] sm:text-lg">{currentAxis.title}</div></div></div>
+              <div className="hidden max-w-[360px] flex-1 sm:block"><div className="mb-1.5 flex justify-between text-[10px] font-bold uppercase tracking-[.1em] text-[#778592] sm:text-[11px]"><span>Toplam ilerleme</span><span>%{progressPercent}</span></div><div className="h-2 overflow-hidden rounded-full bg-[#E8EDF1]"><div className="h-full rounded-full bg-[#B9782D] transition-all" style={{ width: `${progressPercent}%` }} /></div></div>
+              <div className="rounded-xl border border-[#E1E6EB] bg-[#F7F9FA] px-3 py-2 text-[11px] font-extrabold text-[#536373] sm:text-xs">{answeredCount}/5 yanıt</div>
             </div>
 
             <div className="mt-2.5 flex min-h-0 flex-1 flex-col gap-2">
@@ -410,12 +410,12 @@ export default function App() {
                 const selected = answers[`${currentAxis.id}-${qi}`];
                 return (
                   <div key={qi} className="quiz-card grid min-h-0 flex-1 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-[18px] border border-[#DEE5EA] bg-white/92 px-3.5 py-2.5 shadow-[0_7px_20px_rgba(20,47,73,.045)] backdrop-blur-lg sm:px-4">
-                    <div className="flex min-w-0 items-start gap-3"><span className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg bg-[#EDF2F8] text-[9px] font-black text-[#2E68D7]">{qi + 1}</span><p className="quiz-question text-[10.5px] font-bold leading-[1.35] text-[#314255] sm:text-[11.5px]">{q}</p></div>
+                    <div className="flex min-w-0 items-start gap-3"><span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-[#EDF2F8] text-xs font-black text-[#2E68D7]">{qi + 1}</span><p className="quiz-question text-sm font-bold leading-[1.5] text-[#314255] sm:text-[15px] lg:text-base">{q}</p></div>
                     <div className="flex flex-shrink-0 gap-1 sm:gap-1.5">
                       {SCALE_LABELS.map((label, idx) => {
                         const val = idx + 1;
                         const active = selected === val;
-                        return <button key={val} onClick={() => setAnswer(qi, val)} title={`${val} — ${label}`} className={`scale-btn flex h-8 w-8 items-center justify-center rounded-[10px] border text-[10px] font-black transition sm:h-9 sm:w-9 ${active ? "border-[#B9782D] bg-[#B9782D] text-white shadow-[0_5px_12px_rgba(185,120,45,.18)]" : "border-[#DCE3E8] bg-[#F8FAFB] text-[#607080] hover:border-[#B9782D]/60 hover:bg-[#F7EFE6]"}`}>{val}</button>;
+                        return <button key={val} onClick={() => setAnswer(qi, val)} title={`${val} — ${label}`} className={`scale-btn flex h-10 w-10 items-center justify-center rounded-xl border text-xs font-black transition sm:h-11 sm:w-11 sm:text-sm ${active ? "border-[#B9782D] bg-[#B9782D] text-white shadow-[0_5px_12px_rgba(185,120,45,.18)]" : "border-[#DCE3E8] bg-[#F8FAFB] text-[#526476] hover:border-[#B9782D]/60 hover:bg-[#F7EFE6]"}`}>{val}</button>;
                       })}
                     </div>
                   </div>
@@ -424,9 +424,9 @@ export default function App() {
             </div>
 
             <div className="mt-2.5 flex flex-shrink-0 items-center justify-between gap-3">
-              <button onClick={goPrevAxis} className="flex items-center gap-1.5 rounded-xl border border-[#D9E1E7] bg-white/90 px-4 py-2.5 text-[10px] font-extrabold text-[#536273] hover:bg-white"><ArrowLeft size={14} /> Geri</button>
-              <div className="hidden items-center gap-1.5 text-[8px] font-bold text-[#8B97A3] lg:flex">1 Hiç yok <span>·</span> 3 Kısmen var <span>·</span> 5 Tam entegre</div>
-              <button onClick={goNextAxis} disabled={!axisComplete} className="flex items-center gap-1.5 rounded-xl bg-[#10243D] px-5 py-2.5 text-[10px] font-extrabold text-white transition hover:bg-[#173553] disabled:cursor-not-allowed disabled:bg-[#CBD3DA]">{axisIndex < AXES.length - 1 ? "Sonraki Eksen" : "Son Adıma Geç"} <ArrowRight size={14} /></button>
+              <button onClick={goPrevAxis} className="flex items-center gap-1.5 rounded-xl border border-[#D9E1E7] bg-white/90 px-4 py-2.5 text-xs font-extrabold text-[#536273] hover:bg-white sm:text-sm"><ArrowLeft size={16} /> Geri</button>
+              <div className="hidden items-center gap-2 text-[11px] font-bold text-[#778592] lg:flex">1 Hiç yok <span>·</span> 3 Kısmen var <span>·</span> 5 Tam entegre</div>
+              <button onClick={goNextAxis} disabled={!axisComplete} className="flex items-center gap-1.5 rounded-xl bg-[#10243D] px-5 py-2.5 text-xs font-extrabold text-white transition hover:bg-[#173553] disabled:cursor-not-allowed disabled:bg-[#CBD3DA] sm:text-sm">{axisIndex < AXES.length - 1 ? "Sonraki Eksen" : "Son Adıma Geç"} <ArrowRight size={16} /></button>
             </div>
           </section>
         )}
