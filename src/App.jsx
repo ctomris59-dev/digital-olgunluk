@@ -327,67 +327,68 @@ export default function App() {
         <div className="absolute -bottom-40 right-[-90px] h-[430px] w-[430px] rounded-full bg-[#EED7BB]/50 blur-[100px]" />
       </div>
 
-      <header className="relative z-30 h-16 border-b border-white/10 bg-[#081C35] text-white shadow-[0_8px_28px_rgba(4,18,35,.16)]">
+      <header className="relative z-30 h-[72px] border-b border-[#D9E1E7] bg-white/95 text-[#10243D] shadow-[0_8px_30px_rgba(16,36,61,.08)] backdrop-blur-xl">
         <div className="mx-auto flex h-full max-w-[1500px] items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex min-w-0 items-center gap-3.5">
             <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-white p-[2px] ring-2 ring-[#B9782D]/80">
               <img src="/ctso-logo.png" alt="Çorlu TSO" className="h-full w-full rounded-full object-cover" />
             </div>
             <div className="min-w-0">
-              <div className="flex items-center gap-2 text-[9px] font-extrabold uppercase tracking-[.16em] text-[#D9B27C] sm:text-[10px]">
-                <span>Çorlu Ticaret ve Sanayi Odası</span><span className="hidden h-1 w-1 rounded-full bg-white/25 sm:block" /><span className="hidden text-white/50 sm:block">Üye Dönüşüm Portalı</span>
+              <div className="flex items-center gap-2 text-[9px] font-extrabold uppercase tracking-[.16em] text-[#A76827] sm:text-[10px]">
+                <span>Çorlu Ticaret ve Sanayi Odası</span><span className="hidden h-1 w-1 rounded-full bg-[#10243D]/25 sm:block" /><span className="hidden text-[#617386] sm:block">Üye Dönüşüm Portalı</span>
               </div>
-              <div className="truncate text-[15px] font-extrabold tracking-tight text-white sm:text-lg">Dijital Olgunluk Analizi</div>
+              <div className="truncate text-[15px] font-extrabold tracking-tight text-[#10243D] sm:text-lg">Dijital Olgunluk Analizi</div>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <div className="hidden rounded-xl border border-white/10 bg-white/[.06] px-3 py-1.5 text-right md:block"><div className="text-[8px] font-extrabold uppercase tracking-[.17em] text-white/40">DMAT · 01</div><div className="text-[10px] font-bold text-white/80">6 eksen · 30 soru</div></div>
+            <div className="hidden rounded-xl border border-[#DCE3E9] bg-[#F6F8FA] px-3 py-1.5 text-right md:block"><div className="text-[8px] font-extrabold uppercase tracking-[.17em] text-[#A76827]">DMAT · 01</div><div className="text-[10px] font-bold text-[#536578]">6 eksen · 30 soru</div></div>
             {screen === "quiz" && <div className="rounded-xl bg-[#B9782D] px-3 py-1.5 text-[10px] font-extrabold text-white">%{progressPercent}</div>}
           </div>
         </div>
       </header>
 
-      <main className="relative z-10 h-[calc(100dvh-64px)] overflow-hidden">
+      <main className="relative z-10 h-[calc(100dvh-72px)] overflow-hidden">
         {showMethodology && <MethodologyModal onClose={() => setShowMethodology(false)} />}
         {showConsentText && <ConsentModal onClose={() => setShowConsentText(false)} />}
 
         {screen === "intro" && (
           <section className="mx-auto grid h-full max-w-[1500px] grid-cols-1 gap-4 px-4 py-4 sm:px-6 lg:grid-cols-12 lg:px-8 lg:py-5">
-            <div className="relative flex min-h-0 flex-col overflow-hidden rounded-[28px] bg-[#0B2745] p-5 text-white shadow-[0_24px_70px_rgba(8,31,57,.18)] sm:p-7 lg:col-span-7 lg:p-8">
-              <div className="pointer-events-none absolute -right-16 -top-20 h-72 w-72 rounded-full border-[50px] border-[#B9782D]/15" />
-              <div className="pointer-events-none absolute bottom-0 left-0 h-32 w-full bg-[linear-gradient(180deg,transparent,rgba(4,16,31,.28))]" />
+            <div className="relative flex min-h-0 flex-col overflow-hidden rounded-[32px] border border-white bg-white/95 p-5 text-[#10243D] shadow-[0_24px_70px_rgba(16,36,61,.11)] sm:p-7 lg:col-span-7 lg:p-9">
+              <div className="pointer-events-none absolute right-0 top-0 h-full w-[44%] bg-[linear-gradient(135deg,transparent,rgba(185,120,45,.08))]" />
+              <div className="pointer-events-none absolute -right-16 -top-20 h-72 w-72 rounded-full border-[44px] border-[#B9782D]/10" />
+              <div className="absolute left-0 top-0 h-full w-1.5 bg-[linear-gradient(180deg,#B9782D,#E1B675,#10243D)]" />
               <div className="relative">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[.07] px-3 py-1.5 text-[9px] font-extrabold uppercase tracking-[.16em] text-[#E4B876]"><ShieldCheck size={13} /> Dijital dönüşüm ön taraması</div>
-                <h1 className="vh-title mt-5 max-w-3xl text-[clamp(2.2rem,4.1vw,4.15rem)] font-extrabold leading-[.98] tracking-[-.05em]">Dijital olgunluğunuzu ölçün. Dönüşüm rotanızı netleştirin.</h1>
-                <p className="vh-copy mt-4 max-w-2xl text-[13px] font-medium leading-6 text-white/67 sm:text-[15px] sm:leading-7">Süreçten veriye, müşteri deneyiminden yapay zekâ ve siber güvenliğe kadar işletmenizi 6 stratejik eksende değerlendirin; olgunluk seviyenizi ve öncelikli aksiyonlarınızı görün.</p>
+                <div className="inline-flex items-center gap-2 rounded-full border border-[#E5D4C0] bg-[#FAF5EF] px-3 py-1.5 text-[9px] font-extrabold uppercase tracking-[.16em] text-[#9C6124]"><ShieldCheck size={13} /> Dijital dönüşüm ön taraması</div>
+                <h1 className="vh-title mt-6 max-w-3xl text-[clamp(2.35rem,4.25vw,4.5rem)] font-extrabold leading-[.96] tracking-[-.055em] text-[#10243D]">Bugünün fotoğrafını çekin.<br/><span className="text-[#B9782D]">Yarının rotasını kurun.</span></h1>
+                <p className="vh-copy mt-5 max-w-2xl text-[14px] font-medium leading-7 text-[#5C6D7E] sm:text-base sm:leading-7">Süreç, veri, müşteri deneyimi, otomasyon, yetkinlik ve siber güvenlik kapasitenizi tek bir kurumsal skorkartta ölçün; yatırım önceliklerinizi kanıta dayalı biçimde belirleyin.</p>
               </div>
 
               <div className="relative mt-auto pt-5">
                 <div className="grid grid-cols-3 gap-2.5">
-                  {[["30", "Soru"], ["06", "Stratejik Eksen"], ["05", "Olgunluk Seviyesi"]].map(([n, t]) => <div key={t} className="rounded-2xl border border-white/10 bg-white/[.06] p-3"><div className="text-xl font-black text-[#E7B871] sm:text-2xl">{n}</div><div className="mt-0.5 text-[9px] font-extrabold uppercase tracking-[.12em] text-white/55">{t}</div></div>)}
+                  {[["30", "Soru"], ["06", "Stratejik Eksen"], ["05", "Olgunluk Seviyesi"]].map(([n, t]) => <div key={t} className="rounded-2xl border border-[#E1E6EA] bg-[#F7F9FA] p-3.5"><div className="text-2xl font-black text-[#B9782D]">{n}</div><div className="mt-1 text-[9px] font-extrabold uppercase tracking-[.12em] text-[#617386]">{t}</div></div>)}
                 </div>
-                <label className="mt-3 flex cursor-pointer items-start gap-2.5 rounded-2xl border border-white/10 bg-black/10 p-3">
+                <label className="mt-3 flex cursor-pointer items-start gap-2.5 rounded-2xl border border-[#DCE3E8] bg-white p-3.5 shadow-sm">
                   <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-0.5 h-4 w-4 flex-shrink-0 accent-[#D59547]" />
-                  <span className="text-[10px] leading-4 text-white/68"><button type="button" onClick={(e) => { e.preventDefault(); setShowConsentText(true); }} className="font-extrabold text-white underline decoration-white/40 underline-offset-2">KVKK Aydınlatma Metni</button>'ni okudum, verilerimin belirtilen amaçlarla işlenmesini kabul ediyorum.</span>
+                  <span className="text-[10px] leading-4 text-[#607183]"><button type="button" onClick={(e) => { e.preventDefault(); setShowConsentText(true); }} className="font-extrabold text-[#10243D] underline decoration-[#B9782D]/50 underline-offset-2">KVKK Aydınlatma Metni</button>'ni okudum, verilerimin belirtilen amaçlarla işlenmesini kabul ediyorum.</span>
                 </label>
                 <div className="mt-3 flex gap-2.5">
-                  <button onClick={() => consent && setScreen("quiz")} disabled={!consent} className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-[#B9782D] px-5 py-3 text-xs font-extrabold text-white shadow-[0_10px_24px_rgba(185,120,45,.22)] transition hover:bg-[#A56826] disabled:cursor-not-allowed disabled:bg-white/15 disabled:text-white/35">Değerlendirmeye Başla <ArrowRight size={15} /></button>
-                  <button onClick={() => setShowMethodology(true)} className="hidden items-center justify-center gap-2 rounded-2xl border border-white/12 bg-white/[.06] px-4 text-[10px] font-extrabold text-white/80 transition hover:bg-white/[.1] sm:flex"><GraduationCap size={14} /> Metodoloji</button>
+                  <button onClick={() => consent && setScreen("quiz")} disabled={!consent} className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-[#10243D] px-5 py-3.5 text-sm font-extrabold text-white shadow-[0_12px_26px_rgba(16,36,61,.18)] transition hover:bg-[#173B5E] disabled:cursor-not-allowed disabled:bg-[#CBD3DA]">Analizi Başlat <ArrowRight size={17} /></button>
+                  <button onClick={() => setShowMethodology(true)} className="hidden items-center justify-center gap-2 rounded-2xl border border-[#D8E0E6] bg-white px-5 text-xs font-extrabold text-[#526476] transition hover:border-[#B9782D] hover:text-[#9C6124] sm:flex"><GraduationCap size={16} /> Metodoloji</button>
                 </div>
               </div>
             </div>
 
             <div className="hidden min-h-0 flex-col gap-3 lg:col-span-5 lg:flex">
-              <div className="flex min-h-0 flex-1 flex-col rounded-[28px] border border-white/80 bg-white/90 p-5 shadow-[0_18px_55px_rgba(24,48,74,.09)] backdrop-blur-xl">
-                <div className="flex items-start justify-between gap-3"><div><div className="text-[9px] font-extrabold uppercase tracking-[.17em] text-[#A76827]">Değerlendirme mimarisi</div><h2 className="mt-1 text-xl font-extrabold tracking-tight text-[#14283F]">6 eksende bütüncül görünüm</h2></div><div className="rounded-xl bg-[#F4E9DB] px-2.5 py-1.5 text-[9px] font-black text-[#9B6324]">DMAT</div></div>
+              <div className="flex min-h-0 flex-1 flex-col rounded-[32px] border border-white/10 bg-[#10243D] p-5 text-white shadow-[0_22px_60px_rgba(16,36,61,.18)]">
+                <div className="flex items-start justify-between gap-3"><div><div className="text-[9px] font-extrabold uppercase tracking-[.17em] text-[#E4B876]">Değerlendirme mimarisi</div><h2 className="mt-1 text-xl font-extrabold tracking-tight text-white">6 eksenli kontrol merkezi</h2></div><div className="rounded-xl border border-white/10 bg-white/[.07] px-2.5 py-1.5 text-[9px] font-black text-[#E4B876]">DMAT</div></div>
                 <div className="mt-4 grid min-h-0 flex-1 grid-cols-2 gap-2.5">
                   {AXES.map((a) => (
-                    <div key={a.id} className="flex min-h-0 flex-col rounded-[18px] border border-[#E0E6EB] bg-[#F9FAFB] p-4 sm:p-4.5">
+                    <div key={a.id} className="flex min-h-0 flex-col rounded-[18px] border border-white/10 bg-white/[.055] p-4 transition hover:bg-white/[.09]">
                       <div className="flex items-start gap-3">
                         <AxisIcon no={a.no} />
-                        <div className="text-[13.5px] font-extrabold leading-[1.35] text-[#1A2E44] sm:text-[15px]">{a.title}</div>
+                        <div className="text-[13.5px] font-extrabold leading-[1.35] text-white sm:text-[15px]">{a.title}</div>
                       </div>
-                      <div className="vh-axis-copy mt-3 text-[11.5px] leading-5 text-[#71808E] sm:text-[12.5px] sm:leading-[1.65]">{a.intro}</div>
+                      <div className="vh-axis-copy mt-3 text-[11.5px] leading-5 text-white/55 sm:text-[12.5px] sm:leading-[1.65]">{a.intro}</div>
                     </div>
                   ))}
                 </div>
@@ -409,7 +410,8 @@ export default function App() {
               {currentAxis.questions.map((q, qi) => {
                 const selected = answers[`${currentAxis.id}-${qi}`];
                 return (
-                  <div key={qi} className="quiz-card grid min-h-0 flex-1 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-[18px] border border-[#DEE5EA] bg-white/92 px-3.5 py-2.5 shadow-[0_7px_20px_rgba(20,47,73,.045)] backdrop-blur-lg sm:px-4">
+                  <div key={qi} className="quiz-card group relative grid min-h-0 flex-1 grid-cols-[minmax(0,1fr)_auto] items-center gap-4 overflow-hidden rounded-[20px] border border-[#DCE3E8] bg-white px-4 py-3 shadow-[0_10px_28px_rgba(16,36,61,.055)] transition hover:-translate-y-0.5 hover:border-[#CDA77D] hover:shadow-[0_16px_36px_rgba(16,36,61,.09)] sm:px-5">
+                    <div className="absolute inset-y-0 left-0 w-1 bg-[#B9782D] opacity-0 transition group-hover:opacity-100" />
                     <div className="flex min-w-0 items-start gap-3"><span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-[#EDF2F8] text-xs font-black text-[#2E68D7]">{qi + 1}</span><p className="quiz-question text-sm font-bold leading-[1.5] text-[#314255] sm:text-[15px] lg:text-base">{q}</p></div>
                     <div className="flex flex-shrink-0 gap-1 sm:gap-1.5">
                       {SCALE_LABELS.map((label, idx) => {
