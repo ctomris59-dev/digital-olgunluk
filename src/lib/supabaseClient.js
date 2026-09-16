@@ -11,7 +11,7 @@ export async function saveAssessment({ firmName, contactName, email, phone, answ
   if (!supabase) {
     console.info(
       "[dijital-olgunluk] Supabase yapılandırılmamış — sonuç kaydedilmedi. " +
-        "Kurulum için README.md dosyasındaki 'Veri Kaydı Kurulumu' bölümüne bakın."
+        "Supabase kullanmak için .env.example dosyasındaki değişkenleri yapılandırın."
     );
     return false;
   }
@@ -35,26 +35,5 @@ export async function saveAssessment({ firmName, contactName, email, phone, answ
   return true;
 }
 
-export async function saveTrainingSignup({ firmName, email, phone }) {
-  if (!supabase) {
-    console.info(
-      "[dijital-olgunluk] Supabase yapılandırılmamış — eğitim kaydı alınmadı. " +
-        "Kurulum için README.md dosyasındaki 'Veri Kaydı Kurulumu' bölümüne bakın."
-    );
-    return false;
-  }
-
-  const { error } = await supabase.from("training_signups").insert({
-    firm_name: firmName,
-    email,
-    phone: phone || null,
-  });
-
-  if (error) {
-    console.error("[dijital-olgunluk] Eğitim kaydı hatası:", error.message);
-    return false;
-  }
-  return true;
-}
 
 export default supabase;

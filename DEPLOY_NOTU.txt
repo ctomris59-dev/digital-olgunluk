@@ -1,17 +1,21 @@
-DİJİTAL OLGUNLUK ANALİZİ — ÜYE DÖNÜŞÜM PORTALI FULLSCREEN V1
+DMAT / EDIH REVİZYON NOTU
+=========================
 
-Tasarım güncellemeleri:
-- Üye Dönüşüm Portalı ile uyumlu kurumsal header
-- Dijital olgunluk için lacivert + bronz + mavi renk sistemi
-- Manrope başlık / DM Sans gövde tipografisi
-- Tüm ana ekranlar 100dvh içinde; sayfa scroll'u yok
-- Giriş ekranı, 6 eksenli değerlendirme, iletişim ekranı ve sonuçlar tam ekrana göre yeniden tasarlandı
-- Sonuçlar: Genel Bakış / 6 Eksen / Yol Haritası / Rapor & Eğitim sekmeleri
-- Metodoloji ve KVKK modalları da scrollsuz sekmeli yapıda
-- Mevcut Supabase kayıt, e-posta bildirimi ve PDF işlevleri korundu
+Bu sürümde uygulama yalnızca EDIH Digital Maturity Assessment Tool (DMAT) KOBİ soru setine göre çalışır.
 
-Kontrol marker:
-UI-FIX-DMAT-2026-08-21-FULLSCREEN-PORTAL-V1
+- Eski özel 30 soru / 6 eksen modeli kaldırıldı.
+- CMMI, acatech, SIRI, NIST vb. karma metodoloji referansları kaldırıldı.
+- 6 resmî DMAT boyutu ve 11 DMAT ana sorusu kullanılıyor.
+- Q1 iki yatırım sütunu ile resmî metodolojiye göre hesaplanıyor.
+- Q4 ve Q9 0-5 ölçeği ile değerlendiriliyor.
+- Q7'de “Veriler dijital olarak toplanmıyor” maddesi pozitif puan üretmiyor.
+- Q9, resmî EDIH Türkçe formundaki 5 teknoloji maddesi ile düzeltildi.
+- Q11 Hayır / Kısmen / Evet ölçeği kullanıyor.
+- Boyutlar 0-100; genel skor altı boyutun ortalaması olarak hesaplanıyor.
+- PDF raporu yalnızca DMAT sonuçları, yanıt dökümü ve EDIH/JRC metodoloji-kaynaklarını içeriyor.
 
-GitHub/Vercel için mevcut projede bu paketteki dosyalar ile değiştirin.
-.env dosyası güvenlik nedeniyle pakete dahil edilmemiştir. Mevcut Vercel environment variables ayarlarınızı koruyun.
+Kurulum:
+  npm install
+  npm run build
+
+Not: Yerel uygulama resmî EDIH portalına/benchmark sistemine otomatik veri göndermez.

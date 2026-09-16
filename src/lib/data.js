@@ -1,318 +1,471 @@
-// Çorlu TSO Dijital Olgunluk Ölçüm Aracı — Genişletilmiş Veri Modeli
+// EDIH / DMAT SME — resmi soru seti ve puanlama modeli
+// Kaynak: European Commission JRC, Digital Maturity Assessment (DMA)
+// Framework & Questionnaires for SMEs/PSOs, JRC133234 (2023)
 
-const CMMI_LEVEL_NAMES = ["Başlangıç", "Tekrarlanabilir", "Tanımlı", "Ölçülüyor", "Optimize Ediliyor"];
-
-const AXES = [
+export const DMAT_SOURCES = [
   {
-    id: "process",
+    title: "European Commission JRC — Digital Maturity Assessment (DMA) Framework & Questionnaires for SMEs/PSOs",
+    detail: "JRC133234, 2023 — resmi çerçeve, puanlama kuralları ve sonuç yorumlama yaklaşımı.",
+    url: "https://european-digital-innovation-hubs.ec.europa.eu/system/files/2023-11/DMA_Framework_Guidelines_for_EDIHs.pdf",
+  },
+  {
+    title: "European Digital Innovation Hubs Network — Türkçe DMAT KOBİ Soru Formu",
+    detail: "EDIH ağı tarafından yayımlanan Türkçe KOBİ DMAT soru seti.",
+    url: "https://european-digital-innovation-hubs.ec.europa.eu/system/files/2024-05/CNECT-2023-00777-00-00-TR-TRA-00.pdf",
+  },
+  {
+    title: "EDIH Network — Open DMAT",
+    detail: "EDIH'lerde kullanılan DMAT ile aynı soruları içeren açık öz-değerlendirme aracı.",
+    url: "https://european-digital-innovation-hubs.ec.europa.eu/open-dma",
+  },
+];
+
+export const STAFF_SIZES = [
+  "Mikro ölçekli (1-9)",
+  "Küçük ölçekli (10-49)",
+  "Orta ölçekli (50-249)",
+  "Büyük ölçekli (250 veya daha fazla)",
+];
+
+export const SECTORS = [
+  "Havacılık ve Uzay",
+  "Tarım ve gıda",
+  "Kamu, sosyal ve kişisel hizmet faaliyetleri",
+  "İnşaat",
+  "Tüketim maddeleri/ürünleri",
+  "Kültür ve Yaratıcı endüstriler",
+  "Savunma ve güvenlik",
+  "Eğitim",
+  "Enerji ve uygulamaları",
+  "Çevre",
+  "Finansal hizmetler",
+  "Yaşam bilimleri ve sağlık hizmetleri",
+  "İmalat",
+  "Denizcilik ve balıkçılık",
+  "Madencilik ve taş ocakçılığı",
+  "Mobilite (Otomotiv dahil)",
+  "Kamu yönetimi",
+  "Gayrimenkul, kiralama ve işletme faaliyetleri",
+  "Mesleki, Bilimsel ve Teknik Faaliyetler",
+  "Telekomünikasyon, Bilgi ve İletişim",
+  "Turizm (restoran ve konaklama dahil)",
+  "Toptan ve perakende",
+  "Yasal Yönler",
+  "Düzenleme",
+];
+
+export const SCALE_0_5 = [
+  "Kullanılmadı",
+  "Kullanmayı düşünüyoruz",
+  "Prototipleme",
+  "Test ediliyor",
+  "Uygulanıyor",
+  "Operasyonel",
+];
+
+export const DMAT_DIMENSIONS = [
+  {
+    id: "strategy",
     no: "01",
-    short: "Süreç",
-    title: "Süreç Dijitalleşmesi",
-    intro: "İş süreçlerinizin kağıt/manuel mi, yoksa yazılım destekli mi yürüdüğünü ölçer.",
-    framework: "acatech (Bilgi Sistemleri) · ISO/IEC 33001 · CMMI V2.0",
-    questions: [
-      "Muhasebe, stok, satış gibi temel iş süreçlerimiz kağıt/Excel yerine bir yazılım üzerinden yürütülür.",
-      "Departmanlar arası bilgi akışı, manuel tekrar girişi gerektirmeden dijital bir sistem üzerinden aktarılır.",
-      "Süreçlerde bir sapma veya hata tespit edildiğinde, kök nedenini bulup düzeltici aksiyon almak için tanımlı bir yöntemimiz vardır.",
-      "Yeni bir dijital araç devreye alma kararı, tanımlı bir sorumlu/süreç üzerinden yürütülür.",
-      "İş süreçlerimize ait performans göstergeleri (KPI) düzenli olarak tanımlanır, ölçülür ve raporlanır.",
-    ],
-    resources: [
-      { name: "KOSGEB İşletme Geliştirme Destek Programı", url: "https://www.kosgeb.gov.tr" },
-    ],
-    kpis: [
-      "Ortalama Süreç Onay Süresi (Saat/Gün)",
-      "Departmanlar Arası Manuel Veri Tekrar Oranı (%)",
-      "Süreç Sapma / Hatalı Adım Sayısı"
-    ],
-    quickWin: "Kâğıt veya e-posta/WhatsApp üzerinden yürüyen onay süreçlerini bulut tabanlı ücretsiz/düşük maliyetli dijital form araçlarına (MS Forms, Google Workspace vb.) taşıyarak izlenebilirlik sağlayın.",
-    levelGuide: [
-      {
-        description: "Süreçler kişilere bağımlı, kâğıt/Excel tabanlı veya anlık (ad-hoc) yürütülüyor.",
-        action: "1. Odak: En kritik 2-3 çekirdek süreci (satın alma, fatura onayı vb.) haritalandırın. 2. Araç: Kâğıt/WhatsApp üzerinden yürüyen işleri bulut tabanlı form ve onay araçlarına aktarın. 3. Çıktı: Süreçlerde ilk dijital kayıt ve izlenebilirlik altyapısını kurun."
-      },
-      {
-        description: "Departman bazında kısmen yazılım kullanılıyor ancak sistemler izole ve veri aktarımı manuel.",
-        action: "1. Odak: Departmanlar arası bilgi kopukluğunu gidermek için standart veri alanları belirleyin. 2. Araç: Manuel Excel takibini sonlandırıp temel bir ERP veya modüler iş süreç yönetim (BPM) yazılımına geçin. 3. Çıktı: Süreç sorumlularını tanımlayarak iş akışı onay mekanizmalarını standardize edin."
-      },
-      {
-        description: "Kurumsal süreçler tanımlanmış, dokümante edilmiş ve ERP/CRM ile entegre yürütülüyor.",
-        action: "1. Odak: Süreçler arası darboğazları ve bekleme sürelerini analiz edin. 2. Araç: Departmanlar arası veri entegrasyonu için REST API ve webhook mimarilerini devreye alın. 3. Çıktı: Süreç dokümantasyonu ile fiili yürütme arasındaki sapmaları sıfırlayarak kurumsal süreç standardizasyonunu tamamlayın."
-      },
-      {
-        description: "Süreç performans göstergeleri (KPI/SLA) sayısal olarak takip ediliyor ve kontrol altında.",
-        action: "1. Odak: Süreç verimliliğini geçmişe dönük değil canlı olarak denetleyin. 2. Araç: İş zekası (Power BI, Looker Studio) panoları kurarak hedef sapmalarına otomatik eşik uyarıları tanımlayın. 3. Çıktı: Öngörülebilir süreç performansı ve sayısal kalite kontrolü elde edin."
-      },
-      {
-        description: "Süreçler analitik veriler ve yapay zeka desteğiyle sürekli olarak kendi kendini iyileştiriyor.",
-        action: "1. Odak: Süreçlerdeki insan müdahalesi gerektiren karmaşık karar noktalarını otomatize edin. 2. Araç: Süreç madenciliği (Process Mining) ve kural tabanlı yapay zeka motorlarını entegre edin. 3. Çıktı: Dinamik kaynak tahsisi yapan, değişkenliklere anında adapte olabilen otonom süreç yapısına ulaşın."
-      },
-    ],
+    short: "Strateji",
+    title: "Dijital İş Stratejisi",
+    description:
+      "İşletmenin dijitalleşme yatırımlarını, planlarını, kaynaklarını ve kurumsal hazırlığını değerlendirir.",
+    questions: ["q1", "q2"],
   },
   {
-    id: "data",
+    id: "readiness",
     no: "02",
-    short: "Veri",
-    title: "Veri Yönetimi ve Analitik (İkiz Dönüşüm Uyumlu)",
-    intro: "Verinin toplanma, saklanma, kararlarda ve enerji/sürdürülebilirlik takibinde kullanılma biçimini ölçer.",
-    framework: "acatech · EDIH Veri Yönetimi · Fraunhofer IMPULS (Yeşil Veri)",
-    questions: [
-      "Satış, üretim veya müşteri verilerimiz dağınık Excel dosyaları yerine merkezi bir sistemde toplanır.",
-      "Yönetim kararları alınırken güncel veriye dayalı raporlar kullanılır.",
-      "Fabrika/Tesis enerji tüketim verileri (elektrik, doğalgaz, su) veya karbon emisyon verileri dijital olarak izlenebilir.",
-      "Veri kalitesinden (doğruluk, güncellik, tutarlılık) sorumlu bir kişi veya süreç vardır.",
-      "Farklı sistemlerden (satış, üretim, finans) gelen veriler birbiriyle ilişkilendirilerek analiz edilebilir.",
-    ],
-    resources: [
-      { name: "EDIH West Marmara — Veri Yönetimi ve Yeşil Dönüşüm Danışmanlığı", url: "https://european-digital-innovation-hubs.ec.europa.eu" },
-      { name: "TÜBİTAK TEYDEB 1501 — Sanayi Ar-Ge Destek Programı", url: "https://tubitak.gov.tr" },
-    ],
-    kpis: [
-      "Veri Giriş Doğruluk / Hata Oranı (%)",
-      "Manuel Rapor Hazırlama Süresi (Adam/Saat)",
-      "Ürün Başına Düşen Enerji / Karbon Yoğunluğu Verisi"
-    ],
-    quickWin: "Kritik veri giriş alanlarında veri doğrulama (data validation) kuralları uygulayın ve haftalık yönetim raporlarını otomatikleştirecek basit bir BI panosu (Power BI / Looker Studio) kurun.",
-    levelGuide: [
-      {
-        description: "Veriler dağınık, yerel bilgisayarlarda/Excel dosyalarında saklanıyor; veri güvenliği ve bütünlüğü yok.",
-        action: "1. Odak: Kurumsal veri envanterini çıkararak veri kirliliğini tespit edin. 2. Araç: Ortak bulut depolama veya NAS yapısı kurup rol tabanlı erişim yetkilendirmesi (RBAC) uygulayın. 3. Çıktı: Otomatik günlük yedekleme ve merkezi veri güvenliği altyapısını kurun."
-      },
-      {
-        description: "Veriler merkezi veritabanlarında tutuluyor fakat analizler düzensiz ve manuel raporlamaya dayanıyor.",
-        action: "1. Odak: Veri giriş alanlarında doğrulama kuralları belirleyin. 2. Araç: SQL sorguları veya standart rapor şablonları ile yönetim raporlarını otomatize edin. 3. Çıktı: Departmanlar arası veri çelişkilerini azaltıp güvenilir raporlama alışkanlığı kazanın."
-      },
-      {
-        description: "Veri yönetişimi kuralları tanımlı; tek doğru veri kaynağı (Single Source of Truth) mevcut.",
-        action: "1. Odak: Farklı veri kaynaklarını birleştirerek çapraz analiz imkânı yaratın. 2. Araç: Veri Ambarı (Data Warehouse) ve Merkezi İş Zekası (BI) platformu kurun. 3. Çıktı: Yönetim kararlarının tamamını anlık ve tek merkezden doğrulanan verilere dayandırın."
-      },
-      {
-        description: "Veri analitiği proaktif kararlar almak için kullanılıyor; kestirimci modeller deneniyor.",
-        action: "1. Odak: Geçmiş verileri kullanarak gelecek dönem senaryoları ve tahminler üretin. 2. Araç: Kestirimci analitik ve Makine Öğrenmesi (ML) kütüphaneleri kullanın. 3. Çıktı: Talep tahmini, stok optimizasyonu ve karbon emisyon riskini sayısal olarak öngörün."
-      },
-      {
-        description: "Veri, organizasyonun en değerli stratejik varlığı; gerçek zamanlı veri akışı ve otonom karar sistemleri aktif.",
-        action: "1. Odak: Veri işleme gecikmesini (latency) milisaniyeler seviyesine indirin. 2. Araç: Gerçek zamanlı veri akış mimarileri ve yapay zeka ajanı entegrasyonları sağlayın. 3. Çıktı: Kendi kendini kalibre eden, anomali anında otomatik aksiyon alan veri odaklı kurumsal yapı oluşturun."
-      },
-    ],
-  },
-  {
-    id: "market",
-    no: "03",
-    short: "Pazar",
-    title: "Müşteri / Pazar Dijital Varlığı",
-    intro: "E-ticaret, dijital pazarlama ve online müşteri ilişkilerindeki olgunluğu ölçer.",
-    framework: "MIT & Capgemini · EDIH Dijital İş Stratejisi · OECD",
-    questions: [
-      "Güncel tutulan bir web sitemiz ve/veya aktif sosyal medya hesabımız vardır.",
-      "Ürün/hizmetlerimizi online kanallardan (e-ticaret, pazaryeri, B2B platform) satabiliyoruz.",
-      "Müşteri talep ve şikayetleri dijital bir sistem (CRM, ticket sistemi) üzerinden takip edilir.",
-      "Dijital pazarlama faaliyetlerimizin sonuçlarını ölçüp değerlendiririz.",
-      "Rakip analizi veya pazar trendlerini takip etmek için dijital araç/veri kaynakları kullanırız.",
-    ],
-    resources: [
-      { name: "KOSGEB E-Ticaret Destek Programı", url: "https://www.kosgeb.gov.tr" },
-      { name: "Ticaret Bakanlığı — E-İhracat ve Dijital Pazaryerleri Destek Programı", url: "https://www.ticaret.gov.tr" },
-      { name: "TİM — Dijital İhracat Destekleri", url: "https://tim.org.tr" },
-    ],
-    kpis: [
-      "Dijital Kanallardan Gelen Satış Oranı (%)",
-      "Müşteri Edinme Maliyeti (CAC)",
-      "Müşteri Taleplerine Dönüş Süresi (Saat)"
-    ],
-    quickWin: "Gelen müşteri taleplerini kişisel e-postalar yerine giriş seviyesi bir CRM yazılımına (Cloud CRM) bağlayarak talep kaçırma oranını sıfırlayın.",
-    levelGuide: [
-      {
-        description: "Dijital varlık minimal veya güncel değil; müşteri iletişimi geleneksel yöntemlerle yürütülüyor.",
-        action: "1. Odak: Dijital vitrininizi oluşturun. 2. Araç: Mobil uyumlu, SEO optimize web sitesi, Google İşletme Profili ve aktif sosyal medya hesapları açın. 3. Çıktı: Potansiyel müşterilerin firmanıza dijital kanallardan ulaşmasını sağlayın."
-      },
-      {
-        description: "Dijital kanallar aktif ancak müşteri talepleri kişisel e-posta/telefon üzerinden takipsiz kalıyor.",
-        action: "1. Odak: Gelen tüm talep (lead) ve müşteri etkileşimlerini kayıt altına alın. 2. Araç: Giriş seviyesi CRM yazılımına geçin. 3. Çıktı: Satış fırsatlarının kaybolmasını önleyin, talep dönüş sürelerini kısaltın."
-      },
-      {
-        description: "Online satış ve dijital pazarlama kanalları tanımlı; CRM ve e-ticaret altyapısı entegre.",
-        action: "1. Odak: Müşteri yolculuğunu çok kanallı (Omnichannel) yapıya dönüştürün. 2. Araç: Pazarlama otomasyonu, e-posta pazarlama ve pazar yeri API entegrasyonlarını devreye alın. 3. Çıktı: Müşteri segmentasyonu ve e-ihracat/online satış hacmini büyütün."
-      },
-      {
-        description: "Dijital pazarlama yatırımlarının geri dönüşü (ROAS) ve müşteri edinim maliyeti (CAC) anlık ölçülüyor.",
-        action: "1. Odak: Müşteri yaşam boyu değerini (CLV) artıracak kişiselleştirilmiş stratejiler geliştirin. 2. Araç: Web analitiği ve A/B test araçları ile dönüşüm oranı optimizasyonu yapın. 3. Çıktı: Pazarlama bütçesini en yüksek dönüşüm getiren kanallara tahsis edin."
-      },
-      {
-        description: "Yapay zeka destekli kişiselleştirme, proaktif müşteri yönetimi ve otonom satış kanalları mevcut.",
-        action: "1. Odak: Hiper-kişiselleştirilmiş müşteri deneyimi sunun. 2. Araç: GenAI destekli akıllı satış asistanları ve öneri motorları kullanın. 3. Çıktı: 7/24 kesintisiz, otonom ve yüksek sadakat üreten dijital müşteri ekosistemi yaratın."
-      },
-    ],
-  },
-  {
-    id: "automation",
-    no: "04",
-    short: "Otomasyon",
-    title: "Otomasyon ve Yapay Zeka (SIRI Uyumlu)",
-    intro: "Üretim ve operasyonda otomasyon, IIoT ve YZ araçlarının benimsenme düzeyini ölçer.",
-    framework: "acatech · EDIH Otomasyon & YZ · SIRI (WEF)",
-    questions: [
-      "Üretim/operasyon süreçlerimizde otomasyon sistemleri (PLC, robotik, otomatik hat) kullanılır.",
-      "Tekrarlayan idari işler için otomasyon araçları veya yazılım robotları (RPA) kullanılır.",
-      "Firmamızda yapay zeka destekli araçlar deneniyor veya kullanılıyor.",
-      "Makine/ekipman verilerimiz (IoT sensör, performans verisi) dijital olarak izlenip analiz ediliyor.",
-      "Operasyonel kararlarımız (bakım zamanlaması, stok, üretim planı vb.) geçmiş verilere dayalı öngörü/tahmin modelleriyle destekleniyor.",
-    ],
-    resources: [
-      { name: "EDIH — Test-Before-Invest Hizmetleri", url: "https://european-digital-innovation-hubs.ec.europa.eu" },
-      { name: "TÜBİTAK TEYDEB 1501/1507 Ar-Ge Destekleri", url: "https://tubitak.gov.tr" },
-      { name: "KOSGEB Ar-Ge ve İnovasyon Desteği", url: "https://www.kosgeb.gov.tr" },
-    ],
-    kpis: [
-      "Toplam Ekipman Etkinliği (OEE) (%)",
-      "Plansız Duruş Süresi (Saat/Ay)",
-      "Iskarta / Yeniden İşleme Oranı (%)"
-    ],
-    quickWin: "Rutin ve tekrarlayan idari veri transferleri için temel düzeyde masaüstü otomasyon (RPA / Zapier) veya Excel makroları devreye alarak zaman kazanın.",
-    levelGuide: [
-      {
-        description: "Operasyonlar büyük ölçüde manuel iş gücü ve kâğıt/Excel takibiyle yürütülüyor.",
-        action: "1. Odak: Yüksek hacimli, kurala dayalı rutin işleri belirleyin. 2. Araç: Temel idari süreçlerde masaüstü RPA veya Excel otomasyon şablonları kullanın. 3. Çıktı: Angarya yükünü hafifletip veri giriş hatalarını sıfırlayın."
-      },
-      {
-        description: "Noktasal otomasyonlar (PLC, adil yazılımlar) var fakat adalar halinde, entegre değil.",
-        action: "1. Odak: Yazılımlar ve makineler arası veri kopukluğunu ortadan kaldırın. 2. Araç: API entegrasyonları, endüstriyel haberleşme protokolleri (Modbus, OPC UA) kullanın. 3. Çıktı: Operasyon verisinin bilgi sistemlerine otomatik akışını sağlayın."
-      },
-      {
-        description: "Otomasyon kurumsal süreçlerin standart parçası; sahadan veri toplama otomatize edilmiş.",
-        action: "1. Odak: Saha ve üretim ortamındaki tüm varlıkları izlenebilir kılın. 2. Araç: Endüstriyel IoT (IIoT) sensörleri, MES ve kurumsal RPA araçları kurun. 3. Çıktı: Ekipman Verimliliği (OEE) ve operasyonel performansı anlık görünür yapın."
-      },
-      {
-        description: "Makine ve süreç verileri düzenli analiz edilerek arıza ve duruşlar öngörülebiliyor.",
-        action: "1. Odak: Reaktif bakımdan kestirimci yaklaşıma geçin. 2. Araç: Kestirimci Bakım (Predictive Maintenance) ve Yapay Zeka destekli Kalite Kontrol kameraları kullanın. 3. Çıktı: Ekipman ömrünü uzatın, arıza maliyetlerini düşürün."
-      },
-      {
-        description: "Yapay zeka ve otonom sistemler operasyonel kararları insan müdahalesiz optimize ediyor.",
-        action: "1. Odak: Esnek ve otonom çalışan sistemler kurun. 2. Araç: Dijital İkiz (Digital Twin), GenAI süreç asistanları ve otonom karar verici YZ ajanları entegre edin. 3. Çıktı: Kendi kendini kalibre eden otonom yapıya ulaşın."
-      },
-    ],
+    short: "Hazırlık",
+    title: "Dijital Hazırlıklılık",
+    description:
+      "Ana akım ve gelişmiş dijital teknolojilerin işletmede ne ölçüde benimsendiğini değerlendirir.",
+    questions: ["q3", "q4"],
   },
   {
     id: "people",
-    no: "05",
-    short: "Yetkinlik",
-    title: "Dijital Yetkinlik ve İnsan Kaynağı",
-    intro: "Çalışan yetkinliği, organizasyonel yapı ve yönetimin dijital dönüşüme verdiği önceliği ölçer.",
-    framework: "acatech · MIT & Capgemini · OECD Nitelikli İşler",
-    questions: [
-      "Çalışanlarımız günlük işlerinde kullandıkları dijital araçlar konusunda yeterli eğitim almıştır.",
-      "Firmamızda dijital dönüşüm/yeni teknoloji konularında düzenli eğitim faaliyetleri yürütülür.",
-      "Yönetim, dijital dönüşümü stratejik öncelik olarak görür ve kaynak ayırır.",
-      "Dijitalleşme sürecinde çalışanlarımız için yeni roller/pozisyonlar tanımlanmış veya mevcut iş tanımları güncellenmiştir.",
-      "Firmamızda dijital dönüşüm sürecini yürüten veya bu konuda sorumluluk üstlenen tanımlı bir kişi/ekip vardır.",
-    ],
-    resources: [
-      { name: "Çorlu TSO Ücretsiz Eğitim Programları", url: null },
-    ],
-    kpis: [
-      "Çalışan Başına Yıllık Dijital Eğitim Saati",
-      "Dijital Araç Adaptasyon ve Kullanım Sıcaklığı",
-      "İçsel Dijitalleşme Proje Öneri Sayısı"
-    ],
-    quickWin: "Çalışanlar için temel siber güvenlik, yapay zeka araçları (ChatGPT vb.) ve dijital iş akışı konseptlerinde kısa iç eğitimler/atölyeler başlatın.",
-    levelGuide: [
-      {
-        description: "Dijital okuryazarlık düşük; teknoloji kullanımına karşı kurumsal direnç gözleniyor.",
-        action: "1. Odak: Dijitalleşme kültürünü başlatın. 2. Araç: Personel dijital yetkinlik envanteri çıkarın; temel siber hijyen ve dijital araç eğitimleri düzenleyin. 3. Çıktı: Kurumsal dijital farkındalığı artırın."
-      },
-      {
-        description: "Bazı kilit personel gelişmiş araçları kullanıyor ancak eğitim kişisel çabaya bağlı.",
-        action: "1. Odak: Bireysel çabaları kurumsal yetkinlik planına dönüştürün. 2. Araç: Departman bazlı Dijital Beceri Geliştirme (Upskilling) takvimi oluşturun. 3. Çıktı: Dijital araç kullanımını tüm departmanlara yayın."
-      },
-      {
-        description: "Yönetim dijitalleşmeyi stratejik hedef olarak benimsemiş; bütçe ve sorumlular tanımlı.",
-        action: "1. Odak: Değişim yönetimini (Change Management) systematize edin. 2. Araç: Çapraz fonksiyonlu Dijital Dönüşüm Komitesi kurun ve 'Dijital Elçiler' belirleyin. 3. Çıktı: Yıllık bütçe ve somut OKR'lar ile ilerleyin."
-      },
-      {
-        description: "Dijital kültür organizasyona yayılmış; çalışanların katkısı sayısal takip ediliyor.",
-        action: "1. Odak: Dijital araç verimliliğini performans sistemine bağlayın. 2. Araç: İK Analitiği ve Eğitim Takip Sistemleri (LMS) devreye alın. 3. Çıktı: Dijital yetkinlik gelişimini sayısal olarak kanıtlayın."
-      },
-      {
-        description: "Çevik (Agile), sürekli öğrenen ve yapay zekayı günlük işe entegre etmiş organizasyon.",
-        action: "1. Odak: İç girişimcilik ve sürekli inovasyon kültürünü merkeze koyun. 2. Araç: Çevik Takımlar (Agile Squads) ve Yapay Zeka Yardımcıları (AI Copilots) kullanımını yayın. 3. Çıktı: Işık hızında adapte olan dijital kültür yaratın."
-      },
-    ],
+    no: "03",
+    short: "İnsan",
+    title: "İnsan Odaklı Dijitalleşme",
+    description:
+      "Personelin dijital becerilerini, katılımını ve dijital araçlarla güçlendirilmesini değerlendirir.",
+    questions: ["q5", "q6"],
   },
   {
-    id: "security",
+    id: "data",
+    no: "04",
+    short: "Veri",
+    title: "Veri Yönetimi ve Bağlanabilirliği",
+    description:
+      "Verinin saklanması, düzenlenmesi, erişilebilirliği, analizi ve siber güvenlik uygulamalarını değerlendirir.",
+    questions: ["q7", "q8"],
+  },
+  {
+    id: "ai",
+    no: "05",
+    short: "YZ",
+    title: "Otomasyon ve Yapay Zekâ",
+    description:
+      "İş süreçlerinde otomasyon, analitik ve yapay zekâ tabanlı uygulamaların olgunluğunu değerlendirir.",
+    questions: ["q9"],
+  },
+  {
+    id: "green",
     no: "06",
-    short: "Güvenlik",
-    title: "Siber Güvenlik ve Altyapı (NIST Uyumlu)",
-    intro: "IT altyapısı, siber dayanıklılık ve KVKK uyum farkındalığını ölçer.",
-    framework: "acatech · OECD Güven · NIST Cybersecurity Framework",
-    questions: [
-      "İnternet, sunucu, bulut altyapımız güncel ve ihtiyaçlarımızı karşılayacak durumdadır.",
-      "Sistemlerimize erişim yetkilendirme ile kontrol edilir; şifre/erişim politikalarımız vardır.",
-      "Siber saldırı, veri sızıntısı gibi risklere karşı önlemlerimiz (antivirüs, güvenlik duvarı vb.) mevcuttur.",
-      "KVKK ve veri güvenliği yükümlülüklerimiz konusunda farkındalığımız ve uyum sürecimiz vardır.",
-      "Sistem arızası veya veri kaybı durumuna karşı bir iş sürekliliği/kurtarma planımız vardır.",
-    ],
-    resources: [
-      { name: "KOSGEB Bilgi Yönetimi Destek Programı", url: "https://www.kosgeb.gov.tr" },
-      { name: "KVKK Kurumu — VERBİS Rehberlik Kaynakları", url: "https://verbis.kvkk.gov.tr" },
-      { name: "TSE — ISO/IEC 27001 Bilgi Güvenliği Danışmanlığı", url: "https://www.tse.org.tr" },
-    ],
-    kpis: [
-      "Ortalama Tehdit Tespit Süresi (MTTD)",
-      "Ortalama Müdahale Süresi (MTTR)",
-      "Yedekleme Test Başarı Oranı (%)"
-    ],
-    quickWin: "Şirket e-posta ve bulut hesaplarında Çok Faktörlü Doğrulamayı (MFA) acilen zorunlu hale getirin ve otomatik bulut yedeklemesini test edin.",
-    levelGuide: [
-      {
-        description: "Temel siber güvenlik önlemleri ve veri yedekleme yetersiz; veri kaybı ve saldırı riski yüksek.",
-        action: "1. Odak: Temel siber hijyeni sağlayın. 2. Araç: Lisanslı Antivirüs, UTM Firewall edinin; 3-2-1 kuralına uygun otomatik yedekleme ve MFA zorunluluğu getirin. 3. Çıktı: İşletmeyi fidye yazılımlarından koruyun."
-      },
-      {
-        description: "Temel güvenlik araçları var ancak yazılı güvenlik politikası ve yetkilendirme eksik.",
-        action: "1. Odak: Bilgi güvenliği kurallarını resmileştirin. 2. Araç: Bilgi Güvenliği Politikası hazırlayın; En Az Yetki prensibi uygulayın ve çalışanlara Oltalama (Phishing) eğitimi verin. 3. Çıktı: İnsan kaynaklı zafiyetleri önleyin."
-      },
-      {
-        description: "Siber güvenlik ve altyapı politikaları tanımlı; KVKK ve ISO 27001 standartlarına uyum var.",
-        action: "1. Odak: Zafiyetleri proaktif tespit edin. 2. Araç: Yılda en az bir kez profesyonel Sızma Testi (Penetration Test) yaptırın; Felaket Kurtarma merkezini aktif edin. 3. Çıktı: İş sürekliliğini garantiye alın."
-      },
-      {
-        description: "Ağ trafiği ve sistem olayları 7/24 izleniyor; ihlallere anlık müdahale ediliyor.",
-        action: "1. Odak: Tehditleri yayılmadan ağ seviyesinde engelleyin. 2. Araç: SIEM ve EDR çözümleri kurun. 3. Çıktı: Tespit (MTTD) ve müdahale (MTTR) sürelerini dakikalara indirin."
-      },
-      {
-        description: "Sıfır Güven (Zero Trust) mimarisi ve yapay zeka destekli otonom tehdit avcılığı aktif.",
-        action: "1. Odak: Hiçbir kullanıcı/cihaza varsayılan olarak güvenmeyen bütünsel koruma sağlayın. 2. Araç: Sıfır Güven (Zero Trust Network Access) ve SOAR entegre edin. 3. Çıktı: Karmaşık tehditlere karşı otonom savunan dayanıklı altyapı oluşturun."
-      },
-    ],
+    short: "Yeşil",
+    title: "Yeşil Dijitalleşme",
+    description:
+      "Dijitalleşmenin çevresel sürdürülebilirlik, kaynak verimliliği ve çevresel seçimlerle ilişkisini değerlendirir.",
+    questions: ["q10", "q11"],
   },
 ];
 
-const SCALE_LABELS = ["Hiç yok", "Başlangıç", "Kısmen var", "Sistematik", "Tam entegre"];
+export const QUESTIONS = {
+  q1: {
+    id: "q1",
+    no: 1,
+    type: "matrix-yes",
+    title:
+      "İşletmeniz aşağıdaki hangi iş alanlarında dijitalleşmeye halihazırda yatırım yaptı ve gelecekte hangi alanlara yatırım yapmayı planlıyor? Lütfen uygun tüm seçenekleri işaretleyin:",
+    columns: ["Halihazırda yatırım yapıldı", "Yatırım yapmayı planlıyor"],
+    items: [
+      "Ürün/Hizmet tasarımı (araştırma, geliştirme ve inovasyon dahil)",
+      "Proje planlama ve yönetimi",
+      "Operasyonlar (fiziksel mal üretimi/imalat, paketleme, bakım, hizmetler, vb.)",
+      "Diğer dahili tesis konumları veya değer zincirindeki diğer şirketlerle işbirliği",
+      "Gelen lojistik ve depolama",
+      "Pazarlama, satış ve müşteri hizmetleri (müşteri yönetimi, sipariş işleme, yardım masası, vb.)",
+      "Teslimat (giden lojistik, e-Faturalar, vb.)",
+      "Yönetim ve insan kaynakları",
+      "Tedarik ve alımlar",
+      "(Siber) güvenlik ve Kişisel Veri düzenlemeleri/GDPR ile uyumluluk",
+    ],
+  },
+  q2: {
+    id: "q2",
+    no: 2,
+    type: "multi",
+    title:
+      "İşletmeniz (daha fazla) dijitalleşmeye aşağıdaki yöntemlerden hangisiyle hazırlanıyor? Lütfen uygun tüm seçenekleri işaretleyin:",
+    items: [
+      "Dijitalleşme ihtiyaçları belirlenir ve işletme hedefleri ile uyumlu hale getirilir",
+      "En az bir yıl boyunca dijitalleşmeyi güvence altına almak için finansal kaynakların (öz kaynaklar, krediler, sübvansiyonlar) belirlenmesi",
+      "Dijitalleşme planlarını desteklemeye hazır Bilgi Teknolojileri (BT) altyapısı",
+      "Bilgi ve İletişim Teknolojileri (BİT) uzmanları istihdam edilmiş/taşeron olarak çalıştırılmaktadır (veya işe alım/taşeron ihtiyaçları belirlenmiştir)",
+      "İşletme yönetiminin gerekli kurumsal değişikliklere öncülük etmeye hazır olması",
+      "İlgili iş birimlerinin ve çalışanlarının dijitalleşme planlarını desteklemeye hazır olması",
+      "İş mimarisi ve operasyonel süreçler, dijitalleşmenin gerektirdiği şekilde uyarlanabilir",
+      "Üretilen ürünlerin halihazırda bir hizmet olarak ticarileştirilmesi (Hizmetleştirme olarak adlandırılır) veya dijital teknolojiler tarafından etkinleştirilen hizmetlerle desteklenmesi",
+      "Müşterilerin ve ortakların çevrim içi hizmetlerden/etkileşimlerden memnuniyetinin düzenli olarak gözlenmesi (sosyal medya kanallarında, e-ticaret operasyonlarında, e-posta alışverişlerinde vb.)",
+      "Dijitalleşmenin riskleri (örneğin, diğer iş alanları üzerindeki planlanmamış etkiler) göz önünde bulundurulmaktadır",
+    ],
+  },
+  q3: {
+    id: "q3",
+    no: 3,
+    type: "multi",
+    title:
+      "İşletmeniz tarafından şu anda aşağıdaki dijital teknoloji ve çözümlerden hangileri kullanılmaktadır? Lütfen uygun tüm seçenekleri işaretleyin:",
+    items: [
+      "Bağlantı altyapısı (yüksek hızlı (fiber) İnternet, bulut bilişim hizmetleri, ofis sistemlerine uzaktan erişim)",
+      "İşletmenin İnternet sitesi",
+      "Müşterilerle iletişim kurmak için İnternet tabanlı formlar ve bloglar/forumlar",
+      "Müşterilerle iletişim kurmak için canlı sohbetler, sosyal ağlar ve sohbet robotları",
+      "E-Ticaret satışları (İşletmeden Tüketiciye, İşletmeden İşletmeye)",
+      "E-Pazarlama tanıtımı (çevrim içi reklamlar, iş için sosyal medya, vb.)",
+      "E-Devlet (kamu ihaleleri de dahil olmak üzere kamu kurumlarıyla çevrim içi etkileşim)",
+      "Uzaktan faaliyet işbirliği araçları (ör. telefonla çalışma platformu, video konferans, sanal öğrenme, işe özel)",
+      "Dahili İnternet portalı (kurum içi ağ)",
+      "Bilgi Yönetim Sistemleri (İşletme Kaynakları Planlaması, Ürün Yaşam Döngüsü Yönetimi, Müşteri İlişkileri Yönetimi, Tedarik Zinciri Yönetimi, e-faturalama)",
+    ],
+  },
+  q4: {
+    id: "q4",
+    no: 4,
+    type: "scale05",
+    title:
+      "Aşağıdaki gelişmiş dijital teknolojilerden hangileri işletmeniz tarafından halihazırda kullanılıyor? Lütfen 0-5 ölçeğini kullanarak tüm seçenekleri derecelendirin:",
+    items: [
+      "Simülasyon ve dijital ikizler (yani fiziksel nesnelerin/süreçlerin gerçek zamanlı dijital temsilleri)",
+      "Sanal gerçeklik, artırılmış gerçeklik",
+      "Bilgisayar destekli tasarım (CAD) ve üretim (CAM)",
+      "Üretim yürütme sistemleri",
+      "Nesnelerin İnterneti (IoT) ve Endüstriyel Nesnelerin İnterneti (I-IoT)",
+      "Blockchain teknolojisi",
+      "Katmanlı üretim (örn. 3D yazıcılar)",
+    ],
+  },
+  q5: {
+    id: "q5",
+    no: 5,
+    type: "multi",
+    title:
+      "İşletmeniz, personelini dijitalleşme için yeniden beceri kazandırmak ve yetkinleştirmek için neler yapıyor? Lütfen uygun tüm seçenekleri işaretleyin:",
+    items: [
+      "Beceri eksikliklerini belirlemek için personel beceri değerlendirmesi yapar",
+      "Personelin eğitimi ve yetkinlik kazandırılması için bir eğitim planı tasarlıyor",
+      "Kısa eğitimler düzenliyor, öğretici kitapçıklar/kılavuzlar ve diğer e-öğrenim kaynakları sağlıyor",
+      "Yaparak öğrenme/eşli öğrenme/deneyim edinme fırsatlarını kolaylaştırıyor",
+      "Ana yetkinlik alanlarında stajyerlik ve iş yerleştirmeleri sağlıyor",
+      "Personeli, harici kuruluşlar (eğitim sağlayıcılar, akademisyenler, satıcılar) tarafından düzenlenen eğitimlere katılmaya teşvik ediyor",
+      "Sübvansiyonlu eğitim ve beceri geliştirme programlarından yararlanıyor",
+    ],
+  },
+  q6: {
+    id: "q6",
+    no: 6,
+    type: "multi",
+    title:
+      "Yeni dijital çözümleri benimserken, işletmeniz personelinin katılımını nasıl sağlıyor ve onları nasıl destekliyor? Lütfen uygun tüm seçenekleri işaretleyin:",
+    items: [
+      "Personelin yeni dijital teknolojiler hakkındaki farkındalığını kolaylaştırmak",
+      "Dijitalleşme planlarını personele şeffaf ve kapsayıcı bir şekilde iletmek",
+      "Personelin kabulünü izleyerek potansiyel yan etkileri azaltmak için önlemler almak (örneğin, değişme korkusu; 'daima açık' kültürü ile iş-hayat dengesi; gizlilik ihlali risklerine karşı önlemler vb.)",
+      "Ürün/hizmet/süreç dijitalizasyonunun tasarımına ve geliştirilmesine personeli (BİT dışı personel dahil) dahil etmek",
+      "Personele, karar almaları ve yürütmeleri için daha fazla özerklik ve uygun dijital araçlar sağlamak",
+      "İşleri ve iş akışlarını, personelin gerçekten çalışmak istediği yolları destekleyecek şekilde yeniden tasarlar/uyarlar",
+      "Dijitalleşmenin sağladığı daha esnek çalışma düzenlemeleri oluşturmak (örn. uzaktan çalışma)",
+      "Personele dijital destek ekibi/servisi (dahili/harici) sağlamak",
+    ],
+  },
+  q7: {
+    id: "q7",
+    no: 7,
+    type: "multi",
+    title:
+      "İşletmenizin verileri nasıl yönetiliyor (yani saklanıyor, düzenleniyor, erişiliyor ve kullanılıyor)? Lütfen uygun tüm seçenekleri işaretleyin:",
+    items: [
+      "Kurumumuzda bir veri yönetimi politikası/planı/önlemler bütünü bulunmaktadır",
+      "Veriler dijital olarak toplanmıyor",
+      "İlgili veriler dijital olarak depolanıyor (örn. ofis uygulamaları, e-posta klasörleri, bağımsız uygulamalar, CRM veya ERP sistemi vb.)",
+      "Veriler farklı sistemler arasında dağıtılmış olsalar bile uygun şekilde entegre ediliyor (örneğin, uyumlu sistemler, uygulama programlama ara birimleri aracılığıyla)",
+      "Verilere farklı cihazlardan ve konumlardan gerçek zamanlı olarak erişilebiliyor",
+      "Toplanan veriler düzenli olarak analiz ediliyor ve karar verme için raporlanıyor",
+      "Veri analizleri, harici kaynakların kendi verileriyle birleştirilmesiyle zenginleştirilir",
+      "Veri analizlerine uzman yardımı olmadan erişilebiliyor (örneğin kontrol paneli üzerinden)",
+    ],
+    zeroScoreItems: [1],
+  },
+  q8: {
+    id: "q8",
+    no: 8,
+    type: "multi",
+    title: "İşletmenizin verileri yeterince güvende mi? Lütfen uygun tüm seçenekleri işaretleyin:",
+    items: [
+      "Bir işletme veri güvenliği politikası/önlemler bütünü bulunmaktadır",
+      "Müşteriyle ilgili tüm veriler siber saldırılara karşı korunmaktadır",
+      "Personel düzenli olarak siber güvenlik ve veri koruma sorunları/riskleri hakkında bilgilendirilmekte ve eğitilmektedir",
+      "Siber tehditler düzenli olarak izlenmekte ve değerlendirilmektedir",
+      "Kritik işletme verilerinin tam bir yedek kopyası tutulmaktadır (kapalı sistemde/bulutta)",
+      "Felaket senaryolarında iş sürekliliği planı mevcuttur (tüm verilerin fidye yazılımı saldırısıyla kilitlenmesi veya BT altyapısına fiziksel zarar gelmesi gibi)",
+    ],
+  },
+  q9: {
+    id: "q9",
+    no: 9,
+    type: "scale05",
+    title:
+      "İşletmeniz aşağıdaki teknolojilerden ve iş uygulamalarından hangilerini halihazırda kullanıyor? Lütfen 0-5 ölçeğini kullanarak tüm seçenekleri derecelendirin:",
+    items: [
+      "Sohbet robotları, metin madenciliği, makine çevirisi, duygu analizi dahil olmak üzere Doğal Dil İşleme",
+      "Bilgisayar görüşü / görüntü tanıma",
+      "Ses işleme / konuşma tanıma, işleme ve sentezleme",
+      "Robotik ve otonom cihazlar",
+      "İş zekası, veri analizi, karar destek sistemleri, öneri sistemleri, akıllı kontrol sistemleri",
+    ],
+  },
+  q10: {
+    id: "q10",
+    no: 10,
+    type: "multi",
+    title:
+      "İşletmeniz çevresel sürdürülebilirliğe katkıda bulunmak için dijital teknolojileri nasıl kullanıyor? Lütfen uygun tüm seçenekleri işaretleyin:",
+    items: [
+      "Sürdürülebilir iş modeli (örn. döngüsel ekonomi modeli, hizmet olarak ürün)",
+      "Sürdürülebilir hizmet sunumu (örn. diğer kullanıcılar tarafından daha fazla yeniden kullanım için kullanım takibi)",
+      "Sürdürülebilir ürünler (örneğin, eko-tasarım, uçtan uca ürün yaşam döngüsü planlaması, kullanım ömrünün sonlandırılması ve faydalı ömrün uzatılması)",
+      "Sürdürülebilir üretim ve imalat yöntemleri, malzemeler ve bileşenler (kullanım ömrü sonu yönetimi dahil)",
+      "Emisyonlar, kirlilik ve/veya atık yönetimi",
+      "Kendi tesislerinde sürdürülebilir enerji üretimi",
+      "Ham madde tüketiminin/maliyetinin iyileştirilmesi",
+      "Nakliye ve paketleme maliyetlerinin azaltılması",
+      "Sorumlu tüketici davranışlarını teşvik etmek için dijital uygulamalar",
+      "Kağıtsız idari süreçler",
+    ],
+  },
+  q11: {
+    id: "q11",
+    no: 11,
+    type: "partial",
+    title:
+      "İşletmeniz dijital seçim ve uygulamalarında çevresel etkileri dikkate alıyor mu? Lütfen verilen skalayı kullanarak tüm seçenekleri değerlendirin: Hayır, Kısmen, Evet:",
+    items: [
+      "Çevresel kaygılar ve standartlar işletmenin iş modeli ve stratejisine dahil edilmiştir",
+      "Uygulanan bir Çevre Yönetim Sistemi/sertifikasyonu bulunmaktadır",
+      "Çevresel yönler dijital teknolojilerin/tedarikçilerin tedarik kriterlerinin bir parçasıdır",
+      "Dijital teknolojilerin ve veri depolama alanının enerji tüketimi izlenir ve optimize edilir",
+      "Eski teknolojik ekipmanın geri dönüşümü/yeniden kullanımı işletme tarafından aktif olarak uygulanmaktadır",
+    ],
+  },
+};
 
-const LEVELS = [
-  { max: 1.49, name: "Bilgisayarlaşma", desc: "Temel dijital araçlar münferit kullanılıyor; süreçler büyük ölçüde manuel.", recommendation: "Öncelik: temel dijital altyapıyı (donanım, temel yazılımlar) tüm departmanlara yaygınlaştırmak." },
-  { max: 2.19, name: "Bağlanabilirlik", desc: "Sistemler birbirine bağlanmaya başlamış ama entegrasyon sınırlı.", recommendation: "Öncelik: farklı sistemleri (ERP, muhasebe, üretim) birbirine bağlayıp veri akışını otomatikleştirmek." },
-  { max: 2.89, name: "Görünürlük", desc: "Veriler görünür hale geliyor; süreçler izlenebiliyor ama analiz sığ.", recommendation: "Öncelik: toplanan veriyi anlamlı raporlara dönüştürüp yönetime düzenli sunmak." },
-  { max: 3.59, name: "Şeffaflık", desc: "Veriler ilişkilendirilip yorumlanıyor; kararlar veriye dayanıyor.", recommendation: "Öncelik: farklı veri kaynaklarını ilişkilendirip kök-neden analizleri yapabilmek." },
-  { max: 4.29, name: "Öngörü Yeteneği", desc: "Geçmiş veriden geleceğe dair tahmin/öngörü üretilebiliyor.", recommendation: "Öncelik: geçmiş veriden geleceğe dair tahmin modelleri geliştirmek (talep, bakım, risk)." },
-  { max: 5.01, name: "Uyarlanabilirlik", desc: "Sistemler kendi kendine öğreniyor, süreçler otonom şekilde optimize oluyor.", recommendation: "Öncelik: sistemlerin kendi kendine öğrenip süreçleri otonom optimize etmesini sağlamak." },
-];
+export const createInitialAnswers = () => ({
+  q1Invested: { selected: [], none: false },
+  q1Planned: { selected: [], none: false },
+  q2: { selected: [], none: false },
+  q3: { selected: [], none: false },
+  q4: Array(QUESTIONS.q4.items.length).fill(null),
+  q5: { selected: [], none: false },
+  q6: { selected: [], none: false },
+  q7: { selected: [], none: false },
+  q8: { selected: [], none: false },
+  q9: Array(QUESTIONS.q9.items.length).fill(null),
+  q10: { selected: [], none: false },
+  q11: Array(QUESTIONS.q11.items.length).fill(null),
+});
 
-function levelFor(score) {
-  return LEVELS.find((l) => score <= l.max) ?? LEVELS[LEVELS.length - 1];
+const round2 = (n) => Math.round((n + Number.EPSILON) * 100) / 100;
+const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
+
+function multiScore(group, questionId) {
+  const q = QUESTIONS[questionId];
+  const zeroSet = new Set(q.zeroScoreItems || []);
+  const positiveItemCount = q.items.length - zeroSet.size;
+  const selectedPositive = (group?.selected || []).filter((idx) => !zeroSet.has(idx)).length;
+  if (!positiveItemCount) return 0;
+  return clamp((selectedPositive * 10) / positiveItemCount, 0, 10);
 }
 
-function statusFor(score) {
-  if (score < 3) return { label: "Öncelikli gelişim alanı", tone: "low" };
-  if (score < 4) return { label: "Gelişim fırsatı", tone: "mid" };
-  return { label: "Güçlü alan", tone: "high" };
+function scale05Score(values) {
+  if (!values?.length) return 0;
+  // 0..5 => 0, .2, .4, .6, .8, 1. Her öğe eşit ağırlıkta.
+  const raw = values.reduce((sum, v) => sum + (Number(v || 0) / 5), 0);
+  return clamp((raw * 10) / values.length, 0, 10);
 }
 
-function axisLevelGuide(axis, score) {
-  const levelIndex = Math.max(1, Math.min(5, Math.round(score || 1)));
-  const guide = axis.levelGuide[levelIndex - 1];
-  return { level: levelIndex, name: CMMI_LEVEL_NAMES[levelIndex - 1], ...guide };
+function partialScore(values) {
+  if (!values?.length) return 0;
+  // SME Q11 resmi ekinde Hayır=0, Kısmen=1, Evet=2; 5 öğe => azami 10 puan.
+  return clamp(values.reduce((sum, v) => sum + Number(v || 0), 0), 0, 10);
 }
 
-export { AXES, SCALE_LABELS, LEVELS, CMMI_LEVEL_NAMES, levelFor, statusFor, axisLevelGuide };
+export function calculateDMAT(answers) {
+  const q1ai = multiScore(answers.q1Invested, "q2"); // 10 adet 0/1 öğe; q2 ile aynı max yapı
+  const q1pi = multiScore(answers.q1Planned, "q2");
+  const q2 = multiScore(answers.q2, "q2");
+  const q3 = multiScore(answers.q3, "q3");
+  const q4 = scale05Score(answers.q4);
+  const q5 = multiScore(answers.q5, "q5");
+  const q6 = multiScore(answers.q6, "q6");
+  const q7 = multiScore(answers.q7, "q7");
+  const q8 = multiScore(answers.q8, "q8");
+  const q9 = scale05Score(answers.q9);
+  const q10 = multiScore(answers.q10, "q10");
+  const q11 = partialScore(answers.q11);
+
+  const questionScores = {
+    q1Invested: round2(q1ai),
+    q1Planned: round2(q1pi),
+    q2: round2(q2),
+    q3: round2(q3),
+    q4: round2(q4),
+    q5: round2(q5),
+    q6: round2(q6),
+    q7: round2(q7),
+    q8: round2(q8),
+    q9: round2(q9),
+    q10: round2(q10),
+    q11: round2(q11),
+  };
+
+  const dimensionScores = {
+    // Resmi kılavuz: Q1'in iki sütunu ayrı soru gibi değerlendirilir; Q2 ile birlikte D1'i oluşturur.
+    strategy: round2(((q1ai + q1pi + q2) / 30) * 100),
+    readiness: round2((q3 + q4) * 5),
+    people: round2((q5 + q6) * 5),
+    data: round2((q7 + q8) * 5),
+    ai: round2(q9 * 10),
+    green: round2((q10 + q11) * 5),
+  };
+
+  const overall = round2(
+    Object.values(dimensionScores).reduce((sum, v) => sum + v, 0) /
+      Object.values(dimensionScores).length
+  );
+
+  return { questionScores, dimensionScores, overall, level: maturityLevel(overall) };
+}
+
+export function maturityLevel(score) {
+  // JRC yorumlama bantları: Basic 0-25, Average 26-50,
+  // Moderately advanced 50-75, Advanced 76-100. Sınır çakışmasını
+  // deterministik kılmak için 50, "Ortalama" bandında tutulur.
+  if (score <= 25) return { key: "basic", name: "Temel", official: "Basic", range: "0–25" };
+  if (score <= 50) return { key: "average", name: "Ortalama", official: "Average", range: "26–50" };
+  if (score <= 75) return { key: "moderate", name: "Orta İleri", official: "Moderately advanced", range: "51–75" };
+  return { key: "advanced", name: "İleri", official: "Advanced", range: "76–100" };
+}
+
+const INTERPRETATIONS = {
+  strategy: {
+    basic: "Dijitalleşme için plan, kaynak ve yatırım kapsamı henüz sınırlı. Öncelik, açık bir plan ve kaynak tahsisi oluşturmaktır.",
+    average: "Başlangıç düzeyinde plan, kaynak ve yatırımlar mevcut; dijitalleşmenin stratejik öneminin ve yatırım kapsamının genişletilmesi gerekir.",
+    moderate: "Belirgin bir plan, kaynak ve yönetim desteği bulunuyor; mevcut ve planlanan yatırımlar birçok iş alanına yayılmış durumda.",
+    advanced: "Dijitalleşme stratejik bir öncelik; kapsamlı yatırımlar, kaynaklar ve yönetim taahhüdü yerleşmiş durumda.",
+  },
+  readiness: {
+    basic: "Ana akım dijital teknolojilerin kullanımı az ve gelişmiş teknolojiler sınırlı. Temel dijital altyapı ve kullanım alanları genişletilebilir.",
+    average: "Ana akım dijital teknolojiler kullanılmaya başlanmış; gelişmiş teknolojilerin işletme süreçlerine yayılımı sınırlı.",
+    moderate: "Temel dijital altyapı güçlü, ana akım teknolojiler yaygın; bazı gelişmiş teknolojiler uygulanıyor veya deneniyor.",
+    advanced: "Ana akım ve gelişmiş dijital teknolojiler geniş ölçekte benimsenmiş ve iş süreçlerine operasyonel olarak yerleşmiş durumda.",
+  },
+  people: {
+    basic: "Dijital beceri geliştirme ve personel katılımı sınırlı. Sistematik beceri analizi ve eğitim planı önemli bir başlangıç alanıdır.",
+    average: "Bazı eğitim ve katılım uygulamaları mevcut; bunların planlı, sürekli ve kapsayıcı bir yapıya dönüştürülmesi gerekir.",
+    moderate: "Personel eğitimi, katılımı ve dijital çalışma düzenleri büyük ölçüde yapılandırılmış; ileri beceriler için gelişim alanı vardır.",
+    advanced: "Kapsamlı beceri geliştirme, personel katılımı, esnek çalışma ve dijital destek uygulamaları kurumsallaşmış durumda.",
+  },
+  data: {
+    basic: "Veri yönetimi ve güvenliği erken aşamada. Dijital saklama, politika, yedekleme ve siber güvenlik için temel yapı kurulmalıdır.",
+    average: "Veri dijital olarak tutuluyor ve bazı güvenlik uygulamaları var; entegrasyon, analitik ve süreklilik planları geliştirilebilir.",
+    moderate: "Veri politikaları, yapılandırılmış dijital veri, analiz ve güvenlik uygulamaları büyük ölçüde mevcut; entegrasyon derinleştirilebilir.",
+    advanced: "Veri entegre, erişilebilir ve karar desteğinde etkin kullanılıyor; siber güvenlik, yedekleme ve iş sürekliliği güçlü biçimde uygulanıyor.",
+  },
+  ai: {
+    basic: "Otomasyon ve yapay zekâ kullanımı yok veya çok sınırlı. Uygun süreçlerde küçük ölçekli pilotlar başlanabilir.",
+    average: "Otomasyon/analitik uygulamaları kısmi veya belirli görevlerle sınırlı; kullanım alanlarının iş süreçlerine yayılması gerekir.",
+    moderate: "Birden çok süreçte otomasyon, analitik veya yapay zekâ uygulanıyor; iş sonuçlarına etkisi görünür hale gelmeye başlamış durumda.",
+    advanced: "Otomasyon, analitik ve yapay zekâ iş süreçlerine geniş ölçekte yerleşmiş ve operasyonel olarak kullanılıyor.",
+  },
+  green: {
+    basic: "Dijitalleşme kararlarında çevresel etkiler sınırlı ele alınıyor. Kaynak verimliliği ve çevresel kriterler için başlangıç adımları gereklidir.",
+    average: "Bazı sürdürülebilirlik uygulamaları ve çevresel kriterler mevcut; bunların daha fazla iş sürecine yayılması gerekir.",
+    moderate: "Dijital teknolojiler sürdürülebilirlik hedeflerine çeşitli alanlarda katkı sağlıyor ve çevresel etkiler karar süreçlerinde dikkate alınıyor.",
+    advanced: "Çevresel kriterler dijital strateji ve tedarik kararlarına güçlü biçimde entegre; kaynak/enerji izleme ve döngüsellik uygulamaları yaygın.",
+  },
+};
+
+export function dimensionInterpretation(dimensionId, score) {
+  const level = maturityLevel(score);
+  return {
+    level,
+    text: INTERPRETATIONS[dimensionId][level.key],
+  };
+}
+
+export function isQuestionComplete(questionId, answers) {
+  if (questionId === "q1") {
+    const a = answers.q1Invested;
+    const p = answers.q1Planned;
+    return Boolean((a.none || a.selected.length) && (p.none || p.selected.length));
+  }
+  const q = QUESTIONS[questionId];
+  if (q.type === "multi") {
+    const v = answers[questionId];
+    return Boolean(v?.none || v?.selected?.length);
+  }
+  if (q.type === "scale05" || q.type === "partial") {
+    return Array.isArray(answers[questionId]) && answers[questionId].every((v) => v !== null && v !== undefined);
+  }
+  return false;
+}
