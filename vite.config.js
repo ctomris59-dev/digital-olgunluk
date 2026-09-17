@@ -65,6 +65,11 @@ function dmatAlignmentPlugin() {
           'const planned = answers.q1Planned.none ? "Hayır" : answers.q1Planned.selected.includes(i) ? "Evet" : "Hayır";',
           'const planned = answers.q1Planned.selected.includes(i) ? "Evet" : "Hayır";',
         );
+
+        code = code.replace(
+          /function addResponseBlock\(doc, title, lines, y\) \{[\s\S]*?\n\}/,
+          `function addResponseBlock(doc, title, lines, y) {\n  const titleWidth = CONTENT_W - 2;\n  setFont(doc, true, 8.2, NAVY);\n  const titleLines = doc.splitTextToSize(String(title || ""), titleWidth);\n  const titleNeed = titleLines.length * 4.2 + 7;\n  y = ensureSpace(doc, y, titleNeed);\n  setFont(doc, true, 8.2, NAVY);\n  titleLines.forEach((line, i) => doc.text(line, M, y + i * 4.2));\n  y += titleLines.length * 4.2 + 3;\n\n  for (const line of lines) {\n    const wrapped = doc.splitTextToSize(String(line || ""), CONTENT_W - 8);\n    for (const wrappedLine of wrapped) {\n      y = ensureSpace(doc, y, 4.5);\n      setFont(doc, false, 7.2, SLATE);\n      doc.text(wrappedLine, M + 4, y);\n      y += 3.8;\n    }\n    y += 2;\n  }\n\n  y = ensureSpace(doc, y, 4);\n  doc.setDrawColor(...GRID);\n  doc.line(M, y, PAGE_W - M, y);\n  return y + 5;\n}`,
+        );
       }
 
       return code === source ? null : { code, map: null };
