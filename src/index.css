@@ -194,3 +194,142 @@ main > .grid.gap-5.lg\:grid-cols-2 + .mt-4.rounded-2xl.border {
     margin-top: .65rem !important;
   }
 }
+
+/* Landing page typography — larger, more readable and more corporate */
+.landing .eyebrow {
+  font-size: 12px !important;
+  letter-spacing: .15em !important;
+}
+
+.landing .brand-title {
+  font-size: 19px !important;
+}
+
+.landing .method-pill {
+  font-size: 13px !important;
+  padding: 10px 14px !important;
+}
+
+.landing .tag {
+  font-size: 12px !important;
+  padding: 8px 13px !important;
+}
+
+.landing h1 {
+  font-size: clamp(44px, 5vw, 64px) !important;
+  line-height: 1.03 !important;
+}
+
+.landing .hero-copy {
+  font-size: 17px !important;
+  line-height: 1.72 !important;
+  color: rgba(255,255,255,.74) !important;
+}
+
+.landing .metric b {
+  font-size: 24px !important;
+}
+
+.landing .metric small {
+  font-size: 12px !important;
+  line-height: 1.35 !important;
+}
+
+.landing .start-btn {
+  font-size: 15px !important;
+  padding: 16px 24px !important;
+}
+
+.landing .safe-note {
+  font-size: 12px !important;
+}
+
+.landing .scope-kicker {
+  font-size: 12px !important;
+}
+
+.landing .scope-title {
+  font-size: 25px !important;
+}
+
+.landing .scope-icon {
+  width: 46px !important;
+  height: 46px !important;
+  font-size: 18px !important;
+}
+
+.landing .dimension {
+  min-height: 64px !important;
+  padding: 12px 14px !important;
+}
+
+.landing .dimension-no {
+  width: 35px !important;
+  height: 35px !important;
+  flex-basis: 35px !important;
+  font-size: 12px !important;
+}
+
+.landing .dimension-text {
+  font-size: 13px !important;
+  line-height: 1.35 !important;
+}
+
+.landing .info-title {
+  font-size: 16px !important;
+}
+
+.landing .info-copy {
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+}
+
+.landing .landing-footer {
+  font-size: 11px !important;
+}
+
+@media (min-width: 901px) and (max-height: 760px) {
+  .landing h1 {
+    font-size: 48px !important;
+  }
+
+  .landing .hero-copy {
+    font-size: 15px !important;
+    line-height: 1.55 !important;
+  }
+
+  .landing .metric b {
+    font-size: 21px !important;
+  }
+
+  .landing .metric small {
+    font-size: 11px !important;
+  }
+
+  .landing .dimension {
+    min-height: 55px !important;
+  }
+
+  .landing .dimension-text {
+    font-size: 12px !important;
+  }
+
+  .landing .info-title {
+    font-size: 15px !important;
+  }
+
+  .landing .info-copy {
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .landing .eyebrow { font-size: 9.5px !important; }
+  .landing .brand-title { font-size: 15px !important; }
+  .landing h1 { font-size: 39px !important; }
+  .landing .hero-copy { font-size: 14px !important; }
+  .landing .metric small { font-size: 11px !important; }
+  .landing .dimension-text { font-size: 12.5px !important; }
+  .landing .info-copy { font-size: 12.5px !important; }
+}
