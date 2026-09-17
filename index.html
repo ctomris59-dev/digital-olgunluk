@@ -3,30 +3,60 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dijital Olgunluk Analizi | Üye Dönüşüm Portalı</title>
+    <meta name="theme-color" content="#0b1c33" />
+    <title>DMAT Dijital Olgunluk Değerlendirmesi | Çorlu TSO</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
     <style>
-      /* DMAT question screens must be scrollable when the content exceeds viewport height. */
-      html,
-      body {
-        height: auto !important;
-        min-height: 100% !important;
-        overflow-x: hidden !important;
-        overflow-y: auto !important;
-        overscroll-behavior-y: auto !important;
-      }
-
-      #root {
-        height: auto !important;
-        min-height: 100% !important;
-        overflow: visible !important;
-      }
+      :root{--navy:#0b1c33;--navy2:#10243d;--bronze:#b9782d;--blue:#2e68d7;--line:#dfe6ed;--bg:#f2f5f8}
+      *{box-sizing:border-box}
+      html,body{margin:0;height:auto!important;min-height:100%!important;overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior-y:auto!important;font-family:'DM Sans',Arial,sans-serif;background:var(--bg);color:var(--navy2)}
+      #root{display:none;height:auto!important;min-height:100%!important;overflow:visible!important}
+      .landing{position:fixed;inset:0;z-index:9999;overflow:auto;background:linear-gradient(180deg,#f8fafc 0%,#eef3f7 100%);transition:opacity .25s ease,transform .25s ease}
+      .landing.leaving{opacity:0;transform:scale(.995);pointer-events:none}
+      .landing-header{height:70px;border-bottom:1px solid rgba(15,35,61,.09);background:rgba(255,255,255,.9);backdrop-filter:blur(16px)}
+      .header-inner,.landing-main{width:min(1180px,calc(100% - 40px));margin:0 auto}
+      .header-inner{height:100%;display:flex;align-items:center;justify-content:space-between;gap:20px}
+      .brand{display:flex;align-items:center;gap:12px;min-width:0}.brand img{width:44px;height:44px;object-fit:contain}
+      .eyebrow{font-size:10px;font-weight:800;letter-spacing:.17em;text-transform:uppercase;color:var(--bronze)}
+      .brand-title{margin-top:2px;font-family:'Manrope',sans-serif;font-size:16px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .method-pill{border:1px solid var(--line);background:#fff;border-radius:13px;padding:9px 12px;font-size:11px;font-weight:700;color:#5c6878;box-shadow:0 5px 18px rgba(15,35,61,.04)}
+      .landing-main{min-height:calc(100dvh - 70px);display:flex;flex-direction:column;justify-content:center;padding:24px 0 18px}
+      .hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:18px;align-items:stretch}
+      .hero{position:relative;overflow:hidden;min-height:505px;border-radius:34px;padding:38px 40px;background:linear-gradient(135deg,#07172b 0%,#0d2340 72%,#102b4b 100%);color:#fff;box-shadow:0 30px 80px rgba(7,23,43,.18)}
+      .hero:before{content:'';position:absolute;width:310px;height:310px;border-radius:50%;right:-110px;top:-120px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.018)}
+      .hero:after{content:'';position:absolute;width:280px;height:280px;border-radius:50%;right:70px;bottom:-190px;border:1px solid rgba(185,120,45,.3);background:rgba(185,120,45,.05)}
+      .hero-content{position:relative;z-index:2;height:100%;display:flex;flex-direction:column}
+      .tag{display:inline-flex;align-items:center;gap:8px;width:max-content;max-width:100%;border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.055);border-radius:999px;padding:7px 11px;font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:#edc287}
+      .tag-dot{width:7px;height:7px;border-radius:50%;background:#d49a4c;box-shadow:0 0 0 4px rgba(212,154,76,.12)}
+      h1{margin:24px 0 0;max-width:700px;font-family:'Manrope',sans-serif;font-size:clamp(36px,4.3vw,55px);line-height:1.04;letter-spacing:-.04em;font-weight:800}h1 span{color:#e2ad66}
+      .hero-copy{max-width:650px;margin:18px 0 0;font-size:14px;line-height:1.75;color:rgba(255,255,255,.66);font-weight:500}
+      .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:25px}.metric{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.052);border-radius:16px;padding:12px 13px}.metric b{display:block;font-family:'Manrope',sans-serif;font-size:18px;color:#fff}.metric small{display:block;margin-top:2px;font-size:9.5px;font-weight:700;color:rgba(255,255,255,.42)}
+      .hero-actions{display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:28px}.start-btn{appearance:none;border:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:10px;border-radius:16px;background:var(--bronze);color:#fff;padding:14px 20px;font-size:12px;font-weight:800;box-shadow:0 14px 32px rgba(185,120,45,.28);transition:transform .18s ease,background .18s ease}.start-btn:hover{transform:translateY(-2px);background:#a96a26}.start-btn svg{transition:transform .18s ease}.start-btn:hover svg{transform:translateX(3px)}
+      .safe-note{display:flex;align-items:center;gap:7px;font-size:10px;font-weight:700;color:rgba(255,255,255,.48)}.safe-note svg{color:#e2ad66}
+      .side{display:grid;grid-template-rows:1fr auto;gap:14px}.scope-card,.info-card{border:1px solid var(--line);background:#fff;box-shadow:0 18px 50px rgba(16,36,61,.06)}.scope-card{border-radius:30px;padding:24px}.scope-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}.scope-kicker{font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--blue)}.scope-title{margin:5px 0 0;font-family:'Manrope',sans-serif;font-size:20px;font-weight:800;letter-spacing:-.02em}.scope-icon{display:grid;place-items:center;width:41px;height:41px;border-radius:14px;background:#edf4ff;color:var(--blue);font-weight:800}
+      .dimensions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px}.dimension{display:flex;align-items:center;gap:10px;min-height:55px;border:1px solid #e3e9ef;background:#f8fafc;border-radius:16px;padding:10px 12px}.dimension-no{display:grid;place-items:center;flex:0 0 31px;width:31px;height:31px;border-radius:10px;background:#fff;color:var(--blue);font-size:10px;font-weight:800;box-shadow:0 3px 10px rgba(20,45,75,.07)}.dimension-text{font-size:10.5px;font-weight:800;line-height:1.3;color:#506074}
+      .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.info-card{border-radius:24px;padding:18px 19px}.info-icon{display:grid;place-items:center;width:36px;height:36px;border-radius:12px;background:#fbf2e7;color:var(--bronze)}.info-card:nth-child(2) .info-icon{background:#ebf8f2;color:#23815d}.info-title{margin-top:10px;font-family:'Manrope',sans-serif;font-size:13px;font-weight:800}.info-copy{margin-top:5px;font-size:10.5px;line-height:1.55;color:#768395}
+      .landing-footer{display:flex;justify-content:space-between;gap:16px;margin-top:13px;padding:0 3px;font-size:9.5px;color:#8994a2}
+      @media(max-width:900px){.landing{position:absolute}.hero-grid{grid-template-columns:1fr}.hero{min-height:auto}.landing-main{justify-content:flex-start}.metrics{grid-template-columns:repeat(2,1fr)}.side{grid-template-rows:auto auto}}
+      @media(max-width:560px){.header-inner,.landing-main{width:min(100% - 24px,1180px)}.landing-header{height:64px}.brand img{width:39px;height:39px}.eyebrow{font-size:8px}.brand-title{font-size:13px}.method-pill{display:none}.landing-main{min-height:calc(100dvh - 64px);padding-top:14px}.hero{border-radius:26px;padding:26px 22px}.tag{font-size:8.5px;letter-spacing:.09em}h1{margin-top:19px;font-size:35px}.hero-copy{font-size:12px;line-height:1.65}.hero-actions{align-items:flex-start;flex-direction:column}.start-btn{width:100%}.dimensions{grid-template-columns:1fr}.info-grid{grid-template-columns:1fr}.landing-footer{flex-direction:column}}
+      @media(min-width:901px) and (max-height:760px){.landing-main{justify-content:flex-start;padding-top:14px}.hero{min-height:455px;padding:28px 32px}h1{margin-top:18px;font-size:42px}.hero-copy{margin-top:12px;line-height:1.55}.metrics{margin-top:16px}.hero-actions{padding-top:18px}.scope-card{padding:19px}.dimensions{margin-top:13px;gap:7px}.dimension{min-height:48px}.info-card{padding:14px 16px}.info-copy{line-height:1.4}}
     </style>
   </head>
   <body>
+    <section id="landing" class="landing" aria-label="DMAT giriş sayfası">
+      <header class="landing-header"><div class="header-inner"><div class="brand"><img src="/ctso-logo.png" alt="Çorlu TSO" /><div><div class="eyebrow">Çorlu Ticaret ve Sanayi Odası</div><div class="brand-title">DMAT Dijital Olgunluk Değerlendirmesi</div></div></div><div class="method-pill">EDIH · Digital Maturity Assessment Tool</div></div></header>
+      <main class="landing-main">
+        <div class="hero-grid">
+          <section class="hero"><div class="hero-content"><div class="tag"><span class="tag-dot"></span> EDIH / JRC metodolojisi</div><h1>Dijital dönüşümünüzü <span>ölçün, görün, yönetin.</span></h1><p class="hero-copy">İşletmenizin dijital olgunluk seviyesini Avrupa Dijital İnovasyon Merkezleri kapsamında kullanılan DMAT yaklaşımıyla değerlendirin. Güçlü yönlerinizi, gelişim alanlarınızı ve 6 boyuttaki skorunuzu tek bir raporda görün.</p><div class="metrics"><div class="metric"><b>6</b><small>DMAT boyutu</small></div><div class="metric"><b>11</b><small>ana soru</small></div><div class="metric"><b>0–100</b><small>boyut skoru</small></div><div class="metric"><b>PDF</b><small>sonuç raporu</small></div></div><div class="hero-actions"><button class="start-btn" type="button" onclick="startDMAT()">Değerlendirmeye Başla <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></button><div class="safe-note"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3z"/><path d="m9 12 2 2 4-4"/></svg> Sonuçlarınız anında hesaplanır.</div></div></div></section>
+          <aside class="side"><section class="scope-card"><div class="scope-head"><div><div class="scope-kicker">Değerlendirme kapsamı</div><h2 class="scope-title">6 boyutta bütüncül görünüm</h2></div><div class="scope-icon">6D</div></div><div class="dimensions"><div class="dimension"><span class="dimension-no">01</span><span class="dimension-text">Dijital İş Stratejisi</span></div><div class="dimension"><span class="dimension-no">02</span><span class="dimension-text">Dijital Hazırlıklılık</span></div><div class="dimension"><span class="dimension-no">03</span><span class="dimension-text">İnsan Odaklı Dijitalleşme</span></div><div class="dimension"><span class="dimension-no">04</span><span class="dimension-text">Veri Yönetimi ve Bağlanabilirliği</span></div><div class="dimension"><span class="dimension-no">05</span><span class="dimension-text">Otomasyon ve Yapay Zekâ</span></div><div class="dimension"><span class="dimension-no">06</span><span class="dimension-text">Yeşil Dijitalleşme</span></div></div></section><div class="info-grid"><section class="info-card"><div class="info-icon">↗</div><div class="info-title">Anında sonuç</div><div class="info-copy">Genel skor, 6 boyut puanı ve soru bazlı sonuçlar değerlendirme sonunda otomatik hesaplanır.</div></section><section class="info-card"><div class="info-icon">✓</div><div class="info-title">Kurumsal PDF raporu</div><div class="info-copy">Yanıtlar, boyut skorları ve EDIH/DMAT metodoloji bilgileri tek raporda sunulur.</div></section></div></aside>
+        </div>
+        <footer class="landing-footer"><span>Çorlu Ticaret ve Sanayi Odası · Dijital Olgunluk Değerlendirmesi</span><span>European Digital Innovation Hubs · DMAT</span></footer>
+      </main>
+    </section>
     <div id="root"></div>
+    <script>function startDMAT(){var landing=document.getElementById('landing');var root=document.getElementById('root');landing.classList.add('leaving');setTimeout(function(){landing.style.display='none';root.style.display='block';window.scrollTo(0,0);},220);}</script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
